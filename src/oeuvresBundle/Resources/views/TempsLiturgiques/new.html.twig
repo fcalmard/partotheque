@@ -1,0 +1,47 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+	<div class="titrelisteetform">
+	
+	    	<h1>Création Temps Liturgiques</h1>
+	    </div>
+	    
+	    <div class="listeetform">
+	
+			<div class="showform">
+    			{{ form(form) }}
+    		</div>
+    	</div>
+    
+	<div class="finlisteetform">
+
+        <ul class="record_actions">
+		    <li>
+		        <a href="{{ path('tempsliturgiques') }}">
+				            <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">        
+		        </a>
+		    </li>
+		</ul>
+	
+	</div>
+	
+{% endblock %}
+{% block javascripts %}
+		
+		{{ parent() }}
+        
+	        <script type="text/javascript">
+	        
+		       var obj = document.getElementById("oeuvresbundle_tempsliturgiques_active")
+		       if(obj)
+			       {
+					obj.checked = true;;
+			       }
+
+		       
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+			</script>
+{% endblock %}

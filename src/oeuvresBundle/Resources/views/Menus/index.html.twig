@@ -1,0 +1,72 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+	<div class="titrelisteetform">
+
+    	<h1>Menus</h1>
+
+	</div>
+
+    <div class="listeetform avecscroll">
+		    <table class="records_list table table-striped">
+		        <thead>
+		            <tr>
+		                <th>Code</th>
+		                <th>Menu principal</th>
+		                <th>Libelle Sous menu</th>
+		                <th>Ordre d'affichage</th>
+		                <th>Lien</th>
+		                <th>Actions</th>
+		            </tr>
+	        </thead>
+	        <tbody>
+	        {% for entity in entities %}
+	            <tr>
+	                <td><a href="{{ path('menus_show', { 'id': entity.id }) }}">{{ entity.mcode }}</a></td>
+	                <td>{{ entity.libelleMenu }}</td>
+	                <td>{{ entity.smlib }}</td>
+	                <td>{{ entity.ordreaff }}</td>
+	                {% set slnk=entity.lnk %}
+	                <td>{{ slnk }}</td>   	                
+	                	                
+	                <td>
+	                <ul>
+	
+	                    <li>
+	                        <a href="{{ path('menus_edit', { 'id': entity.id }) }}">
+	                        	<img alt="Modification" src="/web/css/images/edit.png">
+	                        </a>
+	                    </li>
+	                </ul>
+	                </td>
+	            </tr>
+	        {% endfor %}
+	        </tbody>
+	    </table>
+	</div>
+	
+	<div class="finlisteetform">
+
+        <ul>
+        <li>
+            <a href="{{ path('menus_new') }}">
+		            <img alt="ajout" src="/web/css/images/add.png">
+            </a>
+        </li>
+	    </ul>
+  		</div>
+    {% endblock %}
+    
+{% block javascripts %}
+
+	{{ parent() }}
+
+       <script type="text/javascript">
+
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+       </script>    
+{% endblock %}
+    

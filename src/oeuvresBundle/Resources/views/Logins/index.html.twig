@@ -1,0 +1,44 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Logins list</h1>
+
+    <div class="listeetform avecscroll">
+
+	    <table class="records_list">
+	        <thead>
+	            <tr>
+	                <th>Id</th>
+	                <th>Datecreateat</th>
+	                <th>Actions</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	        {% for entity in entities %}
+	            <tr>
+	                <td><a href="{{ path('logins_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+	                <td>{% if entity.datecreateAt %}{{ entity.datecreateAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+	                <td>
+	                <ul>
+	                    <li>
+	                        <a href="{{ path('logins_show', { 'id': entity.id }) }}">show</a>
+	                    </li>
+	                    <li>
+	                        <a href="{{ path('logins_edit', { 'id': entity.id }) }}">edit</a>
+	                    </li>
+	                </ul>
+	                </td>
+	            </tr>
+	        {% endfor %}
+	        </tbody>
+	    </table>
+    </div>
+
+        <ul>
+        <li>
+            <a href="{{ path('logins_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

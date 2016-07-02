@@ -1,0 +1,56 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+
+    <div class="titrelisteetform">
+
+    <h1>Modification Menu</h1>
+	</div>
+	
+    <div class="listeetform">
+		<div class="showform">
+	    	{{ form(edit_form) }}
+	    </div>
+	</div>
+	
+	
+		<div class="finlisteetform">
+
+		<table>
+			<tr>
+				<td class="tdtblactionsbdp">
+			        <a href="{{ path('menus') }}">
+			            <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
+			        </a>
+			    </td>
+					
+			</tr>
+		</table>
+
+	</div>
+	
+{% endblock %}
+
+{% block javascripts %}
+		
+		{{ parent() }}
+        
+	        <script type="text/javascript">
+	        
+	        
+			{% if id_mensup is defined %}
+		    var obj = document.getElementById("oeuvresbundle_menus_id_mensup")
+		    if(obj)
+			    {
+				obj.value="{{id_mensup}}";
+			    }
+			{% endif %}	
+		
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+			</script>
+{% endblock %}
+
+

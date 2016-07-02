@@ -1,0 +1,68 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+	<div class="titrelisteetform">
+
+    	<h1>Fonctions liturgiques</h1>
+
+	</div>
+
+    <div class="listeetform avecscroll">
+		    <table class="records_list table table-striped">
+		        <thead>
+		            <tr>
+		                <th>Code</th>
+		                <th>Libelle Fonction</th>
+		                <th>Activée</th>
+		                <th>Actions</th>
+		            </tr>
+	        </thead>
+	        <tbody>
+	        {% for entity in entities %}
+	            <tr>
+	                <td><a href="{{ path('fonctions_show', { 'id': entity.id }) }}">{{ entity.code }}</a></td>
+	                <td>{{ entity.libelle }}</td>
+   
+<td>{{ entity.active==1 ? "O" : "N"}}</td>
+	                	                
+	                <td>
+	                <ul>
+	
+	                    <li>
+	                        <a href="{{ path('fonctions_edit', { 'id': entity.id }) }}">
+	                        	<img alt="Modification" src="/web/css/images/edit.png">
+	                        </a>
+	                    </li>
+	                </ul>
+	                </td>
+	            </tr>
+	        {% endfor %}
+	        </tbody>
+	    </table>
+	</div>
+	
+	<div class="finlisteetform">
+
+        <ul>
+        <li>
+            <a href="{{ path('fonctions_new') }}">
+		            <img alt="ajout" src="/web/css/images/add.png">
+            </a>
+        </li>
+	    </ul>
+  		</div>
+    {% endblock %}
+    
+{% block javascripts %}
+
+	{{ parent() }}
+
+       <script type="text/javascript">
+
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+       </script>    
+{% endblock %}
+    

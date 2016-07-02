@@ -1,0 +1,156 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+
+    <div class="titrelisteetform">
+
+	{% if entity.id!=0 %}
+
+    	<h1>Modification Utilisateur</h1>
+	{% else %}
+    	<h1>Nouvel Utilisateur</h1>
+	{% endif%}
+
+	</div>
+    <div class="listeetform">
+		<div class="showform">
+			{{ form_start(edit_form) }}
+			
+			{{ form_label(edit_form.Login, 'Login') }}
+			{{ form_widget(edit_form.Login) }}
+			{{ form_errors(edit_form.Login) }}
+			
+			<br/>
+			{{ form_label(edit_form.passwd, 'Mot de passe') }}
+			{{ form_widget(edit_form.passwd) }}
+			{{ form_errors(edit_form.passwd) }}
+						
+			{{ form_end(edit_form) }}
+					
+		</div>
+	</div>
+{% set CodeLoginEnCours=app.request.session.get("gUserLoginLogged") %}
+
+	{% set listeenregs=app.request.session.get(CodeLoginEnCours ~ '_utilisateurs_tblenreg') %}
+	
+	{% set enregencours= 1 %}
+	{% set nbenreg=0 %}
+	{% set idenreg=0 %}	
+
+	<div style="background-color:beige; display:none;">
+	            		           	<br/>
+	nb enreg=
+		
+		{{ listeenregs|length }}
+		
+		<br/>
+		<!--  |keys affiche clé -->
+		{% for enregkeys in listeenregs|keys %}
+		
+			{% set key= enregkeys %}
+
+				{% if key=='enregencours' %}
+					{% set enregencours= listeenregs[key] %}
+				{% endif %}
+				{% if key=='tblenreg' %}
+				<h1>		
+						
+					{% set cptr=0 %}
+					{% for iden in listeenregs[enregkeys] %}	
+						{% set cptr=cptr+1 %}
+						{% if  entity.id==iden %}
+							<br/>iden:{{ iden }}
+							{% set idenreg = cptr %}
+						{% endif %}
+					{% endfor %}
+					{{ listeenregs[key]|length }}
+					{% set nbenreg=listeenregs[key]|length %}
+							
+					nbenreg={{ nbenreg }}
+				</h1>
+				{% endif %}
+				
+		{% endfor %} 
+		
+	</div>	
+	
+		<div class="finlisteetform">
+
+			<table>
+				<tr>
+					<td class="tdtblactionsbdp">
+				        <a href="{{ path('utilisateurs') }}">
+				            <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
+				        </a>
+				    </td>
+				    	
+				    {% if entity.id!=0 %}
+				    
+					<td class="tdtblactionsbdp">
+					    <a href="{{ path('utilisateurs_confirm_delete', { 'id': entity.id }) }}">
+				             <img alt="Désactiver" src="/web/css/images/desactiver.png" width="64px" height="64px" >
+					    </a>					    
+				    </td>
+				    {% endif %}
+				    
+											
+				<td style="background-color:beige; " >
+				    {% if idenreg>1 %}
+					<a href="{{ path('utilisateurs_pagine', { 'idxenreg': idenreg , 'sens': 'prec' , 'action': 'edit' }) }}">
+			             <img alt="Précedente" src="/web/images/Actions-arrow-left-icon.png" width="64px" height="64px" >
+				    </a>
+				    {% endif %}
+					{% if idenreg<=1 %}
+			             <img alt="premier enregistrement" src="/web/images/Actions-arrow-left-icon.png" width="64px" height="64px" 
+			              style="filter: grayscale(100%);-webkit-filter: grayscale(100%);-moz-filter: grayscale(100%);" >
+				    {% endif %}				    		    
+				    &nbsp;
+				    {{ idenreg }}&nbsp;&nbsp;/&nbsp;&nbsp;{{ nbenreg }}
+				    &nbsp;
+					
+					{% if idenreg>=nbenreg %}
+			             <img alt="dernier enregistrement" src="/web/images/Actions-arrow-right-icon.png" width="64px" height="64px"
+			              style="filter: grayscale(100%);-webkit-filter: grayscale(100%);-moz-filter: grayscale(100%);" >
+				    {% endif %}
+					{% if idenreg<nbenreg %}
+					
+					<a href="{{ path('utilisateurs_pagine', { 'idxenreg': idenreg , 'sens': 'suiv', 'action': 'edit' }) }}">
+			             <img alt="Suivante" src="/web/images/Actions-arrow-right-icon.png" width="64px" height="64px" >
+				    </a>				    
+				    
+				    {% endif %}
+				
+				</td>	
+								    
+				</tr>
+			</table>
+		</div>
+	
+{% endblock %}
+
+
+{% block javascripts %}
+		
+		{{ parent() }}
+        
+	        <script type="text/javascript">
+	        
+	        
+	        
+	        
+			{% if ProfilsId is defined %}
+	        var obj = document.getElementById("oeuvresbundle_utilisateurs_Profils_id");
+		    if(obj)
+		    {
+		    obj.value="{{ProfilsId}}";
+		    }
+			{% endif %}
+			
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+			</script>
+{% endblock %}
+
+

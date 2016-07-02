@@ -1,0 +1,74 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+ 
+   	<div class="titrelisteetform">
+    	<h1>Liste des Utilisateurs</h1>
+	</div>
+	
+    <div class="listeetform avecscroll">
+	    	<table class="records_list table table-striped">
+		        <thead>
+		            <tr>
+		                <th>Login</th>
+		                <th>Utilisateur</th>
+		                <th>Email</th>
+		                <th>Profil</th>
+		                <th>Activé</th>
+		                <th>Saisi le</th>
+		                <th>Actions</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+			        {% for entity in entities %}
+			            <tr>
+			                <td><a href="{{ path('utilisateurs_show', { 'id': entity.id }) }}">{{ entity.Login }}</a></td>
+			                <td>{{ entity.utilisateur }}</td>
+			                <td>{{ entity.email }}</td>
+			                <td>{{ entity.libelleProfil }}</td>
+		               	 <td>{{ entity.actif==1 ? "O" : "N"}}</td>
+			                
+			                <td>{% if entity.datecreateAt %}{{ entity.datecreateAt|date('d/m/Y') }}{% endif %}</td>
+			                <td>
+			                <ul>
+			                    <li>
+			                        <a href="{{ path('utilisateurs_edit', { 'id': entity.id }) }}">
+		                        		                        	<img alt="Modification" src="/web/css/images/edit.png">
+			                        
+			                        </a>
+			                    </li>
+			                </ul>
+			                </td>
+			            </tr>
+			        {% endfor %}
+		        </tbody>
+		    </table>
+	</div>
+	
+	<div class="finlisteetform">
+
+        <ul>
+        <li>
+            <a href="{{ path('utilisateurs_new') }}">
+			            <img alt="ajout" src="/web/css/images/add.png">
+            </a>
+        </li>
+	    </ul>
+    </div>
+    
+    {% endblock %}
+
+    
+    {% block javascripts %}
+		
+		{{ parent() }}
+        
+	        <script type="text/javascript">
+	        
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+			</script>
+{% endblock %}
+

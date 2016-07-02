@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>
+        {% block title %}
+        My Chorale
+        {% endblock %}
+        </title>
+        {% block stylesheets %}
+        
+        	<link rel="stylesheet" href="{{ asset('css/app.css') }}" type="text/css" media="all" filter="cssrewrite" />
+        	<!-- <link rel="stylesheet" href="{{ asset('css/bootstrap-responsive.css') }}" type="text/css" media="all" filter="cssrewrite" />  -->
+        	
+        	<link rel="stylesheet" href="{{ asset('css/tooltip/themes/1/tooltip.css') }}" type="text/css" media="all" filter="cssrewrite" />      	
+        	
+        {% endblock %}
+		{% block jquery_min %}
+		
+			<script type="text/javascript" src="{{ asset('../web/js/jquery-1.12.3.min.js') }} "></script>
+			<script type="text/javascript" src="{{ asset('../web/js/bootstrap.min.js') }} "></script>
+			<script type="text/javascript" src="{{ asset('../web/js/tadaaapickr.js') }} "></script>		
+			<script type="text/javascript" src="{{ asset('../web/js/jquery.ui.datepicker.js') }} "></script>
+			
+			<script type="text/javascript" src="{{ asset('css/tooltip/themes/1/tooltip.js') }} "></script>		
+			
+		{% endblock %}        
+		{% block datepicker_min %}
+			<script type="text/javascript" src="{{ asset('../web/js/dates.locales.fr.js') }} "></script>		
+		{% endblock %}        
+		
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+    
+    <div class="modal fade" id="myModal" role="dialog">
+	    <div class="modal-dialog">
+	    
+	      <!-- Modal content-->
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <h4 class="modal-title">Modal Header</h4>
+	        </div>
+	        <div class="modal-body">
+	          <p>Some text in the modal.</p>
+	        </div>
+	        <div class="modal-footer">
+	          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        </div>
+	      </div>
+	      
+	    </div>
+  	</div>
+  	
+    <div class="modal fade" id="modalConfirmAbandonSaisie" role="dialog">
+	    <div class="modal-dialog">
+	    
+	      <!-- Modal content-->
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <h4 class="modal-title">Abandon saisie en cours</h4>
+	        </div>
+	        <div class="modal-body">
+	          <p>Voulez vous abandonner la saisie en cours.</p>
+	        </div>        
+	        
+			<div class="container">
+			  <form role="form">
+	
+			    <button type="submit" class="btn">Oui</button>
+			    
+			    &nbsp;
+			    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			    
+			  </form>
+			</div>
+			        
+	      </div>
+	      
+	    </div>
+  	</div>
+  	
+    <div class="modal fade" id="zmodalConfirmAbandonSaisie" role="dialog">
+
+		<div class="container">
+		  <h2>Vertical (basic) form</h2>
+		  <form role="form">
+
+		    <button type="submit" class="btn btn-default">Submit</button>
+		  </form>
+		</div>
+
+  	</div>  	
+  
+
+    
+		<a id="haut"></a>
+
+                <div class="navbar navbar-default navbar-static-top" role="navigation" id="navigationdiv" >
+                    <div class="container">
+
+			             {% if app.request.session.get("gUserLoginLogged") is defined and app.request.session.get("gUserLoginLogged")!="" %}
+                    
+	                        <div class="navbar-header">
+	
+	                            <a class="navbar-brand" href="{{ path('homepage') }}">
+	                                Page d'accueil
+	                            </a>
+	
+	                        </div>
+    		             {% endif %}
+                        
+		                        <!-- ********************** -->
+		                        <div class="navbar-collapse collapse">
+		
+		                            <ul class="nav navbar-nav navbar-right">                                
+		                                                                 
+		                               <!--  **    LOGIN ******* -->
+		                                                                
+		                                {% if app.request.session.get("gUserLoginLogged") is defined  and app.request.session.get("gUserLoginLogged")==""%}
+			                                
+			                                <li>
+			                        			<a href="{{ path('logins_new') }}">
+			                                        Connexion
+			                                    </a>
+			                                </li>	
+		                                {% endif %}
+
+		                                {% if app.request.session.get("gUserLoginLogged") is defined and app.request.session.get("gUserLoginLogged")!="" %}
+
+			                                {% set nomtabmenus=app.request.session.get("gUserLoginLogged") %}
+		                                			                                
+			                                <li>
+			                        			<a href="{{ path('logins_unlog') }}">
+			                                        Déconnexion	( {{ app.request.session.get("gUserLoginLogged") }} 
+			                                        
+			                                       {% if app.request.session.get("CodeProfilEnCours") is defined and app.request.session.get("CodeProfilEnCours")!="" %}
+			                                       /&nbsp;{{ app.request.session.get("CodeProfilEnCours") }}
+			                                       {% endif %}
+			                                        
+			                                        )												                                        
+			                                    </a>
+			                                </li>			                                
+		                                {% endif %}
+		                                 	 
+		                           	</ul>
+		                            
+		                        </div>
+		                        <!-- ********************** -->
+                         
+                    </div>
+                    
+                </div>
+		             
+		             {% if app.request.session.get("gUserLoginLogged") is defined and app.request.session.get("gUserLoginLogged")!="" %}
+		             
+		             	{% if app.request.session.get("CodeProfilEnCours") is defined and app.request.session.get("CodeProfilEnCours")!="" %}
+		             	
+		             		<!-- "aMenusProfil_" -->
+		             	
+		             		{% set CodeProfilEnCours=app.request.session.get("CodeProfilEnCours") %}
+		             	
+   		                     <menujobs>
+		             		                     	
+		             		        {% if CodeProfilEnCours is defined %}
+
+										{% set listemenu=app.request.session.get('aMenusProfil_'~ CodeProfilEnCours) %}
+	             		            
+	             		            	{% set cptmenu=1 %}
+		             		           	{% for menu in listemenu %}
+		             		           	
+		             		           		{% set idmenu="menu" ~ cptmenu %}
+		             		           		{% set idssmenu="ssmenu" ~ cptmenu %}
+		             		           	
+           				                    <div class="optmenu"  id="{{ idmenu }}" >
+           				                      {{ menu.LibelleMenu }}
+		             		            		<div class="sousmenu"  id="{{ idssmenu }}" >
+		             		            		<ul class="lstoptssmenu" >
+				             		            	{% for ssMenu in menu.SousMenus %}
+				             		            	
+				             		            		<li class="lstoptssmenu" >
+				             		            			<a class="linkoptmenu" href="{{ path(ssMenu.LnkMenu) }}">{{ ssMenu.LibelleMenu }}</a>
+														</li>
+				             		            	{% endfor %}
+		             		            		</ul>
+			             		            	{% set cptmenu=cptmenu+1 %}
+
+	             		            		</div>
+	             		            		
+	             		            		</div>
+	             		            		
+		             		        	{% endfor %}
+		             		        
+
+		             		        	
+		             		        {% endif %}
+		             		                     			             		                     	
+   		                     </menujobs>
+		             	
+		             	{% endif %}
+                                                         
+
+
+                    {% endif %}
+            
+                <div class="homeaction">
+                	
+                	<a href="" onclick="location.reload();" >
+                	<img alt="recharger" src="/web/images/reload_128.png" style="width:40px; height:40px; "/>
+                	</a>
+                	          <!-- 
+                	<a href="#haut">
+                	<img alt="en haut" src="/web/images/home.png" style="width:50px; height:50px; "/>
+                	</a>
+                	 -->      	
+                	                	                	
+                </div>
+                
+                
+        {% block body %}
+                {% if app.request.session.get("gUserLoginLogged") is defined and app.request.session.get("gUserLoginLogged")=="" %}
+        
+        	        	{% set CodeLoginEnCours=app.request.session.get("gUserLoginLogged") %}
+        	        	{{ app.request.session.set(CodeLoginEnCours ~ "_oeuvres_modifencours",1) }}
+        	        	
+        		{% endif %}
+        {% endblock %}
+        
+
+        
+        {% block javascripts %}
+        
+ 
+        
+        <script type="text/javascript">
+
+        
+        setInterval(reloadFunction, 300000);
+        
+	        $(document).ready( function () {
+
+
+	            $("label[for='oeuvresbundle_filtre_oeuvres_titreOeuvre']").hover(function(){
+	            	tooltip.pop(this, '<h3>Saisissez un titre</h3>')
+	            },
+	            function(){
+	            }
+	            );
+	            
+	            $("#oeuvresbundle_filtre_oeuvres_titreOeuvre").hover(function(){
+	            	tooltip.pop(this, '<h3>Saisissez un titre</h3>')
+	            },
+	            function(){
+	            }
+	            ); 	
+
+	            $("label[for='oeuvresbundle_filtre_oeuvres_compositeur_id']").hover(function(){
+	            	tooltip.pop(this, '<h3>Selectionnez un Compositeur</h3>')
+	            },
+	            function(){
+	            }
+	            );
+
+	            $("#oeuvresbundle_filtre_oeuvres_compositeur_id").hover(function(){
+	            	tooltip.pop(this, '<h3>Selectionnez un Compositeur</h3>')
+	            },
+	            function(){
+	            }
+	            );     
+
+
+	            $("label[for='oeuvresbundle_filtre_oeuvres_genre_id']").hover(function(){
+	            	tooltip.pop(this, '<h3>Selectionnez un Genre</h3>')
+	            },
+	            function(){
+	            }
+	            );
+	            $("#oeuvresbundle_filtre_oeuvres_genre_id").hover(function(){
+	            	tooltip.pop(this, '<h3>Selectionnez un Genre</h3>')
+	            },
+	            function(){
+	            }
+	            ); 
+	            
+	            $("label[for='oeuvresbundle_filtre_oeuvres_tps_litur_id']").hover(function(){
+	            	tooltip.pop(this, '<h3>Selectionnez un Temps liturgique</h3>')
+	            },
+	            function(){
+	            }
+	            );
+	            $("#oeuvresbundle_filtre_oeuvres_tps_litur_id").hover(function(){
+	            	tooltip.pop(this, '<h3>Selectionnez un Temps liturgique</h3>')
+	            },
+	            function(){
+	            }
+	            ); 
+	            
+	            $("label[for='oeuvresbundle_filtre_oeuvres_fonction_id']").hover(function(){
+	            	tooltip.pop(this, '<h3>Selectionnez une Fonction du rite liturgique</h3>')
+	            },
+	            function(){
+	            }
+	            );
+	            $("#oeuvresbundle_filtre_oeuvres_fonction_id").hover(function(){
+	            	tooltip.pop(this, '<h3>Selectionnez une Fonction du rite liturgique</h3>')
+	            },
+	            function(){
+	            }
+	            ); 
+	            
+	            $("label[for='oeuvresbundle_filtre_oeuvres_voix_id']").hover(function(){
+	            	tooltip.pop(this, '<h3>Selectionnez une Voix</h3>')
+	            },
+	            function(){
+	            }
+	            );
+	            $("#oeuvresbundle_filtre_oeuvres_voix_id").hover(function(){
+	            	tooltip.pop(this, '<h3>Selectionnez une Voix</h3>')
+	            },
+	            function(){
+	            }
+	            ); 	            
+	            	            
+	            $("#oeuvresbundle_filtre_oeuvres_submit").hover(function(){
+	            	tooltip.pop(this, '<h3>Valider la sélection</h3>')
+	            },
+	            function(){
+	            }
+	            ); 	  	            
+				
+	            // On cache les sous-menus :
+            	$("#ssmenu1").hide();
+            	$("#ssmenu2").hide();
+            	$("#ssmenu3").hide();
+
+		        $("#tab2").hide();
+		        $("#tab3").hide();
+		                	
+	            $("#menu1").hover(function(){
+	            	afficheMenu(1);
+	            },
+	            function(){
+	            	$("#ssmenu1").hide();
+	            }); 
+	            $("#menu2").hover(function(){
+	            	afficheMenu(2);
+	            },
+	            function(){
+	            	$("#ssmenu2").hide();
+	            }); 	            
+
+	            $("#menu3").hover(function(){
+	            	afficheMenu(3);
+	            },
+	            function(){
+	            	$("#ssmenu3").hide();
+	            }); 
+	            
+	          	  /**********************
+	          	  */
+			    $("ul.tabs li").click(function() {
+					/*
+			        var idOffres = $(this).find("a").attr("id");
+			        
+			        var idOffres = $(this).attr("idoffre");
+					
+			
+					var idoffres=document.getElementById("idoffres")
+			
+					var tabactive=document.getElementById("tabactive")
+			
+					{% if id is defined%}
+						{% if id=='' %}
+							{% set id= 0 %}
+						{% endif %}
+					{% else%}
+						{% set id=0 %}
+					{% endif %}
+					*/
+
+			        var activeTab = $(this).find("a").attr("href");
+			        var tabactive = $(this).find("a").attr("tab");
+
+			        tabactive = $(this).attr("id");
+
+					
+				    var t = "";//$(activeTab).selector;
+				    if(tabactive)
+				    {
+				    	var t = tabactive;//.value;				    
+				    }
+
+				    //tabactive.value=t
+				    				    
+					switch (t) {
+					   case 'part1':
+							$("[id|='tab1']").addClass("active").show();						
+							$("li#part1").addClass("active");
+									        
+		        			$("#tab2").hide();
+		        			$("#tab3").hide();
+		        			$("li#part2").removeClass("active");					        						    
+		        			$("li#part3").removeClass("active");					        						    
+							if(idoffres && idoffres.value!="")
+							{
+							}
+					      	break;
+					   case '#tab2':
+					   case 'part2':
+							$("[id|='tab2']").addClass("active").show();						
+							$("li#part2").addClass("active");
+
+							$("#tab1").hide();
+		        			$("#tab3").hide();
+		        			$("li#part1").removeClass("active");					        						    
+		        			$("li#part3").removeClass("active");		        			
+					      	break;
+					   case '#tab3':
+					   case 'part3':
+							//alert("3 id="+tabactive);
+							$("[id|='tab3']").addClass("active").show();						
+							$("li#part3").addClass("active");
+														   
+		        			$("#tab1").hide();
+		        			$("#tab2").hide();
+		        			$("li#part1").removeClass("active");					        						    
+		        			$("li#part2").removeClass("active");		        			
+					      	break;
+					}
+					
+				
+					/*
+				    
+				    alert("ok");					
+					*/
+			       // $("ul.tabs li").removeClass("active");
+			        
+			        //$(this).addClass("active");
+			/*
+			        $(".blocco-tab").hide();
+			
+			        $(".formtab").hide();
+			
+			    	$(activeTab).addClass("active").show();
+			
+			        $(activeTab).fadeIn(); 		
+			        */
+
+					
+			        return false;
+			    });
+/*
+			    $("#oeuvresbundle_oeuvres_compositeur_id").change(function() {
+
+				    var obj = document.getElementById("oeuvresbundle_oeuvres_compositeur_id");
+					var vobj="";
+				    if(obj)
+				    	{
+				    	vobj=$("#oeuvresbundle_oeuvres_compositeur_id").val();
+				    	}
+				    if(vobj!="")
+				    	{
+					    var obj = document.getElementById("oeuvresbundle_oeuvres_anonyme");
+						if(obj)
+							{
+					    	obj.checked = false;
+
+							}
+				    	}
+
+			    });*/
+	          	  
+			    /*
+			    $("#oeuvresbundle_compositeurs_datenaiss").datepicker({
+					numberOfMonths: 3,
+					stepMonths: 3,
+					showButtonPanel: true,
+					currentText: "Aujourd'hui",
+					nextText: "Suivant",
+					prevText: "Précédent",
+					minDate: new Date(1000,7-1,1), //du 1 juillet 1000
+					maxDate: new Date(2100,12-1,31), //au 31 décembre 2100
+					beforeShowDay: function(date) {
+						var noWeekend = $.datepicker.noWeekends(date); //samedi et dimanche non sélectionable !
+						//var noWeekend = [true, '', '']; // on garde le samedi et le dimanche !
+						
+						if (noWeekend[0]) {
+							return setDays(date.getDate(), date.getMonth(), date.getFullYear());
+						} else {
+							return noWeekend;
+						}
+						
+						/*
+						* Si parmi les dates à colorer il y a des samedis ou des dimanches alors
+						* mettez en commentaire tout ce qui précède et remplacez-le par :
+						* return setDays(date.getDate(), date.getMonth(), date.getFullYear());
+						
+					},
+					onSelect: function(dateText) {
+						//le format de dateText est donné par l'option dateFormat
+						//transforme la date donnée au format texte (08082009) en day (8), month (7), year (2009)
+						selectedDay(
+								parseInt(dateText.slice(0,2),10),
+								parseInt(dateText.slice(3,5),10)-1,								
+							parseInt(dateText.slice(6),10)
+						);
+					}
+				});
+/*
+
+			    
+				$("#oeuvresbundle_compositeurs_datedeces").datepicker({
+					numberOfMonths: 3,
+					stepMonths: 3,
+					showButtonPanel: true,
+					currentText: "Aujourd'hui",
+					nextText: "Suivant",
+					prevText: "Précédent",
+					minDate: new Date(1000,1-1,1), //du 1 juillet 2009
+					maxDate: new Date(2100,12-1,31), //au 31 décembre 2009
+					beforeShowDay: function(date) {
+						var noWeekend = $.datepicker.noWeekends(date); //samedi et dimanche non sélectionable !
+						//var noWeekend = [true, '', '']; // on garde le samedi et le dimanche !
+						
+						if (noWeekend[0]) {
+							return setDays(date.getDate(), date.getMonth(), date.getFullYear());
+						} else {
+							return noWeekend;
+						}
+						
+						/*
+						* Si parmi les dates à colorer il y a des samedis ou des dimanches alors
+						* mettez en commentaire tout ce qui précède et remplacez-le par :
+						* return setDays(date.getDate(), date.getMonth(), date.getFullYear());
+						
+					},
+					onSelect: function(dateText) {
+						//le format de dateText est donné par l'option dateFormat
+						//transforme la date donnée au format texte (08082009) en day (8), month (7), year (2009)
+						selectedDay(
+								parseInt(dateText.slice(0,2),10),
+								parseInt(dateText.slice(3,5),10)-1,
+								parseInt(dateText.slice(6),10)
+						);
+					}
+				});
+				
+				*/
+				$("form input.date").datepicker();
+				$("form input.date").datepicker({
+				language: "fr",
+				dateFormat: "dd/mm/yyyy",
+				firstDayOfWeek: 1
+				});
+				$("form.ja input.date").datepicker({
+				locale: "fr"
+				});
+
+			    $("[id^='oeuvresbundle_oeuvres_']").change(function() {
+			    	OeuvresModifEnCours(1);
+			    });
+				
+				/*alert('document ready FIN');*/
+  	        	
+	        } ) ;
+			
+	        function OeuvresModifEnCours(modif)
+			{
+	    	    var DATA = "modif=" + modif;
+	    	    
+	    	    $.ajax({
+	    	        type: "POST",
+	    	        dataType: 'text',
+	    	        url:  "http://{{ app.request.httpHost }}/web/Oeuvresmodifencours.php",
+	    	        data: DATA,
+	    		    async: true, // Mode synchrone	        
+	    	        success: function(msg)
+	    	        {
+	    	        	
+	    	        }
+	    	    });	 
+	    	    
+			}
+			
+			function afficheMenu(opt)
+			{
+				/**
+				#menu2
+				*/
+
+				//alert("afficheMenu "+opt);
+				
+				$("#ssmenu1").hide();
+				$("#ssmenu2").hide();
+				$("#ssmenu3").hide();
+				if(opt==1)
+				{
+				$("#ssmenu1").show();
+				}
+				if(opt==2)
+				{
+				$("#ssmenu2").show();
+				}
+				if(opt==3)
+				{
+				$("#ssmenu3").show();
+				}		
+				/* alert('afficheMenu '+opt); */
+			
+			}
+
+			function reloadFunction() {
+				
+				/*location.reload();*/
+			}
+			
+
+			
+		</script>
+		
+		{% if app.request.session.get("gUserLoginLogged") is defined and app.request.session.get("gUserLoginLogged")=="" %}
+			<script>
+			
+			</script>  
+		{% endif %}
+
+		{%  if nomtabmenus is defined %}
+			<script>
+
+			</script>
+		{% endif %}
+   
+        {% endblock %}
+    </body>
+</html>

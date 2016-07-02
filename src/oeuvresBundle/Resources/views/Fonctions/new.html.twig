@@ -1,0 +1,50 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+	<div class="titrelisteetform">
+
+    	<h1>Nouvelle fonction liturgique</h1>
+	
+	
+	</div>
+    <div class="listeetform">
+
+		<div class="showform">
+			
+    		{{ form(form) }}
+
+		</div>
+    </div>
+    
+   	<div class="finlisteetform">
+
+		<table>
+			<tr>
+				<td class="tdtblactionsbdp">
+			        <a href="{{ path('fonctions') }}">
+					   <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
+			        </a>				
+				</td>
+			</tr>
+		</table>
+	
+	</div>
+		
+{% endblock %}
+
+
+	{% block javascripts %}
+		
+			{{ parent() }}
+		
+			<script type="text/javascript">
+			
+				$("#menu1").hide();
+				$("#menu2").hide();
+				$("#menu3").hide();
+						
+			</script>
+			
+	{% endblock %}
+	
+	

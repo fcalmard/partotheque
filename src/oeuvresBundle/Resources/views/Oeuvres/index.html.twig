@@ -1,0 +1,357 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+
+	<div class="titrelisteetform">
+   	 	<h1>Liste des œuvres
+   	 	   	 	<a href="" >
+
+			         <a class="tooltip" href="{{ path('oeuvres_affiche_filtres') }}" onmouseover="tooltip.pop(this, '<h3>Afficher ou cacher les critères de filtre</h3>')">
+
+					   	{% if affiche_filtre is defined and affiche_filtre ==1 %}
+
+			          	<img alt="Cacher les critères de filtre" src="/web/images/arrow-up.png"/>
+			          	
+   						{% else %}
+			          		<img alt="Afficher les critères de filtre" src="/web/images/arrow-down.png"/>
+   						{% endif %}
+			          	
+					</a>
+								                
+				</a>
+		
+   	 	
+   	 	</h1>
+   	</div>
+   	{% if affiche_filtre is defined and affiche_filtre ==1 %}
+	   	{% if filtre_form is defined %}
+	   		<div class="filtreform" id="divfiltresoeuvre">
+						
+				<br/>
+				
+				{{ form_start(filtre_form) }}
+							
+				{{ form_label(filtre_form.titreOeuvre, 'Titre') }}
+				{{ form_widget(filtre_form.titreOeuvre) }}
+				{{ form_errors(filtre_form.titreOeuvre) }}
+		
+				{{ form_label(filtre_form.compositeur_id, 'Compositeur') }}
+				{{ form_widget(filtre_form.compositeur_id) }}
+				{{ form_errors(filtre_form.compositeur_id) }}					
+		
+				{{ form_label(filtre_form.genre_id, 'Genre') }}
+				{{ form_widget(filtre_form.genre_id) }}
+				{{ form_errors(filtre_form.genre_id) }}
+				<br/>
+		
+				{{ form_label(filtre_form.tps_litur_id, 'Temps liturgique') }}
+				{{ form_widget(filtre_form.tps_litur_id) }}
+				{{ form_errors(filtre_form.tps_litur_id) }}										
+		
+		   		{{ form_label(filtre_form.fonction_id, 'Fonction du rite liturgique') }}
+				{{ form_widget(filtre_form.fonction_id) }}
+				{{ form_errors(filtre_form.fonction_id) }}
+		
+		   		{{ form_label(filtre_form.voix_id, 'Voix') }}
+				{{ form_widget(filtre_form.voix_id) }}
+				{{ form_errors(filtre_form.voix_id) }}					
+		
+				<br/>
+				
+						
+						<div class="grpbuttons">
+		
+							{{ form_widget(filtre_form.submit) }}
+					        &nbsp;
+					         <a class="tooltip" href="{{ path('oeuvres_filtrer', { 'tous': 1 }) }}" onmouseover="tooltip.pop(this, '<h3>Supprimer la sélection</h3>')">
+					          	Supprimer la sélection <img alt="Supprimer la sélection" src="/web/css/images/aff_all.png"/>
+							</a>
+											
+							<br/>
+			
+						</div>  								   					
+		
+				{{ form_end(filtre_form) }}
+			
+			<br/>
+																	
+	   		</div>
+	   		
+	   	{% endif %}
+   	{% endif %}
+   	
+    <div class="listeetform avecscroll">
+	    <table class="records_list table table-striped">
+	        <thead class="degrade">
+	        <!-- 
+	        tripar  ordretri asc desc ''
+	        -->
+	        
+	        	{% set colonnedetri='' %}
+	        	{% set ordretri='' %}
+	        
+	        	{% if app.request.session.get("gUserLoginLogged") is defined and app.request.session.get("gUserLoginLogged")!="" %}
+	                   			
+             		{% set CodeLoginEnCours=app.request.session.get("gUserLoginLogged") %}
+					{% set listetrioeuvres=app.request.session.get(CodeLoginEnCours ~ '_oeuvres_tri') %}
+
+            		{% for atri in listetrioeuvres %}
+            		           	
+          				{% for ptri in atri %}
+          					{% if ptri!="" %}
+	           					{% for pcoltri in atri|keys %}
+								{% set colonnedetri=pcoltri %}
+           						{% endfor %} 
+								{% set ordretri=ptri %}
+          					{% endif %}
+          				{% endfor %}           		           	
+					{% endfor %} 
+	        
+	        	{% endif %}
+	        
+	            <tr>
+
+	                <th class="thw600" >Titre 
+		                <a class="lnktri300" href="{{ path('oeuvres_trier', { 'tripar': 'o.titreOeuvre' ,'ordretri':'asc'} ) }}" >
+		                {% if colonnedetri=='o.titreOeuvre' %}
+		                	{% if ordretri=='' %}
+       						{% endif %}
+		                	{% if ordretri=='asc' %}
+		                		<img alt="tri croissant" src="/web/images/arrow-up.png" />
+       						{% endif %}
+		                	{% if ordretri=='desc' %}
+		                		<img alt="tri croissant" src="/web/images/arrow-down.png" />
+       						{% endif %}   
+		                	
+    					{% else %}
+    						<img alt="tri" src="/web/images/afftri4.png" style="width:30px;height:30px; " />
+       					{% endif %}
+		                </a>
+	                </th>
+	                <th class="thw600" >Compositeur
+		                <a class="lnktri20" href="{{ path('oeuvres_trier', { 'tripar': 'compositeur' ,'ordretri':'asc'} ) }}" >
+		                
+		                {% if colonnedetri=='compositeur' %}
+		                	{% if ordretri=='' %}
+       						{% endif %}
+		                	{% if ordretri=='asc' %}
+		                		<img alt="tri croissant" src="/web/images/arrow-up.png" />
+       						{% endif %}
+		                	{% if ordretri=='desc' %}
+		                		<img alt="tri croissant" src="/web/images/arrow-down.png" />
+       						{% endif %}   
+		                	
+    					{% else %}
+    						<img alt="tri croissant" src="/web/images/afftri4.png" style="width:30px;height:30px; " />
+       					{% endif %}
+       							                
+		                </a>
+		            </th>
+	                <th class="thw400" >Genre
+		                <a class="lnktri20" href="{{ path('oeuvres_trier', { 'tripar': 'genre' ,'ordretri':'asc'} ) }}" >
+		                {% if colonnedetri=='genre' %}
+		                	{% if ordretri=='' %}
+       						{% endif %}
+		                	{% if ordretri=='asc' %}
+		                		<img alt="tri croissant" src="/web/images/arrow-up.png" />
+       						{% endif %}
+		                	{% if ordretri=='desc' %}
+		                		<img alt="tri croissant" src="/web/images/arrow-down.png" />
+       						{% endif %}   
+		                	
+    					{% else %}
+    						<img alt="tri croissant" src="/web/images/afftri4.png" style="width:30px;height:30px; " />
+       					{% endif %}		                
+		                </a>	                
+	                </th>
+	                <th class="thw600" >Temps liturgique
+		                <a class="lnktri20" href="{{ path('oeuvres_trier', { 'tripar': 'tpslliturgique' ,'ordretri':'asc'} ) }}" >
+		                {% if colonnedetri=='tpslliturgique' %}
+		                	{% if ordretri=='' %}
+       						{% endif %}
+		                	{% if ordretri=='asc' %}
+		                		<img alt="tri croissant" src="/web/images/arrow-up.png" />
+       						{% endif %}
+		                	{% if ordretri=='desc' %}
+		                		<img alt="tri croissant" src="/web/images/arrow-down.png" />
+       						{% endif %}   
+		                	
+    					{% else %}
+    						<img alt="tri croissant" src="/web/images/afftri4.png" style="width:30px;height:30px; " />
+       					{% endif %}		                
+		                </a>
+		            </th>
+	                <th class="thw800" >Fonction rite liturgique
+		                <a class="lnktri20" href="{{ path('oeuvres_trier', { 'tripar': 'fonction' ,'ordretri':'asc'} ) }}">
+		                {% if colonnedetri=='fonction' %}
+		                	{% if ordretri=='' %}
+       						{% endif %}
+		                	{% if ordretri=='asc' %}
+		                		<img alt="tri croissant" src="/web/images/arrow-up.png" />
+       						{% endif %}
+		                	{% if ordretri=='desc' %}
+		                		<img alt="tri croissant" src="/web/images/arrow-down.png" />
+       						{% endif %}   
+		                	
+    					{% else %}
+    						<img alt="tri croissant" src="/web/images/afftri4.png" style="width:30px;height:30px; " />
+       					{% endif %}			                
+		                </a>	                
+	                </th>
+	                <th class="thw500" >Voix
+		                <a class="lnktri20" href="{{ path('oeuvres_trier', { 'tripar': 'voix' ,'ordretri':'asc'} ) }}">
+		                {% if colonnedetri=='voix' %}
+		                	{% if ordretri=='' %}
+       						{% endif %}
+		                	{% if ordretri=='asc' %}
+		                		<img alt="tri croissant" src="/web/images/arrow-up.png" />
+       						{% endif %}
+		                	{% if ordretri=='desc' %}
+		                		<img alt="tri croissant" src="/web/images/arrow-down.png" />
+       						{% endif %}   
+		                	
+    					{% else %}
+    						<img alt="tri croissant" src="/web/images/afftri4.png" style="width:30px;height:30px; " />
+       					{% endif %}			                
+		                </a>		                
+	                </th>
+	                <th class="thw800" >Numéro de dossier
+	                	<a class="lnktri20" href="{{ path('oeuvres_trier', { 'tripar': 'o.reference' ,'ordretri':'asc'} ) }}">
+		                {% if colonnedetri=='o.reference' %}
+		                	{% if ordretri=='' %}
+       						{% endif %}
+		                	{% if ordretri=='asc' %}
+		                		<img alt="tri croissant" src="/web/images/arrow-up.png" />
+       						{% endif %}
+		                	{% if ordretri=='desc' %}
+		                		<img alt="tri croissant" src="/web/images/arrow-down.png" />
+       						{% endif %}   
+		                	
+    					{% else %}
+    						<img alt="tri croissant" src="/web/images/afftri4.png" style="width:30px;height:30px; "/>
+       					{% endif %}		                	
+		                </a>		
+	                </th>
+	                <th>Cote
+	                </th>
+	                <th>Actions</th>	                 
+	            </tr>
+	        </thead>
+	        <tbody>
+	        {% for entity in entities %}
+	            <tr>
+
+	                <td><a href="{{ path('oeuvres_show', { 'id': entity.id }) }}">{{ entity.titreOeuvre }}
+	                {% if entity.traductiontitreOeuvre!="" %}
+	                ( {{ entity.traductiontitreOeuvre }} )
+	                {% endif %}
+	                </a></td>
+
+	                <td>{{ entity.compositeur }}</td>	     
+	                <td>{{ entity.genre }}</td>
+	                <td>{{ entity.tpslliturgique }}</td>
+	                <td>{{ entity.fonction }}</td>
+	                <td>{{ entity.voix }}</td>   
+	                <td>{{ entity.reference }}</td>
+	                <th>{{ entity.cote }}</th>
+	                <td>
+		                <ul class="lstactionsul">
+	
+		                    <li>
+		                        <a href="{{ path('oeuvres_edit', { 'id': entity.id }) }}">
+			                        	<img alt="Modification" src="/web/css/images/edit.png">
+		                        
+		                        </a>
+		                    </li>
+		                </ul>
+	                </td>
+	            </tr>
+	        {% endfor %}
+	        </tbody>
+	    </table>
+
+	</div>
+
+	<div class="finlisteetform">
+
+        <ul>
+	        <li>
+	            <a href="{{ path('oeuvres_new') }}">
+		            <img alt="ajout" src="/web/css/images/add.png">
+	            </a>
+	        </li>
+    	</ul>
+
+   	</div>
+
+    {% endblock %}
+    
+{% block javascripts %}
+
+	{{ parent() }}
+
+       <script type="text/javascript">
+
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+			
+			/*
+    	//lire filtre de session
+    	$aFiltre=$session->get($skFiltre);			
+			*/
+		
+		{% if titreOeuvre is defined %}
+	        var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_titreOeuvre");
+		    if(obj)
+		    {
+		    obj.value="{{titreOeuvre}}";
+		    }
+		{% endif %}
+		
+		{% if compositeur_id is defined %}
+	        var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_compositeur_id");
+		    if(obj)
+		    {
+		    	obj.value="{{compositeur_id}}";
+		    }
+		{% endif %}
+		{% if genre_id is defined %}
+		    var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_genre_id");
+		    if(obj)
+		    {
+		   		obj.value="{{genre_id}}";
+		    }
+		{% endif %}
+		
+		{% if tps_litur_id is defined %}
+		    var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_tps_litur_id");
+		    if(obj)
+		    {
+		   		obj.value="{{tps_litur_id}}";
+		    }
+		{% endif %}		
+
+		{% if fonction_id is defined %}
+		    var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_fonction_id");
+		    if(obj)
+		    {
+		   		obj.value="{{fonction_id}}";
+		    }
+		{% endif %}
+		
+		{% if voix_id is defined %}
+		    var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_voix_id");
+		    if(obj)
+		    {
+		   		obj.value="{{voix_id}}";
+		    }
+		{% endif %}	
+	
+		
+			
+			
+						
+       </script>
+{% endblock %}
+    

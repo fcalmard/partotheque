@@ -1,0 +1,4 @@
+oeuvres:
+    resource: "@oeuvresBundle/Resources/config/routing.yml"
+    prefix:   /
+

@@ -1,0 +1,31 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    
+    	<div class="titrelisteetform">
+
+    <h1>Mot de passe perdu</h1>
+    </div>
+        <div class="formlogin">
+    
+    	<div class="showform">
+    	
+			{{ form_start(form) }}
+
+			{{ form_label(form.email, 'Votre email') }}
+			{{ form_widget(form.email) }}
+			{{ form_errors(form.email) }}			
+
+
+    		{{ form_end(form) }}
+    		<br/>
+	    
+	    {% if message is defined and message!="" %}
+	    	<h1>{{ message }}</h1>
+	    	<br/>
+	    {% endif %}
+		</div>
+		</div>
+		
+    
+{% endblock %}

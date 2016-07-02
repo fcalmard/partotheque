@@ -1,0 +1,97 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+
+
+	<div class="titrelisteetform">
+
+    <h1>Menu</h1>
+
+	</div>
+    <div class="listeetform">
+
+		<div class="showform">
+			
+		    <table class="record_properties">
+		        <tbody>
+
+		            <tr>
+		                <th>Code</th>
+		                <td>{{ entity.codeMenu }}</td>
+		            </tr>
+		            <tr>
+		                <th>Libelle</th>
+		                <td>{{ entity.libelleMenu }}</td>
+		            </tr>
+		            <tr>
+		                <th>Lien</th>
+		                <td>{{ entity.lnk }}</td>
+		            </tr>
+
+		            <tr>
+		                <th>Saisie le </th>
+		                <td>{{ entity.datecreateAt|date('d/m/Y') }}</td>
+		            </tr>
+		            <tr>
+		                <th>Activé</th>
+		                <td>{{ entity.actif==1 ? "O" : "N"}}</td>
+		            </tr>
+
+
+		            <tr>
+		                <th>Odre d'affichage</th>
+		                <td>{{ entity.ordreaff }}</td>
+		            </tr>
+		            <tr>
+		                <th>Tooltip</th>
+		                <td>{{ entity.tooltip }}</td>
+		            </tr>
+		            <tr>
+		                <th>Menu parent</th>
+		                <td>{{ entity.idmensup }}</td>
+		            </tr>
+
+
+		        </tbody>
+		    </table>
+		</div>
+	</div>
+
+	<div class="finlisteetform">
+
+		<table>
+			<tr>
+				<td class="tdtblactionsbdp">
+			        <a href="{{ path('menus') }}">
+			            <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
+			        </a>
+				</td>
+				<td class="tdtblactionsbdp">
+			        <a href="{{ path('menus_edit', { 'id': entity.id }) }}">
+			            <img alt="Modification" src="/web/css/images/edit.png">
+			        </a>
+				</td>
+
+				
+			</tr>
+		</table>
+	</div>	
+	
+	
+
+{% endblock %}
+
+{% block javascripts %}
+		
+		{{ parent() }}
+        
+	        <script type="text/javascript">
+	        
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+			</script>
+{% endblock %}
+
+

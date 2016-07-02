@@ -1,0 +1,55 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+	<div class="titrelisteetform">
+
+    <h1>Genre</h1>
+	
+	</div>
+    <div class="listeetform">
+
+		<div class="showform">
+		<p>
+		<h1>Confirmez vous la désactivation ?</h1>
+		</p>
+			{{ form(confirm_form) }}
+			
+		</div>
+	</div>
+
+	<div class="finlisteetform">
+
+		<table>
+			<tr>
+				<td class="tdtblactionsbdp">
+			        <a href="{{ path('genres') }}">
+			            <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
+			        </a>
+				</td>
+				<td class="tdtblactionsbdp">
+			        <a href="{{ path('genres_edit', { 'id': entity.id }) }}">
+			            <img alt="Modification" src="/web/css/images/edit.png">
+			        </a>
+				</td>
+	
+			</tr>
+		</table>
+	</div>	
+	
+{% endblock %}
+
+{% block javascripts %}
+		
+		{{ parent() }}
+        
+	        <script type="text/javascript">
+	        
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+			</script>
+{% endblock %}
+
+
+

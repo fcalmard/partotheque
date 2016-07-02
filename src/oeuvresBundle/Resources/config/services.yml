@@ -1,0 +1,15 @@
+services:
+#    oeuvres.example:
+#        class: oeuvresBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+    oeuvresBundle.form.type.lnkurl:
+        class: oeuvresBundle\lnkurlType
+    email_Service:
+        class:  oeuvresBundle\Services\emailService
+        arguments: ["@service_container","@@destinataire"]
+    mailerService:
+        class:  oeuvresBundle\Services\mailerService
+        arguments: ["%my_mailer.transport%"]
+    infoService:
+        class:  oeuvresBundle\Services\messageServiceClass
+        arguments: [@mailer, @templating]       

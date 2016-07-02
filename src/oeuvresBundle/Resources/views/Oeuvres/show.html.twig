@@ -1,0 +1,285 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <div class="titrelisteetform">
+
+    <h1>{{ entity.titreOeuvre }} 
+    	                {% if entity.traductiontitreOeuvre!="" %}
+    						( {{ entity.traductiontitreOeuvre }} )
+		                {% endif %}
+		                 </h1>
+	
+	</div>
+    <div class="listeetform">
+
+		<div class="showform">
+	
+		    <table class="record_properties">
+		        <tbody>
+<!-- 
+		            <tr>
+		                <th class="libelleFomShow" >Titre</th>
+		                <td>{{ entity.titreOeuvre }}</td>
+		            </tr>
+		             -->
+		            <tr class="ligneshow" >
+		                <th>Compositeur</th>
+		                 {% if Compositeur is defined %}
+		                 <td>{{ Compositeur }}
+		                 {% endif %}
+		                 </td>		                
+		            </tr>				            
+		            <tr class="ligneshow" >
+		                <th>Anonyme</th>
+		                <td>{{ entity.anonyme==1 ? "O" : "N"}}</td>
+		            </tr>	            
+	                
+		            <tr class="ligneshow" >
+		                <th>Genre</th>
+		                 {% if Genre is defined %}
+		                 <td>{{ Genre }}
+		                 {% endif %}
+		            </tr>
+		            	                
+		            <tr class="ligneshow" >
+		                <th>Temps liturgique</th>
+		                 {% if TempsLiturgique is defined %}
+		                 <td>{{ TempsLiturgique }}
+		                 {% endif %}
+		                 </td>		                
+		            </tr>
+		            
+		            <tr class="ligneshow" >
+		                <th>Fonction du rite liturgique</th>
+		                 {% if Fonction is defined %}
+		                 <td>{{ Fonction }}
+		                 {% endif %}
+		            </tr>
+		            
+		            
+		            <tr class="ligneshow" >
+		                <th>Voix</th>
+		                 {% if Voix is defined %}
+		                 <td>{{ Voix }}</td>
+		                 {% endif %}		                 
+		            </tr>
+		            
+		            <tr class="ligneshow" >
+		                <th>Langues</th>
+		                 {% if Langues is defined %}
+		                 <td>{{ Langues }}</td>
+		                 {% endif %}		                 
+		            </tr>		            
+		            
+		            
+		            <tr class="ligneshow" >
+		                <th>Accompagnement</th>
+		                 {% if Accompagnement is defined %}
+		                 <td>{{ Accompagnement }}</td>
+		                 {% endif %}		                 
+		            </tr>
+		            		            
+		            <tr class="ligneshow" >
+		                <th>Côte</th>
+		                <td>{{ entity.cote }}</td>
+		            </tr>
+		            
+		            <tr class="ligneshow" >
+		                <th >Numéro de dossier</th>
+		                <td>{{ entity.reference }}</td>
+		            </tr>
+		            	        
+		            <tr class="ligneshow" >
+		                <th >Traducton</th>
+     							    {% if entity.fichiertraduction !="" %}
+										{% set sPathFichierPdf="../../../" ~ sDossierTraductions ~ "/"~ entity.fichiertraduction %}
+
+		    			                <td>{{ entity.fichiertraduction }}
+     							    	&nbsp;&nbsp;
+										<img src="{{ app.request.getBasePath() ~ '/images/1417045437_folderopen1.png' }}"
+										 width="40px" alt="Ouvrir fichier" onClick="window.open('{{ sPathFichierPdf }}');  "/>
+										 
+										 </td>
+									{% else %}
+										<td>&nbsp;</td>
+									{% endif %}
+											                
+		            </tr>
+		            		            
+		            <tr class="ligneshow" >
+		                <th>Siècle</th>
+		                <td>{{ entity.siecle }}</td>
+		            </tr>
+		            
+		            <tr class="ligneshow" >
+		                <th  class="libelleFomShow">Durée</th>
+		                <td>{{ entity.duree }}</td>
+		            </tr>
+		            		            
+
+		            		            
+		            <!-- 
+		            <tr>
+		                <th>Commentaires</th>
+		                <td>{{ entity.commentaire }}</td>
+		            </tr>		            
+		             -->
+		            		             
+		            <tr class="ligneshow" >
+		                <th>Active</th>
+		                <td>{{ entity.actif==1 ? "O" : "N"}}</td>
+		            </tr>
+		            
+		            <tr class="ligneshow" >
+		                <th>Crée le</th>
+		                <td>{{ entity.datecreateAt|date('d/m/Y') }}</td>
+		            </tr>
+
+		        </tbody>
+		    </table>
+		    
+		</div>
+	</div>
+
+	{% set CodeLoginEnCours=app.request.session.get("gUserLoginLogged") %}
+
+	{% set listeenregoeuvres=app.request.session.get(CodeLoginEnCours ~ '_oeuvres_tblenreg') %}
+	
+	{% set enregencours= 1 %}
+	{% set nbenreg=0 %}
+	{% set idenreg=0 %}
+	
+	<div style="background-color:beige; display:none;">
+	            		           	<br/>
+	nb enreg oeuvres=
+		
+		{{ listeenregoeuvres|length }}
+		
+		            		           	<br/>
+		<!--  |keys affiche clé -->
+		
+		{% for enregoeuvreskeys in listeenregoeuvres|keys %}
+		
+			{% set key= enregoeuvreskeys %}
+		
+
+				{% if key=='enregencours' %}
+					{% set enregencours= listeenregoeuvres[key] %}
+					
+				{% endif %}
+				{% if key=='tblenreg' %}
+				<h1>		
+						
+					{% set cptr=0 %}
+					{% for idoe in listeenregoeuvres[enregoeuvreskeys] %}	
+						{% set cptr=cptr+1 %}
+						{% if  entity.id==idoe %}
+							<br/>idoe:{{ idoe }}
+							{% set idenreg = cptr %}
+						{% endif %}
+					{% endfor %}
+					{{ listeenregoeuvres[key]|length }}
+					{% set nbenreg=listeenregoeuvres[key]|length %}
+							
+					nbenreg={{ nbenreg }}
+				</h1>
+				{% endif %}
+				
+				{% if listeenregoeuvres[enregoeuvreskeys] is iterable %}
+				
+					{% for enregoeuvresn0 in listeenregoeuvres[enregoeuvreskeys] %}	
+												
+						{% for enregoeuvreskeys1 in enregoeuvresn0|keys %}
+																								
+							{% if enregoeuvresn0[enregoeuvreskeys1] is iterable %}
+	
+							{% else %} 
+										
+							{% set key1= enregoeuvreskeys1 %}
+							
+							{% endif %} 
+					
+						{% endfor %}
+						
+					{% endfor %}
+					
+				{% else %} 
+				{% endif %} 
+
+
+		{% endfor %} 
+					
+					
+	</div>
+
+	<div class="finlisteetform">
+         
+		<table>
+			<tr>
+				<td class="tdtblactionsbdp">
+				
+			        <a href="{{ path('oeuvres') }}">
+				            <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
+			        </a>
+				</td>
+				<td class="tdtblactionsbdp">
+			        <a href="{{ path('oeuvres_edit', { 'id': entity.id }) }}">
+				        <img alt="Modification" src="/web/css/images/edit.png">
+			        </a>
+				
+				</td>
+				<td class="tdtblactionsbdp">
+				    <a href="{{ path('oeuvres_confirm_action_delete', { 'id': entity.id }) }}">
+			             <img alt="Désactiver" src="/web/css/images/desactiver.png" width="64px" height="64px" >
+				    </a>			
+				</td>
+				
+				<td style="background-color:beige; " >
+				    {% if idenreg>1 %}
+					<a href="{{ path('oeuvres_pagine', { 'idxenreg': idenreg , 'sens': 'prec' , 'action': 'show' }) }}">
+			             <img alt="Précedente" src="/web/images/Actions-arrow-left-icon.png" width="64px" height="64px" >
+				    </a>
+				    {% endif %}
+					{% if idenreg<=1 %}
+			             <img alt="premier enregistrement" src="/web/images/Actions-arrow-left-icon.png" width="64px" height="64px" 
+			              style="filter: grayscale(100%);-webkit-filter: grayscale(100%);-moz-filter: grayscale(100%);" >
+				    {% endif %}				    		    
+				    &nbsp;
+				    {{ idenreg }}&nbsp;&nbsp;/&nbsp;&nbsp;{{ nbenreg }}
+				    &nbsp;
+					
+					{% if idenreg>=nbenreg %}
+			             <img alt="dernier enregistrement" src="/web/images/Actions-arrow-right-icon.png" width="64px" height="64px"
+			              style="filter: grayscale(100%);-webkit-filter: grayscale(100%);-moz-filter: grayscale(100%);" >
+				    {% endif %}
+					{% if idenreg<nbenreg %}
+					
+					<a href="{{ path('oeuvres_pagine', { 'idxenreg': idenreg , 'sens': 'suiv', 'action': 'show' }) }}">
+			             <img alt="Suivante" src="/web/images/Actions-arrow-right-icon.png" width="64px" height="64px" >
+				    </a>				    
+				    
+				    {% endif %}
+				
+				</td>
+				
+				
+			</tr>
+		</table>
+
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+
+	{{ parent() }}
+
+       <script type="text/javascript">
+
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+       </script>
+{% endblock %}
+
+

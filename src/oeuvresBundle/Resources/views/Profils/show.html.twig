@@ -1,0 +1,80 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+
+	<div class="titrelisteetform">
+
+    <h1>Profil</h1>
+
+	</div>
+
+    <div class="listeetform">
+
+		<div class="showform">
+				
+		    <table class="record_properties">
+		        <tbody>
+
+		            <tr>
+		                <th>Code&nbsp;&nbsp;&nbsp;</th>
+		                <td>{{ entity.CodeProfil }}</td>
+		            </tr>
+		            <tr>
+		                <th>Libelle </th>
+		                <td>{{ entity.libelleProfil }}</td>
+		            </tr>
+		            <tr>
+		                <th>Saisie le &nbsp;</th>
+		                <td>{{ entity.datecreateAt|date('d/m/Y') }}</td>
+		            </tr>
+		            <tr>
+		                <th>Actif </th>
+		                <td>{{ entity.actif==1 ? "O" : "N"}}</td>
+		                
+		            </tr>
+		        </tbody>
+		    </table>
+		</div>
+	</div>
+
+	<div class="finlisteetform">
+
+		<table>
+			<tr>
+				<td class="tdtblactionsbdp">
+			        <a href="{{ path('profils') }}">
+			            <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
+			        </a>
+				</td>
+				<td class="tdtblactionsbdp">
+			        <a href="{{ path('profils_edit', { 'id': entity.id }) }}">
+			            <img alt="Modification" src="/web/css/images/edit.png">
+			        </a>
+				</td>
+				<td class="tdtblactionsbdp">
+				    <a href="{{ path('profils_confirm_delete', { 'id': entity.id }) }}">
+			             <img alt="Désactiver" src="/web/css/images/desactiver.png" width="64px" height="64px" >
+				    </a>					    
+			    </td>
+				
+			</tr>
+		</table>
+	</div>	
+	
+	
+
+{% endblock %}
+
+
+{% block javascripts %}
+
+	{{ parent() }}
+
+       <script type="text/javascript">
+
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+       </script>    
+{% endblock %}    

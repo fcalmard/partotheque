@@ -1,0 +1,63 @@
+oeuvres_utilisateurs:
+    resource: "@oeuvresBundle/Resources/config/routing/utilisateurs.php"
+    prefix:   /utilisateurs
+
+oeuvres_menus:
+    resource: "@oeuvresBundle/Resources/config/routing/menus.php"
+    prefix:   /menus
+oeuvres_fonctions:
+    resource: "@oeuvresBundle/Resources/config/routing/fonctions.php"
+    prefix:   /fonctions
+
+oeuvres_compositeurs:
+    resource: "@oeuvresBundle/Resources/config/routing/compositeurs.php"
+    prefix:   /compositeurs
+
+oeuvres_tempsliturgiques:
+    resource: "@oeuvresBundle/Resources/config/routing/tempsliturgiques.php"
+    prefix:   /tempsliturgiques
+
+oeuvres_voix:
+    resource: "@oeuvresBundle/Resources/config/routing/voix.php"
+    prefix:   /voix
+
+oeuvres_avancements:
+    resource: "@oeuvresBundle/Resources/config/routing/avancements.php"
+    prefix:   /avancements
+
+oeuvres_accompagnements:
+    resource: "@oeuvresBundle/Resources/config/routing/accompagnements.php"
+    prefix:   /accompagnements
+
+oeuvres_partitions:
+    resource: "@oeuvresBundle/Resources/config/routing/partitions.php"
+    prefix:   /partitions
+
+oeuvres_profils:
+    resource: "@oeuvresBundle/Resources/config/routing/profils.php"
+    prefix:   /profils
+
+oeuvres_logins:
+    resource: "@oeuvresBundle/Resources/config/routing/logins.php"
+    prefix:   /logins
+
+oeuvres_typesmusiques:
+    resource: "@oeuvresBundle/Resources/config/routing/typesmusiques.php"
+    prefix:   /typesmusiques
+
+oeuvres_oeuvres:
+    resource: "@oeuvresBundle/Resources/config/routing/oeuvres.php"
+    prefix:   /oeuvres
+
+oeuvres_genres:
+    resource: "@oeuvresBundle/Resources/config/routing/genres.php"
+    prefix:   /genres
+oeuvres_langues:
+    resource: "@oeuvresBundle/Resources/config/routing/langues.php"
+    prefix:   /langues
+homepage:
+    path:     /
+    defaults: { _controller: oeuvresBundle:Default:index }
+oeuvres_liste:
+    path:     /oeuvres/liste
+    defaults: { _controller: oeuvresBundle:Oeuvres:index }

@@ -1,0 +1,61 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+	<div class="titrelisteetform">
+    	<h1>Temps Liturgiques</h1>  	
+	</div>
+    <div class="listeetform avecscroll">
+	    <table class="records_list table table-striped">
+	        <thead>
+	            <tr>
+	                <th>Libelle</th>
+	                <th>Saisi le</th>
+	                <th>Actions</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	        {% for entity in entities %}
+	            <tr>
+	                <td><a href="{{ path('tempsliturgiques_show', { 'id': entity.id }) }}">{{ entity.libelle }}</a></td>
+	                <td>{% if entity.datecreateAt %}{{ entity.datecreateAt|date('d/m/Y') }}{% endif %}</td>
+	                <td>
+	                <ul>
+	                    <li>
+	                        <a href="{{ path('tempsliturgiques_edit', { 'id': entity.id }) }}">
+	                        	<img alt="Modification" src="/web/css/images/edit.png">
+	                        </a>
+	                    </li>
+	                </ul>
+	                </td>
+	            </tr>
+	        {% endfor %}
+	        </tbody>
+	    </table>
+	 </div>
+
+	<div class="finlisteetform">
+
+	        <ul>
+		        <li>
+		            <a href="{{ path('tempsliturgiques_new') }}">
+				            <img alt="ajout" src="/web/css/images/add.png">
+		            </a>
+		        </li>
+		    </ul>
+    </div>
+    {% endblock %}
+    
+{% block javascripts %}
+
+	{{ parent() }}
+
+       <script type="text/javascript">
+
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+       </script>
+{% endblock %}
+    
+        

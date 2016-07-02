@@ -1,0 +1,73 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+
+	<div class="titrelisteetform">
+
+    	<h1>Liste des Compositeurs</h1>
+	</div>
+	
+    <div class="listeetform avecscroll">
+	    	<table class="records_list table table-striped">
+	    	
+	        <thead>
+	            <tr>
+	                <th>Nom</th>
+	                <th>Prenom</th>
+	                <th>Nationalite</th>
+	                <th>Né le </th>
+	                <th>Décédé le</th>
+	                <th>Saisie le</th>
+	                <th>Actions</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	        {% for entity in entities %}
+	            <tr>
+	                <td><a href="{{ path('compositeurs_show', { 'id': entity.id }) }}">{{ entity.nom }}</a></td>
+	                <td>{{ entity.prenom }}</td>
+	                <td>{{ entity.nationalite }}</td>
+	                <td>{{ entity.datenaiss }}</td>
+	                <td>{{ entity.datedeces }}</td>
+	                <td>{% if entity.datecreateAt %}{{ entity.datecreateAt|date('d/m/Y') }}{% endif %}</td>
+	                <td>
+	                <ul>
+	                    <li>
+	                        <a href="{{ path('compositeurs_edit', { 'id': entity.id }) }}">
+	                        	<img alt="Modification" src="/web/css/images/edit.png">
+	                        </a>
+	                    </li>
+	                </ul>
+	                </td>
+	            </tr>
+	        {% endfor %}
+	        </tbody>
+	    </table>
+	</div>
+	<div class="finlisteetform">
+
+	        <ul>
+		        <li>
+		            <a href="{{ path('compositeurs_new') }}">
+			            <img alt="ajout" src="/web/css/images/add.png">
+		            </a>
+		        </li>
+		    </ul>
+    </div>
+    
+    {% endblock %}
+    
+    {% block javascripts %}
+
+	{{ parent() }}
+
+		<script type="text/javascript">
+
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+       </script>    
+	{% endblock %}
+    
+    

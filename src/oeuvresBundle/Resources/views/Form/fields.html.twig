@@ -1,0 +1,14 @@
+{# src/oeuvresBundle/Resources/views/Form/fields.html.twig #}
+{% block lnkurl_widget %}
+    {% spaceless %}
+	    {% set type = type|default('url') %}
+		<div class="divlien"><a href="mdpperdu">mot de passe perdu ? </a>
+		</div>
+	    {% set type = type|default('lnkurl') %}
+    {% endspaceless %}
+{% endblock %}
+{% block url_widget %}
+{% spaceless %}
+    {{ block('form_widget_simple') }}
+{% endspaceless %}
+{% endblock url_widget %}

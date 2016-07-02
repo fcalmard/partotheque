@@ -1,0 +1,14 @@
+        {% block javascripts %}
+        <script type="text/javascript">
+
+        var idSocietesOffre=0;
+
+		{% if tps_litur_id %}
+		<script type="text/javascript">
+			var obj = document.getElementById("oeuvresbundle_oeuvres_tps_litur_id")
+   			obj.value={{ tps_litur_id }};
+   		</script>   		
+		{% endif %}
+		
+		</script>
+        {% endblock %}

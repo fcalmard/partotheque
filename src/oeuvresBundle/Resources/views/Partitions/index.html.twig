@@ -1,0 +1,53 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+		<div class="titrelisteetform">
+	
+		    <h1>Partitions</h1>
+		
+		</div>
+		
+	    <div class="listeetform">
+			    <table class="records_list table table-striped">
+		        <thead>
+		            <tr>
+		                <th>Libelle</th>
+		                <th>Duree</th>
+		                <th>Activée</th>
+		                <th>Saisie le</th>
+		                <th>Actions</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		        {% for entity in entities %}
+		            <tr>
+		                <td><a href="{{ path('partitions_show', { 'oeuvre_id' : oeuvre_id , 'id': entity.id }) }}">{{ entity.libelle }}</a></td>
+		                <td>{{ entity.active==1 ? "O" : "N"}}</td>
+		                <td>{{ entity.duree }}</td>
+		                <td>{% if entity.datecreateAt %}{{ entity.datecreateAt|date('d/m/Y') }}{% endif %}</td>
+		                <td>
+		                <ul>
+		                    <li>
+		                        <a href="{{ path('partitions_show', { 'oeuvre_id' : oeuvre_id ,'id': entity.id }) }}">show</a>
+		                    </li> 
+		                    {% if oeuvreid is defined %}
+			                    <li>
+			                        <a href="{{ path('partitions_edit', { 'id': entity.id }) }}">edit</a>
+			                    </li>
+		                    {% endif %}
+		                </ul>
+		                </td>
+		            </tr>
+		        {% endfor %}
+		        </tbody>
+			    </table>
+	    </div>
+
+        <ul>
+        <li>
+            <a href="{{ path('partitions_new',{'oeuvre_id': 0 }) }}">
+		       <img alt="ajout" src="/web/css/images/add.png">
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

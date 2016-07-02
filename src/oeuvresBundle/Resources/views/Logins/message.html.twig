@@ -1,0 +1,45 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    
+    <div class="titrelisteetform">
+
+    
+    </div>
+        <div class="listeetform">
+
+		<div class="showform">
+		    <h1>{{ message }}</h1>
+		
+		    <br/>
+	<a href="{{ path('homepage') }}">
+	    Page d'accueil
+	</a>
+    <br/>
+	
+	<a href="{{ path('logins_new') }}">
+	    Connexion
+	</a>	
+	              
+	              
+		</div>
+		</div>
+		
+              
+{% endblock %}
+    
+
+{% block javascripts %}
+
+	{{ parent() }}
+
+       <script type="text/javascript">
+
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+       </script>    
+{% endblock %}  
+
+    

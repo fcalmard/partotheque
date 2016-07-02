@@ -1,0 +1,61 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <div class="titrelisteetform">
+
+    	<h1>Partition</h1>
+	</div>
+
+    <div class="listeetform">
+
+		<div class="showform">
+		
+		    <table class="record_properties">
+		        <tbody>
+		            <tr>
+		                <th>libelle</th>
+		                <td>{{ entity.libelle }}</td>
+		            </tr>
+		            <tr>
+		                <th>Active</th>
+		                <td>{{ entity.active==1 ? "O" : "N"}}</td>
+		            </tr>
+		            <tr>
+		                <th>Duree</th>
+		                <td>{{ entity.duree }}</td>
+		            </tr>
+		            <tr>
+		                <th>Oeuvre_id</th>
+		                <td>{{ entity.oeuvreid }}</td>
+		            </tr>
+
+
+		            <tr>
+		                <th>Saisie le</th>
+		                <td>{{ entity.datecreateAt|date('d/m/Y') }}</td>
+		            </tr>
+		        </tbody>
+		    </table>
+		</div>
+	</div>
+	<div class="finlisteetform">
+
+		<table>
+			<tr>
+				<td class="tdtblactionsbdp">
+				<!--  oeuvre_id  -->
+			        <a href="{{ path('oeuvres_edit',{ 'oeuvreid' : entity.Oeuvres_id }) }}">
+				        <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
+			        </a>
+			    </td>	
+				<td class="tdtblactionsbdp">
+			        <a href="{{ path('partitions_edit',{ id : entity.id } ) }}">
+				        <img alt="Modification" src="/web/css/images/edit.png">
+			        </a>			        
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+
+	    <div class="titrelisteetform">
+    		<h1>Saisie Partition 
+				{% if oeuvre is defined %}
+		    		( {{ oeuvre }} ) 
+				{% endif %}
+		    </h1>		    		
+    	</h1>
+    
+		
+    <div class="listeetform">
+		<div class="showform">
+		<br/>
+
+			{{ form_start(edit_form) }}
+
+			{{ form_widget(edit_form) }}
+			
+			{{ form_label(edit_form.historique, 'Commentaires') }}
+			{{ form_widget(edit_form.historique) }}
+			{{ form_errors(edit_form.historique) }}									
+
+			{{ form_end(edit_form) }}
+
+		</div>
+	</div>
+
+	<div class="finlisteetform">
+
+		<table>
+			<tr>
+		        {% if oeuvre_id is defined %}
+
+					<td class="tdtblactionsbdp">
+					
+				        <a href="{{ path('oeuvres_edit',{'oeuvreid' : oeuvre_id ,'id':  oeuvre_id  } ) }}">
+						    
+						   <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
+						   
+				        </a>       				
+					</td>
+					{% if entity.id!='' %}
+						<td class="tdtblactionsbdp">
+						    <a href="{{ path('partitions_confirm_action_delete', { 'oeuvre_id' : oeuvre_id ,'id': entity.id }) }}">
+						     <img alt="Désactiver" src="/web/css/images/desactiver.png" width="64px" height="64px" >
+						    </a>			
+						</td>						
+		        	{% endif %}
+		        {% endif %}
+
+			</tr>
+		</table>
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+	{{ parent() }}
+
+       <script type="text/javascript">
+       var obj = document.getElementById("oeuvresbundle_oeuvres_actif")
+       if(obj)
+	       {
+			obj.checked = true;;
+	       }
+		$("#menu1").hide();
+		$("#menu2").hide();
+		$("#menu3").hide();
+
+	   {% if oeuvre_id is defined %}
+	       var obj = document.getElementById("oeuvresbundle_partitions_oeuvre_id")
+	       if(obj)
+		       {
+				obj.value={{ oeuvre_id }}
+		       }
+
+	       var obj = document.getElementById("oeuvresbundle_partitions_Oeuvres")
+	       if(obj)
+		       {
+				obj.value={{ oeuvre_id }}
+		       }
+	       
+	       
+	       
+	   {% endif %}
+
+
+	   
+
+						
+       </script>
+{% endblock %}
+
+

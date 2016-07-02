@@ -1,0 +1,65 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+	<div class="titrelisteetform">
+
+    <h1>Connexion</h1>
+    
+    </div>
+    
+    <div class="formlogin">
+
+		<div class="showform">    
+			{{ form_start(form) }}
+			
+			{{ form_label(form.login, 'Login') }}
+			{{ form_widget(form.login) }}
+			{{ form_errors(form.login) }}
+			<br/>
+			{{ form_label(form.pwd, 'Mot de passe') }}
+			{{ form_widget(form.pwd) }}
+			{{ form_errors(form.pwd) }}
+    	    
+    	    {# affiche lien sans libelle #}
+
+    	    {{ form_widget(form.oublimdp) }}
+
+    		{{ form_end(form) }}
+	    
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+	
+		
+				{{ parent() }}
+		
+	 <script type="text/javascript">
+			{% if typesmus_id is defined %}
+			   var obj = document.getElementById("oeuvresbundle_genres_typesmus_id")
+			   
+			    if(obj)
+				    {
+					obj.value="{{typesmus_id}}";
+				    }
+			   
+			{% endif %}
+
+			
+			
+			//$("#navigationdiv").hide();
+
+			$("div.titrelisteetform").show();
+			$("div.listeetform").show();
+			$("div.finlisteetform").show();
+			
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+			
+	</script>
+{% endblock %}
+		
+		

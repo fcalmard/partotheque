@@ -1,0 +1,516 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+
+    <div class="titrelisteetform">
+
+		{% if mode is defined %}
+			{% if mode=="create" %}
+			    <h1>Création œuvre</h1> 
+			{% endif %}
+			{% if mode=="edit" %}
+			    <h1>Modification œuvre</h1> 
+			{% endif %}
+		{% endif %}
+
+	</div>
+
+	    
+    <div class="listeetform">
+		<div class="showform">
+
+			
+			{{ form_start(edit_form) }}
+			
+			{{ form_label(edit_form.titreOeuvre, 'Titre') }}
+			{{ form_widget(edit_form.titreOeuvre) }}
+			{{ form_errors(edit_form.titreOeuvre) }}
+								
+			<br/>
+				{{ form_label(edit_form.anonyme, 'Anonyme') }}
+				{{ form_widget(edit_form.anonyme) }}
+				{{ form_errors(edit_form.anonyme) }}
+				
+			<br/>
+				{{ form_label(edit_form.compositeur_id, 'Compositeur') }}
+				{{ form_widget(edit_form.compositeur_id) }}
+				{{ form_errors(edit_form.compositeur_id) }}	
+													
+			<br/>
+				{{ form_label(edit_form.genre_id, 'Genre') }}
+				{{ form_widget(edit_form.genre_id) }}
+				{{ form_errors(edit_form.genre_id) }}
+
+			<br/>
+
+			{{ form_label(edit_form.reference, 'Numéro de dossier') }}
+			{{ form_widget(edit_form.reference) }}
+			{{ form_errors(edit_form.reference) }}
+									
+			<br/>
+			<!--  Langues  -->
+															
+															
+			{{ form_label(edit_form.Langues, 'Langues') }}
+			{{ form_widget(edit_form.Langues) }}
+			{{ form_errors(edit_form.Langues) }}
+																								
+			{{ form_label(edit_form.tps_litur_id, 'Temps liturgique') }}
+			{{ form_widget(edit_form.tps_litur_id) }}
+			{{ form_errors(edit_form.tps_litur_id) }}
+<br/>
+			{{ form_label(edit_form.fonction_id, 'Fonction du rite liturgique') }}
+			{{ form_widget(edit_form.fonction_id) }}
+			{{ form_errors(edit_form.fonction_id) }}
+
+<br/>
+
+			{{ form_label(edit_form.voix_id, 'Voix') }}
+			{{ form_widget(edit_form.voix_id) }}
+			{{ form_errors(edit_form.voix_id) }}
+			
+<br/>						
+			
+			<div class="main_tabs_container">
+		
+				<ul class="tabs">
+				    <li class="left active" id="part1" idoeuvre=""><a class="lnktabs" href="#" tab="part1" id="{{ entity.id }}">Partitions</a></li>			
+				    <li class="left" id="part3" idoeuvre="" ><a class="lnktabs" href="#" tab="part3" id="{{ entity.id }}">Compléments</a></li>
+				</ul>
+				
+							<div class="tabs_container">
+							
+								<div id= "tab1" class="formtab" >
+
+									<br/>
+										<!-- LISTE DES PARTITIONS -->	
+																	
+										<!-- Partitions  -->
+
+										{% set nbpart=0 %}
+
+		        						{% if Partitions is defined %}
+
+											<table class="records_list table table-striped">
+
+										        <thead>
+										            <tr class="degrade">
+										                <th>Libelle</th>
+										                <th>Duree</th>
+
+										                <th colspan="2" >Fichier</th>
+
+										                <th>Saisie le</th>
+										                <th>Sélection</th>
+										                
+										            </tr>
+										        </thead>        
+													
+												{% for Partition in Partitions %}
+														{% set nbpart=nbpart+1 %}
+		
+														<tr>
+
+															<td>
+														        
+										                        <a href="{{ path('partitions_edit', {'oeuvre_id':entity.id ,'id': Partition.id } ) }}">
+														   		{{ Partition.libelle }}
+										                        </a>
+														        
+														        <br/>
+		
+															</td>
+															<td>
+															{{ Partition.duree }}
+															</td>
+															
+															{%if Partition.pathfichier!=""%}
+															
+																{% set sPathFichierPdf="../../../" ~ sDossierPartitions ~ "/"~ Partition.pathfichier %}
+																<td>
+																	
+																	{{ Partition.pathfichier }}
+																	
+																</td>
+
+																<td>
+																	<img src="{{ app.request.getBasePath() ~ '/images/1417045437_folderopen1.png' }}"
+																	 width="40px" alt="Ouvrir fichier" onClick="window.open('{{ sPathFichierPdf }}'); "/>
+																</td>																	
+															
+															{% else %}
+																<td>&nbsp;</td>
+																<td>&nbsp;</td>
+															{% endif %}
+
+															<td>
+																{{ Partition.datecreateAt|date('d/m/Y') }}															
+															</td>
+															
+															<td>
+															<input type="checkbox" />
+															</td>
+														</tr>
+
+												{% else %}
+
+													<tr>
+													<td colspan="5" >
+														<h1>Aucune Partition n'a été trouvée</h1>
+													</td>
+													</tr>
+					
+																		    
+												{% endfor %}
+
+											    {% if nbpart != 0 %}
+
+													<tr>
+															<td colspan="4" >
+																							
+															</td>
+															<td>
+																Tout Sélectionner					
+															</td>
+															<td>
+															<input type="checkbox" />
+															</td>													
+													</tr>
+
+												{% endif %}
+
+													
+										</table>
+						
+												 {% if nbpart != 0 %}
+													<br/>
+													Nombre de partition(s) : {{ nbpart }}							
+												{% endif %}
+
+												{% if entity.id !="" %}
+													<br/>
+													<a href="{{ path('partitions_create_part', { 'oeuvre_id': entity.id }) }}">
+													<img alt="Ajouter une partition" src="/web/css/images/add.png">
+													</a>													
+												{% endif %}
+												
+									{% endif %}
+								
+								</div>
+								
+								<!-- inutilisé
+								<div id= "tab2" class="formtab" >
+								</div>
+								-->
+										
+								<div id= "tab3" class="formtab" >
+												
+									<br/>																
+									{{ form_label(edit_form.traductiontitreOeuvre, 'Traduction Titre') }}
+									{{ form_widget(edit_form.traductiontitreOeuvre) }}
+									{{ form_errors(edit_form.traductiontitreOeuvre) }}
+									
+									<br/>																
+									{{ form_label(edit_form.traductionfile, 'Fichier de traduction') }}
+									{{ form_widget(edit_form.traductionfile) }}
+									{{ form_errors(edit_form.traductionfile) }}	
+
+									<br/>																
+									{{ form_label(edit_form.fichiertraduction, ' ') }}
+									{{ form_widget(edit_form.fichiertraduction) }}
+									{{ form_errors(edit_form.fichiertraduction) }}	
+								
+
+     							    {% if entity.fichiertraduction !="" %}
+										{% set sPathFichierPdf="../../../" ~ sDossierTraductions ~ "/"~ entity.fichiertraduction %}
+     							    	
+										<img src="{{ app.request.getBasePath() ~ '/images/1417045437_folderopen1.png' }}"
+										 width="40px" alt="Ouvrir fichier" onClick="window.open('{{ sPathFichierPdf }}');  "/>
+									{% endif %}
+									
+									<br/>																
+									{{ form_label(edit_form.accompagnement_id, 'Accompagnement') }}
+									{{ form_widget(edit_form.accompagnement_id) }}
+									{{ form_errors(edit_form.accompagnement_id) }}			
+																																	
+									<br/>
+									{{ form_label(edit_form.duree, 'Durée') }}
+									{{ form_widget(edit_form.duree) }}
+									{{ form_errors(edit_form.duree) }}
+
+									<br/>
+									{{ form_label(edit_form.cote, 'Cote') }}
+									{{ form_widget(edit_form.cote) }}
+									{{ form_errors(edit_form.cote) }}
+									
+									<br/>
+									{{ form_label(edit_form.siecle, 'Siècle', {'trim': true} ) }}
+									{{ form_widget(edit_form.siecle) }}
+									{{ form_errors(edit_form.siecle) }}
+										
+									<br/>
+									{{ form_label(edit_form.commentaire, 'Commentaires') }}
+									{{ form_widget(edit_form.commentaire) }}
+									{{ form_errors(edit_form.commentaire) }}									
+																		
+									<br/>																
+									{{ form_label(edit_form.avancement_id, 'Avancement') }}
+									{{ form_widget(edit_form.avancement_id) }}
+									{{ form_errors(edit_form.avancement_id) }}		
+												
+									<br/>																
+									{{ form_label(edit_form.actif, 'Activée') }}
+									{{ form_widget(edit_form.actif) }}
+									{{ form_errors(edit_form.actif) }}										
+																					
+								</div>												
+							</div>
+				
+				
+			</div>
+
+			<br/>
+			<br/>
+			<br/>
+
+			{{ form_widget(edit_form.submit) }}
+
+			{{ form_end(edit_form) }}
+
+
+		</div>
+
+
+	</div>
+
+	{% set CodeLoginEnCours=app.request.session.get("gUserLoginLogged") %}
+	
+	{% set listeenregoeuvres=app.request.session.get(CodeLoginEnCours ~ '_oeuvres_tblenreg') %}
+	
+	{% set modifencours=app.request.session.get(CodeLoginEnCours ~ '_oeuvres_modifencours') %}
+	    
+	{% set enregencours= 1 %}
+	{% set nbenreg=0 %}
+	{% set idenreg=0 %}	
+	{% set idoe=0 %}	
+		
+		<div style="background-color:beige; display:none;">
+		<br/>httpHost >{{ app.request.httpHost }}
+		<br/>nb enreg oeuvres={{ listeenregoeuvres|length }}
+	    <br/>{{ app.request.requestUri }}
+	    <br/>{{ app.request.baseUrl }}
+	    					nbenreg={{ nbenreg }}
+	    
+	    
+	    							<br/>idoe:{{ idoe }}
+	    
+	    
+	    </div>
+	    
+		<div style="background-color:beige; display:none;">
+	            		           	
+	modif en cours=
+		
+		{{ modifencours==1 ? "Oui" : "Non"}}
+		
+		            		           	<br/>
+		<!--  |keys affiche clé -->
+		
+		{% for enregoeuvreskeys in listeenregoeuvres|keys %}
+		
+			{% set key= enregoeuvreskeys %}
+
+				{% if key=='enregencours' %}
+					{% set enregencours= listeenregoeuvres[key] %}
+					
+				{% endif %}
+				{% if key=='tblenreg' %}
+				<h1>		
+						
+					{% set cptr=0 %}
+					{% for idoe in listeenregoeuvres[enregoeuvreskeys] %}	
+						{% set cptr=cptr+1 %}
+						{% if  entity.id==idoe %}
+							{% set idenreg = cptr %}
+						{% endif %}
+					{% endfor %}
+					{% set nbenreg=listeenregoeuvres[key]|length %}
+							
+				</h1>
+				{% endif %}
+				
+				{% if listeenregoeuvres[enregoeuvreskeys] is iterable %}
+				
+					{% for enregoeuvresn0 in listeenregoeuvres[enregoeuvreskeys] %}	
+												
+						{% for enregoeuvreskeys1 in enregoeuvresn0|keys %}
+																								
+							{% if enregoeuvresn0[enregoeuvreskeys1] is iterable %}
+	
+							{% else %} 
+										
+							{% set key1= enregoeuvreskeys1 %}
+							
+							{% endif %} 
+					
+						{% endfor %}
+						
+					{% endfor %}
+					
+				{% else %} 
+				{% endif %} 
+
+
+		{% endfor %} 
+					
+					
+	</div>
+	
+	<div class="finlisteetform">
+	
+		<table>
+			<tr>
+			<td class="tdtblactionsbdp">
+			
+		        <a href="{{ path('oeuvres') }}">
+		            <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
+		        </a>
+		        			
+			</td>
+			
+				{% if entity.id !="" %}
+					<td class="tdtblactionsbdp">
+			        	<a href="{{ path('oeuvres_confim_delete', { 'id': entity.id }) }}">
+				             <img alt="Désactiver" src="/web/css/images/desactiver.png" width="64px" height="64px" >
+			        	</a>			
+					</td>
+
+				<td style="background-color:beige; " >
+				    {% if idenreg>1 %}
+					<a href="{{ path('oeuvres_pagine', { 'idxenreg': idenreg , 'sens': 'prec' , 'action': 'edit' }) }}">
+			             <img alt="Précedente" src="/web/images/Actions-arrow-left-icon.png" width="90px" height="90px" >
+				    </a>
+				    {% endif %}
+					{% if idenreg<=1 %}
+			             <img alt="premier enregistrement" src="/web/images/Actions-arrow-left-icon.png" width="64px" height="64px" class="grise" >
+				    {% endif %}				    		    
+				    &nbsp;
+				    {{ idenreg }}&nbsp;&nbsp;/&nbsp;&nbsp;{{ nbenreg }}
+				    &nbsp;
+					
+					{% if idenreg>=nbenreg %}
+			             <img alt="dernier enregistrement" src="/web/images/Actions-arrow-right-icon.png" width="64px" height="64px" class="grise" >
+				    {% endif %}
+					{% if idenreg<nbenreg %}
+					
+					<a href="{{ path('oeuvres_pagine', { 'idxenreg': idenreg , 'sens': 'suiv', 'action': 'edit' }) }}">
+			             <img alt="Suivante" src="/web/images/Actions-arrow-right-icon.png" width="64px" height="64px" >
+				    </a>				    
+				    
+				    {% endif %}
+				
+				</td>
+				
+				{% endif %}
+			
+			
+			</tr>
+		</table>
+			
+	</div>
+{% endblock %}
+
+
+{% block javascripts %}
+		
+		{{ parent() }}
+        
+	        <script type="text/javascript">
+
+				{% if mode is defined %}
+					{% if mode=="create" %}
+	
+						var obj = document.getElementById("oeuvresbundle_oeuvres_actif")
+				       if(obj)
+					       {
+							obj.checked = true;;
+					       }
+	
+						{% endif %}
+				{% endif %}
+	                   
+				{% if tps_litur_id is defined %}
+			        var obj = document.getElementById("oeuvresbundle_oeuvres_tps_litur_id");
+				    if(obj)
+				    {
+				    obj.value="{{tps_litur_id}}";
+				    }
+					{% endif %}
+		
+				{% if compositeur_id is defined %}
+				    var obj = document.getElementById("oeuvresbundle_oeuvres_compositeur_id")
+				    if(obj)
+					    {
+						obj.value="{{compositeur_id}}";
+					    }
+				{% endif %}	
+				
+				{% if fonction_id is defined %}
+				    var obj = document.getElementById("oeuvresbundle_oeuvres_fonction_id");
+				    if(obj)
+				    {
+				    obj.value="{{fonction_id}}";
+				    }
+				{% endif %}	
+
+				{% if voix_id is defined %}
+				    var obj = document.getElementById("oeuvresbundle_oeuvres_voix_id");
+				    if(obj)
+					    {
+						obj.value="{{voix_id}}";
+					    }
+				{% endif %}
+
+				{% if accompagnement_id is defined %}
+			    var obj = document.getElementById("oeuvresbundle_oeuvres_accompagnement_id");
+			    if(obj)
+				    {
+					obj.value="{{accompagnement_id}}";
+				    }
+				{% endif %}
+			
+				{% if genre_id is defined %}
+			    var obj = document.getElementById("oeuvresbundle_oeuvres_genre_id");
+			    if(obj)
+				    {
+					obj.value="{{ genre_id }}";
+				    }
+				{% endif %}
+				
+				{% if avancement_id is defined %}
+			    var obj = document.getElementById("oeuvresbundle_oeuvres_avancement_id");
+			    if(obj)
+				    {
+					obj.value="{{ avancement_id }}";
+				    }
+				{% endif %}
+				
+				
+			    var obj = document.getElementById("oeuvresbundle_oeuvres_compositeur_id");
+			    
+			    var obj = document.getElementById("oeuvresbundle_oeuvres_anonyme");
+			    
+			    $("#myBtn2").click(function(){
+			        $("#modalConfirmAbandonSaisie").modal({backdrop: false});			        
+			    });			    
+
+
+			    
+				//$("#navigationdiv").hide();
+				$("#menu1").hide();
+				$("#menu2").hide();
+				$("#menu3").hide();
+							
+			</script>
+			
+{% endblock %}
