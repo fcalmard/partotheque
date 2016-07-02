@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Acquisti</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Paramètres</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="msgquit">Voulez vous quitter Acquisti</string>
+    <string name="msggestart">Gestion des articles</string>
+    <string name="msggestfam">Gestion des familles</string>
+    <string name="title_activity_articles">Articles</string>
+    <string name="title_activity_familles">Familles</string>
+    <string name="title_activity_initbd">initbd</string>
+    <string name="libelle_activity_initbd">Initialiser base de données</string>
+    <string name="libelle_activity_articles">Gestion des articles</string>
+    <string name="libelle_activity_familles">Gestion des familles</string>
+
+</resources>

@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/menu/activity_familles_drawer.xml",
+        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/menu/activity_familles_drawer.xml"
+    },
+    {
+        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/menu/main.xml",
+        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/menu/main.xml"
+    },
+    {
+        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/menu/menu_articles.xml",
+        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/menu/menu_articles.xml"
+    },
+    {
+        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/menu/activity_main_drawer.xml",
+        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/menu/activity_main_drawer.xml"
+    },
+    {
+        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/menu/familles.xml",
+        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/menu/familles.xml"
+    }
+]

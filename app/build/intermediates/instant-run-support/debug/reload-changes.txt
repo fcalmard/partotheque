@@ -1,0 +1,3 @@
+CHANGED,/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/transforms/instantRun/debug/folders/4000/5/enhanced/acquisti/ouccelo/free/fr/acquisti/acquisti/MySQLiteHelper$override.class
+CHANGED,/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/transforms/instantRun/debug/folders/4000/5/enhanced/acquisti/ouccelo/free/fr/acquisti/acquisti/ParamDataSource$override.class
+CHANGED,/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/transforms/instantRun/debug/folders/4000/5/enhanced/com/android/tools/fd/runtime/AppPatchesLoaderImpl.class
