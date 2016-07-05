@@ -38,4 +38,41 @@ class CompositeursRepository extends EntityRepository
 			}
 		
 	}
+	
+	public function ChargeListeIds($sNom)
+	{
+		
+		$sListeIds="";
+		
+		$s=sprintf("%s",$sNom);
+		
+		$sql="SELECT
+				t.id from oeuvresBundle:Compositeurs t
+				WHERE t.active=1 and t.nom like '%".$s."%'";
+		
+		$sql.=" or t.prenom like '%".$s."%'";
+		//echo "<br/>ChargeListeIds >".$sql."<";
+		
+		$query = $this->getEntityManager()
+		->createQuery(
+				$sql
+		);
+			
+		try {
+			$aIds=$query->getResult();
+			if(is_array($aIds) && count($aIds)>0)
+			{
+				foreach ($aIds as $kid=>$id)
+				{
+					$sListeIds.=($sListeIds!="") ? "," : "";
+										
+					$sListeIds.=$id['id'];
+				}
+			}
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			$sListeIds="";
+		}
+		return $sListeIds;
+		
+	}
 }

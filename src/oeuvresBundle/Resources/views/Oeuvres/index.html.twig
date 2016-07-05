@@ -28,22 +28,34 @@
 	   		<div class="filtreform" id="divfiltresoeuvre">
 						
 				<br/>
-				
 				{{ form_start(filtre_form) }}
 							
 				{{ form_label(filtre_form.titreOeuvre, 'Titre') }}
 				{{ form_widget(filtre_form.titreOeuvre) }}
 				{{ form_errors(filtre_form.titreOeuvre) }}
 		
+				{{ form_label(filtre_form.compositeurOeuvre, 'Compositeur') }}
+				{{ form_widget(filtre_form.compositeurOeuvre) }}
+				{{ form_errors(filtre_form.compositeurOeuvre) }}
+						
 				{{ form_label(filtre_form.compositeur_id, 'Compositeur') }}
 				{{ form_widget(filtre_form.compositeur_id) }}
 				{{ form_errors(filtre_form.compositeur_id) }}					
+
+				<br/>
+		   		{{ form_label(filtre_form.siecle, 'Siècle') }}
+				{{ form_widget(filtre_form.siecle) }}
+				{{ form_errors(filtre_form.siecle) }}					
 		
 				{{ form_label(filtre_form.genre_id, 'Genre') }}
 				{{ form_widget(filtre_form.genre_id) }}
 				{{ form_errors(filtre_form.genre_id) }}
-				<br/>
+
+				{{ form_label(filtre_form.Langues, 'Langue') }}
+				{{ form_widget(filtre_form.Langues) }}
+				{{ form_errors(filtre_form.Langues) }}
 		
+				<br/>
 				{{ form_label(filtre_form.tps_litur_id, 'Temps liturgique') }}
 				{{ form_widget(filtre_form.tps_litur_id) }}
 				{{ form_errors(filtre_form.tps_litur_id) }}										
@@ -51,7 +63,7 @@
 		   		{{ form_label(filtre_form.fonction_id, 'Fonction du rite liturgique') }}
 				{{ form_widget(filtre_form.fonction_id) }}
 				{{ form_errors(filtre_form.fonction_id) }}
-		
+	
 		   		{{ form_label(filtre_form.voix_id, 'Voix') }}
 				{{ form_widget(filtre_form.voix_id) }}
 				{{ form_errors(filtre_form.voix_id) }}					
@@ -347,10 +359,35 @@
 		   		obj.value="{{voix_id}}";
 		    }
 		{% endif %}	
-	
 		
-			
-			
+		{% if nomcompositeur is defined %}
+		
+	    var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_compositeurOeuvre");
+	    if(obj)
+	    {
+	   		obj.value="{{nomcompositeur}}";
+
+	    }
+		{% endif %}	
+		
+		{% if siecle is defined %}		
+	    var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_siecle");
+	    if(obj)
+	    {
+	   		obj.value="{{siecle}}";
+
+	    }
+		{% endif %}	
+	
+		{% if langue is defined %}		
+	    var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_Langues");
+	    if(obj)
+	    {
+	   		obj.value="{{langue}}";
+
+	    }
+		{% endif %}	
+	
 						
        </script>
 {% endblock %}

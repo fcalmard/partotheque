@@ -8,6 +8,8 @@ use Doctrine\DBAL\Driver\PDOSqlite\Driver;
 
 use Doctrine\ORM\EntityRepository;
 
+use oeuvresBundle\Entity\langues_oeuvres;
+
 //use \Doctrine\DBAL\Driver\Mysqli\MysqliConnection;
 
 use Doctrine\ORM\Persisters\BasicEntityPersister;
@@ -47,7 +49,6 @@ class LanguesRepository extends EntityRepository
 	public function ChargeListeIds()
 	{
 	
-	
 		$query = $this->getEntityManager()
 		->createQuery(
 				'SELECT	t.id FROM oeuvresBundle:langues t'
@@ -58,8 +59,29 @@ class LanguesRepository extends EntityRepository
 		} catch (\Doctrine\ORM\NoResultException $e) {
 			return null;
 		}
-	
-	
+		
 	}	
+	/*
+	 * resultat liste des id des oeuvres de la langue
+	 */
+	public function ChargeListeIdOeuvres($id)
+	{
+		$sListeIds="";
+		$criteria=array('id'=>$id);
+		$aLangues=$this->findBy($criteria);
+		foreach ($aLangues as $kl=>$olangue)
+		{
+			$aol=$olangue->getOeuvres();
+	
+			foreach ($aol as $kol=>$ool)
+			{
+				$sid=$ool->getId();
+				$sListeIds.=($sListeIds!="") ? "," : "";
+				$sListeIds.=$sid;
+			}	
+		}
+		return $sListeIds;
+	}
+	
 	
 }

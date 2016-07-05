@@ -143,6 +143,13 @@ class Langues
     }
 
     /**
+     * 
+     */
+    public function getOeuvres()
+    {
+    	return $this->Oeuvres;
+    }
+    /**
      * Add Oeuvres
      *
      * @param oeuvresBundle\Entity\Oeuvres $oeuvre
@@ -161,13 +168,15 @@ class Langues
     }
     
     /**
-     * Remove Langues
+     * Remove Oeuvres
      *
-     * @param oeuvresBundle\Entity\Langues $langue
+     * @param oeuvresBundle\Entity\Oeuvres $oeuvre
      */
-    public function removeLangue(oeuvresBundle\Entity\Langues $langue)
+    public function removeOeuvre(oeuvresBundle\Entity\Oeuvres $oeuvre)
     {
-    	$this->Langues->removeElement($langue);
+    	if ($this->Oeuvres->contains($oeuvre)) {
+    		$this->Oeuvres->removeElement($oeuvre);
+    	}
     }    
     /**
      * Set datecreateAt

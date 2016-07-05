@@ -50,15 +50,19 @@ class OeuvresController extends Controller
     		return new RedirectResponse($this->generateUrl('homepage'));
     	}
     	    	
-    	$em = $this->getDoctrine()->getManager();  	
-
+    	$em = $this->getDoctrine()->getManager();
+    	 
     	//$entities = $em->getRepository('oeuvresBundle:Oeuvres')->findAll();
     	 
-   	
     	$aFiltre=array();
     	 
     	$titreOeuvre="";
     	$compositeur_id="";
+    	$nomcompositeur="";
+    	$siecle="";
+    	
+    	$aLangues="";
+    	
     	$genre_id="";
     	$tps_litur_id="";
     	$fonction_id="";
@@ -74,7 +78,7 @@ class OeuvresController extends Controller
     	 
     	 //
     	$aTriOeuvresSession=$session->get($gUserLoginLogged.'_oeuvres_tri');
-    	 
+    	    	 
     	$entities = $em->getRepository('oeuvresBundle:Oeuvres')->ChargeListe($aFiltre,$aTriOeuvresSession);
     	
     	/*
@@ -140,7 +144,15 @@ class OeuvresController extends Controller
 	    					case "voix_id":
 	    						$voix_id=$avFiltre['voix_id'];
 	    						break;
-	    		
+	    					case 'nomcompositeur';
+	    						$nomcompositeur=$avFiltre['nomcompositeur'];
+	    						break;
+	    					case 'siecle';
+	    						$siecle=$avFiltre['siecle'];
+	    						break;
+	    					case 'langue':			
+	    						$aLangues=$avFiltre['langue'];
+	    						break;
 	    					default:
 	    						break;
 	    				}
@@ -151,7 +163,6 @@ class OeuvresController extends Controller
 	    	}
 
     	}
-    	
     	$filtre_form = $this->filtreCreateForm($entity);
     	   
     	$affiche=$session->get($gUserLoginLogged.'_oeuvres_affiche_filtre',0);
@@ -161,6 +172,9 @@ class OeuvresController extends Controller
         		'filtre_form'   => $filtre_form->createView(),
     			'titreOeuvre'=>$titreOeuvre,
         		'compositeur_id'=>$compositeur_id,
+        		'nomcompositeur'=>$nomcompositeur,
+        		'siecle'=>$siecle,
+        		'langue'=>$aLangues,
         		'affiche_filtre'=>$affiche,
         		'aTriOeuvresSession'=>$aTriOeuvresSession,
         		'genre_id'=>$genre_id,
@@ -193,9 +207,6 @@ class OeuvresController extends Controller
     	 
     	//$aSessionTblEnreg['pagesenreg']=10;//$aSessionTblPageEnreg;
     	$aSessionTblEnreg['pagesenreg']=$aSessionTblPageEnreg;
-    	 
-    	
-    	 
     	 
     	//$aSessionTblEnreg['tblenreg']=array('tblenreg'=>111);//$aEnregId
     	//$aSessionTblEnreg['tblenreg']=array('tblenreg'=>$aEnregId);
@@ -321,9 +332,6 @@ class OeuvresController extends Controller
     	$session->set($gUserLoginLogged.'_oeuvres_affiche_filtre',$affiche);
     	 
     	return new RedirectResponse($this->generateUrl('oeuvres'));
-    	 
-    	
-    	
     	
     }
     
@@ -483,7 +491,7 @@ class OeuvresController extends Controller
     {
 	    //	{ 'tripar': 'titreOeuvre' },'ordretri':'asc') }
 	    
-    	echo "<br/> TRI PAR >".$tripar.'< ordre >'.$ordretri.'<';
+    	//echo "<br/> TRI PAR >".$tripar.'< ordre >'.$ordretri.'<';
     	
     	$gUserLoginLogged="";
     	$session = $this->getRequest()->getSession();
@@ -583,14 +591,14 @@ class OeuvresController extends Controller
     		//}
     		
     			
-    			echo "<br/> FIN TRAITEMENT <br/>";
+    			//echo "<br/> FIN TRAITEMENT <br/>";
     			
     			$session = new Session();
     			 
     		
     			$session->set($gUserLoginLogged.'_oeuvres_tri',$aTriOeuvres);
     		
-    			var_dump($aTriOeuvres);
+    			//var_dump($aTriOeuvres);
     		
     		//die("<br/>TABLEAU SESSION TRI PRESENT");
     	}
@@ -629,6 +637,14 @@ class OeuvresController extends Controller
 
     	$compositeur_id=$post['compositeur_id'];
     	
+    	$nomcompositeur=$post['compositeurOeuvre'];
+    	
+    	$siecle=$post['siecle'];
+    	
+    	$Langues=$post['Langues'];
+    	 
+    	//var_dump($Langues);
+    	//die("646");
     	$genre_id=$post['genre_id'];
     	
     	$tps_litur_id=$post['tps_litur_id'];
@@ -647,11 +663,15 @@ class OeuvresController extends Controller
     	if($tous==1)
     	{
     		$aFiltre=null;
+    		//die("TOUS");
     		
     	}else
     	{
     		$aFiltre[]=array("titreOeuvre"=>$titreOeuvre);
     		$aFiltre[]=array("compositeur_id"=>$compositeur_id);
+    		$aFiltre[]=array("nomcompositeur"=>$nomcompositeur);
+    		$aFiltre[]=array("siecle"=>$siecle);
+    		$aFiltre[]=array("langue"=>$Langues);
     		$aFiltre[]=array("genre_id"=>$genre_id);
     		$aFiltre[]=array("tps_litur_id"=>$tps_litur_id);
     		$aFiltre[]=array("fonction_id"=>$fonction_id);
@@ -698,11 +718,16 @@ class OeuvresController extends Controller
     	 * retour à la liste filtrée
     	 */
     	
+    	//die($nomcompositeur);
+    	
     	return $this->render('oeuvresBundle:Oeuvres:index.html.twig', array(
     			'entities' => $entities,
     			'filtre_form'   => $filtre_form->createView(),
     			'titreOeuvre'=>$titreOeuvre,
     			'compositeur_id'=>$compositeur_id,
+    			'nomcompositeur'=>$nomcompositeur,
+    			'siecle'=>$siecle,
+    			'langue'=>$Langues,
     			'genre_id'=>$genre_id,
     			'tps_litur_id'=>$tps_litur_id,
     			'fonction_id'=>$fonction_id,
@@ -904,7 +929,7 @@ class OeuvresController extends Controller
         
         
         //var_dump($aL);
-        echo "<br/>".$Langues;
+        //echo "<br/>".$Langues;
         
         $sDossierTraductions=$em->getRepository('oeuvresBundle:Oeuvres')->getDossierTraductions();
         

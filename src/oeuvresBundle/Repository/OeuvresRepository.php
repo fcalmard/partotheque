@@ -6,6 +6,9 @@ namespace oeuvresBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use \Doctrine\ORM\NoResultException;
 use Symfony\Component\HttpFoundation\Session\Session;
+use oeuvresBundle\Repository\CompositeursRepository;
+use oeuvresBundle\Repository\LanguesRepository;
+
 
 
 //use Doctrine\ORM\Persisters\BasicEntityPersister;
@@ -24,8 +27,14 @@ class OeuvresRepository extends EntityRepository
 	 */
 	public function ChargeListe(array $aFiltre = null,$aTriOeuvresSession=null)
 	{
+		/*
+		 * 
+		 */
+				
+		$eml=$this->getEntityManager();
 		
 		$gUserLoginLogged="";
+		
 		/*
 		$aTriOeuvresSession=array();
 		
@@ -58,6 +67,7 @@ class OeuvresRepository extends EntityRepository
 				{
 					//echo "<br/>******  kvalf >";
 					//echo $kvalf;
+					
 					switch ($kvalf)
 					{
 						case 'titreOeuvre':
@@ -83,6 +93,72 @@ class OeuvresRepository extends EntityRepository
 								//echo "<br/> $kvalf <br/>".$sWhere."<br/>";								
 							}
 							break;
+							
+						case 'nomcompositeur':
+							if(trim($valf)!="")
+							{
+								if(!is_null($eml))
+								{
+									//echo "<br/>nomcompositeur >$valf<";
+														
+									//die("101");
+									/*
+									 * recherche des id des compositeur ayant le nom recherché
+									 */
+									$sListeIds= $eml->getRepository('oeuvresBundle:Compositeurs')->ChargeListeIds($valf);
+									//echo "<br/>nomcompositeur sListeIds >$sListeIds<";
+										
+									if($sListeIds!="")
+									{
+										$sWhere=($sWhere!="") ? $sWhere." and " : $sWhere;
+										$sWhere.=" idcompositeur in (".$sListeIds.")";
+									}
+								}else
+								{
+									die("115 EM NULL");
+								}
+
+							}
+							break;
+						case 'siecle':
+							if(trim($valf)!="")
+							{
+								$sWhere=($sWhere!="") ? $sWhere." and " : $sWhere;
+								$sWhere.=" o.siecle like '%".$valf."%'";
+								//die($sWhere);
+							}
+							break;
+						case 'langue':
+							/*
+							 * langues_oeuvres
+							 * 
+							SELECT `langues_id,`oeuvres_id`` FROM `langues_oeuvres` WHERE 1
+							 */
+							if(trim($valf)!="")
+							{
+								if(!is_null($em))
+								{
+									$sListeIds= $em->getRepository('oeuvresBundle:Langues')->ChargeListeIdOeuvres($valf);
+									/*
+									 * liste des id des oeuvres chanté en
+									 */
+									if($sListeIds!='')
+									{
+										$sListeIds="(".$sListeIds.")";
+										
+										$sWhere=($sWhere!="") ? $sWhere." and " : $sWhere;
+										
+										$sWhere.=" o.id in ".$sListeIds;
+										//echo "<br/>".$sWhere;
+																				
+									}
+									
+								}
+
+								
+							}
+							break;
+						
 						case 'genre_id':
 							if(trim($valf)!="")
 							{
@@ -143,7 +219,7 @@ class OeuvresRepository extends EntityRepository
 			//echo "<br/> fin <br/>".$sWhere."<br/>"; 
 				
 			
-			
+			//die("212");
 		
 		}
 		
@@ -182,8 +258,9 @@ class OeuvresRepository extends EntityRepository
 					o.actif,
 					o.reference,
 					o.titreOeuvre,
-					 o.traductiontitreOeuvre,
+					o.traductiontitreOeuvre,
 					o.cote,
+					o.siecle,
 					t.id as idtpslliturgique,
 					t.libelle AS tpslliturgique,
 					g.id as idgenre,

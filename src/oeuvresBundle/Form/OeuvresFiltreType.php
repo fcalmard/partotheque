@@ -17,6 +17,7 @@ use oeuvresBundle\Repository\CompositeursRepository;
 use oeuvresBundle\Repository\FonctionsRepository;
 use oeuvresBundle\Repository\VoixRepository;
 use oeuvresBundle\Repository\GenresRepository;
+use oeuvresBundle\Repository\LanguesRepository;
 use Doctrine\ORM\EntityRepository;
 /*
  
@@ -59,6 +60,10 @@ class OeuvresFiltreType extends AbstractType
     	'class'=>'oeuvresBundle:Compositeurs'
     	)
     	)    	
+    	->add('compositeurOeuvre','text',array('label'=>'Compositeur','required'=>false))
+    	
+    	->add('siecle','text',array('label'=>'Siècle','required'=>false))
+    	 
     	
     	->add('genre_id','entity',array(
     			'property'=>'libelle',
@@ -146,10 +151,27 @@ class OeuvresFiltreType extends AbstractType
     	},
     	'expanded'=>false,
     	'required'=>false,
-    	'class'=>'oeuvresBundle:Voix')) 
+    	'class'=>'oeuvresBundle:Voix'))
     	
 
-	
+    	->add('Langues','entity',array(
+    			'property'=>'libelle',
+    			'label'=>'Langue',
+    			'label_attr' => array('class' => 'clsLabelEntity'),
+    			'multiple'    => false,
+    			'empty_value' => 'Selectionnez une Langue',
+    			'empty_data'  => null,
+    	
+    			'query_builder' => function (LanguesRepository $er) {
+    	
+    			return $er->createQueryBuilder('t')
+    			->where('t.active=1')
+    			->orderBy('t.libelle', 'ASC')
+    			;
+    	},
+    	'expanded'=>false,
+    	'required'=>false,
+    	'class'=>'oeuvresBundle:Langues'))	
     	;
 
     }

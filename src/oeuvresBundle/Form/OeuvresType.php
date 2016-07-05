@@ -192,14 +192,11 @@ class OeuvresType extends AbstractType
     	->add('Langues'
     			,'entity',array(
     					'property'=>'libelle',
-    	
     					'disabled'    => false,
     					'multiple'    => true,
     					'required'    => false,
     					'empty_data'  => null,
-    						
-    					'query_builder' => function (LanguesRepository $er) {
-    					 
+	   					'query_builder' => function (LanguesRepository $er) {
     					return $er->createQueryBuilder('t')
     					->where('t.active=1')
     					->orderBy('t.libelle', 'ASC')

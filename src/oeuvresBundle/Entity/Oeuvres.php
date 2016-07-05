@@ -27,6 +27,9 @@ use Doctrine\ORM\Mapping\JoinColumns;
 use Doctrine\ORM\Mapping\inverseJoinColumn;
 use Doctrine\ORM\Mapping\inverseJoinColumns;
 
+use Compositeurs;
+use oeuvresBundle\Repository\CompositeursRepository;
+
 /**
  * Oeuvres
  *
@@ -295,6 +298,12 @@ class Oeuvres
     {
     	return $this->compositeur_id;
     }    
+    
+    public function getCompositeurOeuvre()
+    {
+    	return $this->compositeur_id;
+    	 
+    }
     /**
      * 
      * @param integer $id
