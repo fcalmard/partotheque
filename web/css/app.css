@@ -425,6 +425,7 @@ select[id^="oeuvresbundle_oeuvres_"]
  	margin-left:2%;
  	padding-bottom: 6px;
  	 width:80%;
+ 	 height:400px;
  }
  input[type="search"]{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}input[type="radio"],input[type="checkbox"]{margin:4px 0 0;margin-top:1px \9;line-height:normal}
  input[type="file"]{display:initial}
@@ -884,6 +885,11 @@ div.avecscroll
 	overflow:auto;
 	height:500px;
 	}
+div.smallavecscroll
+{
+	overflow:auto;
+	height:200px;
+	}	
 div.finlisteetform
 {
 	/*color: auto;*/

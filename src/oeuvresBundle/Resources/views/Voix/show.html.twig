@@ -13,24 +13,69 @@
 		
 		    <table class="record_properties">
 		        <tbody>
-		            <tr>
-		                <th>Id</th>
-		                <td>{{ entity.id }}</td>
-		            </tr>
-		            <tr>
-		                <th>Active</th>
-		                <td>{{ entity.active }}</td>
-		            </tr>
+
 		            <tr>
 		                <th>Libelle</th>
 		                <td>{{ entity.libelle }}</td>
 		            </tr>
+		            
+		            <tr>
+		                <th>Active</th>
+		                <td>{{ entity.active==1 ? "O" : "N"}}</td>
+		            </tr>
+
 		            <tr>
 		                <th>Saisie le</th>
 		                <td>{{ entity.datecreateAt|date('d/m/Y') }}</td>
 		            </tr>
+		            
 		        </tbody>
 		    </table>
+		    
+		    <br/>
+		    
+		    <div class="listeetform smallavecscroll">
+		    	<table class="records_list table table-striped">
+		    	
+			        <thead>
+			            <tr>
+			                <th>Sous Catégorie</th>
+			                <th>Active</th>
+			                <th>Saisie le</th>
+			                <th>Actions</th>
+			            </tr>
+			        </thead>
+			        
+		        {% for sscateg in listesscateg %}
+			        
+			        <tr>
+			        
+			        	<td>
+			        		<a href="{{ path('sscategvoix_show', { 'id': sscateg.id }) }}">{{ sscateg.libelle }}</a></td>
+			        	</td>
+			        	<td>{{ sscateg.active==1 ? "O" : "N"}}</td>
+			        	<td>{{ sscateg.datecreateAt|date('d/m/Y') }}</td>
+			        	<td>
+			                        <a href="{{ path('sscategvoix_edit', { 'id': sscateg.id }) }}">
+	  		                        	<img alt="Modification" src="/web/css/images/edit.png">
+			                        
+			                        </a>			        	
+			        	</td>
+			        </tr>
+			        
+
+				{% endfor %}
+
+
+			        
+			    </table>
+			    
+			</div>
+		        
+			    			        <a class="classajoutsscatvoix" href="{{ path('sscategvoix_new', { 'idvoix': entity.id }) }}">
+	  		                        	<img alt="ajout" src="/web/css/images/add.png">
+			                        </a>		
+			                        		        
 		</div>
 	</div>
 	
@@ -101,9 +146,7 @@
 				    <a href="{{ path('voix_confirm_action_delete', { 'id': entity.id }) }}">
 				     <img alt="Désactiver" src="/web/css/images/desactiver.png" width="64px" height="64px" >
 				    </a>			
-				</td>
-					
-					
+				</td>		
 				
 				<td style="background-color:beige; " >
 				    {% if idenreg>1 %}

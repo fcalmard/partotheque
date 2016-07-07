@@ -11,8 +11,54 @@
 
     <div class="listeetform">
 		<div class="showform">
-		
     		{{ form(edit_form) }}
+    		
+    		<br/>
+		    
+		    <div class="listeetform smallavecscroll">
+		    	<table class="records_list table table-striped">
+		    	
+			        <thead>
+			            <tr>
+			                <th>Sous Catégorie</th>
+			                <th>Active</th>
+			                <th>Saisie le</th>
+			                <th>Actions</th>
+			            </tr>
+			        </thead>
+			        
+		        {% for sscateg in listesscateg %}
+			        
+			        <tr>
+			        
+			        	<td>
+			        		<a href="{{ path('sscategvoix_show', { 'id': sscateg.id }) }}">{{ sscateg.libelle }}</a></td>
+			        	</td>
+			        	<td>{{ sscateg.active==1 ? "O" : "N"}}</td>
+			        	<td>{{ sscateg.datecreateAt|date('d/m/Y') }}</td>
+			        	<td>
+			                        <a href="{{ path('sscategvoix_edit', { 'id': sscateg.id }) }}">
+	  		                        	<img alt="Modification" src="/web/css/images/edit.png">
+			                        
+			                        </a>			        	
+			        	</td>
+			        </tr>
+			        
+
+				{% endfor %}
+
+
+			        
+			    </table>
+			    
+
+			                        
+			</div>
+			
+			    			        <a class="classajoutsscatvoix" href="{{ path('sscategvoix_new', { 'idvoix': entity.id }) }}">
+	  		                        	<img alt="ajout" src="/web/css/images/add.png">
+			                        </a>			
+			
 		</div>
 	</div>
 	

@@ -60,7 +60,6 @@ class Langues
      * @var integer 
      *
      * @ORM\ManyToMany(targetEntity="Oeuvres")
-     * @JoinTable(name="langues_oeuvres"
      * ,joinColumns={@JoinColumn(name="langues_id", referencedColumnName="id")}
      * ,inverseJoinColumns={@JoinColumn(name="oeuvres_id", referencedColumnName="id")}
      * )

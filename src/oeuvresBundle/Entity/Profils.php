@@ -65,7 +65,6 @@ class Profils
 	/**
 	 *
 	 * @ORM\ManyToMany(targetEntity="Menus")
-	 * @JoinTable(name="profils_menus"
 	 * ,joinColumns={@JoinColumn(name="profils_id", referencedColumnName="id")}
 	 * ,inverseJoinColumns={@JoinColumn(name="menus_id", referencedColumnName="id")}
 	 * )

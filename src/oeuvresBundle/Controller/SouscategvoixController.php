@@ -5,23 +5,23 @@ namespace oeuvresBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use oeuvresBundle\Entity\Voix;
-use oeuvresBundle\Form\VoixType;
-use oeuvresBundle\Repository\SouscategvoixRepository;
+use oeuvresBundle\Repository\VoixRepository;
 
+use oeuvresBundle\Entity\Souscategvoix;
+use oeuvresBundle\Form\SouscategvoixType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Voix controller.
+ * Souscategvoix controller.
  *
  */
-class VoixController extends Controller
+class SouscategvoixController extends Controller
 {
 
     /**
-     * Lists all Voix entities.
+     * Lists all Souscategvoix entities.
      *
      */
     public function indexAction()
@@ -41,7 +41,7 @@ class VoixController extends Controller
         }
         
         
-        $entities = $em->getRepository('oeuvresBundle:Voix')->ChargeListe();
+        $entities = $em->getRepository('oeuvresBundle:Souscategvoix')->ChargeListe();
 
         
         $aEnregId=$this->listeDesIds($entities);
@@ -53,7 +53,7 @@ class VoixController extends Controller
         
         $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
                 
-        return $this->render('oeuvresBundle:Voix:index.html.twig', array(
+        return $this->render('oeuvresBundle:Souscategvoix:index.html.twig', array(
             'entities' => $entities,
         ));
     }
@@ -80,7 +80,7 @@ class VoixController extends Controller
     		return new RedirectResponse($this->generateUrl('homepage'));
     	}
     
-    	$aSessionTblEnreg=$session->get($gUserLoginLogged.'_voix_tblenreg');  	 
+    	$aSessionTblEnreg=$session->get($gUserLoginLogged.'_souscategvoix_tblenreg');  	 
     	 
 //  	var_dump($aSessionTblEnreg);
     	 
@@ -140,7 +140,7 @@ class VoixController extends Controller
     		 
     		 
     		 
-    		$aEnregTri=$aSessionTblEnreg['trivoix'];
+    		$aEnregTri=$aSessionTblEnreg['trisouscategvoix'];
     		foreach ($aEnregTri as $ket=>$aEnregTriPar)
     		{
     			//echo "<br/>A ENREGTRI PAR <br/>";
@@ -166,13 +166,13 @@ class VoixController extends Controller
     	{
     		if($action=='show')
     		{
-    			return $this->redirect($this->generateUrl('voix_show', array('id' => $id)));
+    			return $this->redirect($this->generateUrl('sscategvoix_show', array('id' => $id)));
     			 
     		}
     		if($action=='edit')
     		{
     			//die("399");
-    			return $this->redirect($this->generateUrl('voix_edit', array('id' => $id)));
+    			return $this->redirect($this->generateUrl('sscategvoix_show', array('id' => $id)));
     			 
     		}
     	}else
@@ -181,19 +181,19 @@ class VoixController extends Controller
     		die("427");
     	}
     
-    	return new RedirectResponse($this->generateUrl('voix'));
+    	return new RedirectResponse($this->generateUrl('souscategvoix'));
     
     }
     
     
     /**
-     * Creates a new Voix entity.
+     * Creates a new Souscategvoix entity.
      *
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request,$idvoix)
     {
-        $entity = new Voix();
-        $form = $this->createCreateForm($entity);
+        $entity = new Souscategvoix();
+        $form = $this->createCreateForm($entity,$idvoix);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -201,26 +201,26 @@ class VoixController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('voix_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('sscategvoix_show', array('id' => $entity->getId())));
         }
 
-        return $this->render('oeuvresBundle:Voix:new.html.twig', array(
+        return $this->render('oeuvresBundle:Souscategvoix:edit.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
         ));
     }
 
     /**
-     * Creates a form to create a Voix entity.
+     * Creates a form to create a Souscategvoix entity.
      *
-     * @param Voix $entity The entity
+     * @param Souscategvoix $entity The entity
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(Voix $entity)
+    private function createCreateForm(Souscategvoix $entity,$idvoix)
     {
-        $form = $this->createForm(new VoixType(), $entity, array(
-            'action' => $this->generateUrl('voix_create'),
+    	$form = $this->createForm(new SouscategvoixType(), $entity, array(
+            'action' => $this->generateUrl('sscategvoix_create',array('idvoix'=>$idvoix)),
             'method' => 'POST',
         ));
 
@@ -230,89 +230,84 @@ class VoixController extends Controller
     }
 
     /**
-     * Displays a form to create a new Voix entity.
+     * Displays a form to create a new Souscategvoix entity.
      *
      */
-    public function newAction()
+    public function newAction($idvoix)
     {
-        $entity = new Voix();
-        $form   = $this->createCreateForm($entity);
+        $entity = new Souscategvoix();
+        $form   = $this->createCreateForm($entity,$idvoix);
 
-        return $this->render('oeuvresBundle:Voix:new.html.twig', array(
+        return $this->render('oeuvresBundle:Souscategvoix:edit.html.twig', array(
             'entity' => $entity,
+        		'voix_id'=>$idvoix,
             'form'   => $form->createView(),
         ));
     }
 
     /**
-     * Finds and displays a Voix entity.
+     * Finds and displays a Souscategvoix entity.
      *
      */
     public function showAction($id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('oeuvresBundle:Voix')->find($id);
+        $entity = $em->getRepository('oeuvresBundle:Souscategvoix')->find($id);
+        
+        $voixid=$entity->getVoixId();
+        
+        $entityvoix = $em->getRepository('oeuvresBundle:Voix')->find($voixid);
+        
+        $slibvoix=$entityvoix->getLibelle();
         
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Voix entity.');
+            throw $this->createNotFoundException('Unable to find Souscategvoix entity.');
         }
-        
-        /*
-         * ChargeListeSsCateg Voix
-         */
 
-
-        $aListeSousCateg = $em->getRepository('oeuvresBundle:Souscategvoix')->ChargeListeSsCategVoix($id);
-        
-        return $this->render('oeuvresBundle:Voix:show.html.twig', array(
+        return $this->render('oeuvresBundle:Souscategvoix:show.html.twig', array(
             'entity'      => $entity,
-            'listesscateg'=> $aListeSousCateg,
+        		'voixid'=>$voixid,
+                'slibvoix'=>$slibvoix
         ));
     }
 
     /**
-     * Displays a form to edit an existing Voix entity.
+     * Displays a form to edit an existing Souscategvoix entity.
      *
      */
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('oeuvresBundle:Voix')->find($id);
+        $entity = $em->getRepository('oeuvresBundle:Souscategvoix')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Voix entity.');
+            throw $this->createNotFoundException('Unable to find Souscategvoix entity.');
         }
 
+        $voix_id=$entity->getVoixId();
+        
         $editForm = $this->createEditForm($entity);
 
-        /*
-         * ChargeListeSsCateg Voix
-        */
-        
-        
-        $aListeSousCateg = $em->getRepository('oeuvresBundle:Souscategvoix')->ChargeListeSsCategVoix($id);
-                
-        return $this->render('oeuvresBundle:Voix:edit.html.twig', array(
+        return $this->render('oeuvresBundle:Souscategvoix:edit.html.twig', array(
             'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-        	'listesscateg'=> $aListeSousCateg,
-        		
+        		'voix_id'=>$voix_id,
+            'form'   => $editForm->createView(),
         ));
     }
 
     /**
-    * Creates a form to edit a Voix entity.
+    * Creates a form to edit a Souscategvoix entity.
     *
-    * @param Voix $entity The entity
+    * @param Souscategvoix $entity The entity
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm(Voix $entity)
+    private function createEditForm(Souscategvoix $entity)
     {
-        $form = $this->createForm(new VoixType(), $entity, array(
-            'action' => $this->generateUrl('voix_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new SouscategvoixType(), $entity, array(
+            'action' => $this->generateUrl('sscategvoix_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
@@ -331,16 +326,16 @@ class VoixController extends Controller
     	$em = $this->getDoctrine()->getManager();
     
     
-    	$entity = $em->getRepository('oeuvresBundle:Voix')->find($id);
+    	$entity = $em->getRepository('oeuvresBundle:Souscategvoix')->find($id);
     	if (!$entity) {
-    		throw $this->createNotFoundException('Problème de lecture Voix.');
+    		throw $this->createNotFoundException('Problème de lecture Souscategvoix.');
     	}
     	//createConfirmDeleteForm confirmDelete.html.twig
     	//confirm_form
     	$confirm_form=$this->createConfirmDeleteForm($id);
     	//	die('116');
     
-    	return $this->render('oeuvresBundle:Voix:confirmDelete.html.twig', array(
+    	return $this->render('oeuvresBundle:Souscategvoix:confirmDelete.html.twig', array(
     			'entity'      => $entity,
     			'confirm_form'=>$confirm_form->createView()
     	));
@@ -348,17 +343,17 @@ class VoixController extends Controller
     }
         
     /**
-     * Edits an existing Voix entity.
+     * Edits an existing Souscategvoix entity.
      *
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('oeuvresBundle:Voix')->find($id);
+        $entity = $em->getRepository('oeuvresBundle:Souscategvoix')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Voix entity.');
+            throw $this->createNotFoundException('Unable to find Souscategvoix entity.');
         }
 
         $editForm = $this->createEditForm($entity);
@@ -367,17 +362,17 @@ class VoixController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('voix_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('sscategvoix_edit', array('id' => $id)));
         }
 
-        return $this->render('oeuvresBundle:Voix:edit.html.twig', array(
+        return $this->render('oeuvresBundle:Souscategvoix:edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
         ));
     }
 
     /**
-     * Creates a form to delete a Voix entity by id.
+     * Creates a form to delete a Souscategvoix entity by id.
      *
      * @param mixed $id The entity id
      *
@@ -386,7 +381,7 @@ class VoixController extends Controller
     private function createConfirmDeleteForm($id)
     {
     	return $this->createFormBuilder()
-    	->setAction($this->generateUrl('voix_delete', array('id' => $id)))
+    	->setAction($this->generateUrl('sscategvoix_delete', array('id' => $id)))
     	->add('submit', 'submit', array('label' => 'Oui'))
     	->getForm()
     	;
@@ -402,10 +397,10 @@ class VoixController extends Controller
     	$form->handleRequest($request);
     
     	$em = $this->getDoctrine()->getManager();
-    	$entity = $em->getRepository('oeuvresBundle:Voix')->find($id);
+    	$entity = $em->getRepository('oeuvresBundle:Souscategvoix')->find($id);
     
     	if (!$entity) {
-    		throw $this->createNotFoundException('Problème de lecture Voix.');
+    		throw $this->createNotFoundException('Problème de lecture Souscategvoix.');
     	}
     	$entity->setActive(false);
     	$em->flush();
@@ -466,11 +461,11 @@ class VoixController extends Controller
     	$aEnreg=array('ordretrienreg'=>$sColDeTriOrdre);
     	$aEnregTri[]=$aEnreg;
     
-    	$aSessionTblEnreg['trivoix']=$aEnregTri;
+    	$aSessionTblEnreg['trisouscategvoix']=$aEnregTri;
     		
     	$session = new Session();
     
-    	$session->set($gUserLoginLogged.'_voix_tblenreg',$aSessionTblEnreg);
+    	$session->set($gUserLoginLogged.'_souscategvoix_tblenreg',$aSessionTblEnreg);
     
     	//var_dump($aSessionTblEnreg);
     

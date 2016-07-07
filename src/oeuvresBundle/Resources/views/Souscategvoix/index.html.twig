@@ -3,7 +3,7 @@
 {% block body -%}
 	<div class="titrelisteetform">
 
-    <h1>Liste des Voix</h1>
+    <h1>Sous catégories de Voix</h1>
 
 	</div>
 
@@ -38,9 +38,11 @@
   		                        	<img alt="Modification" src="/web/css/images/edit.png">
 		                        
 		                        </a>
-								&nbsp;
-			                        <a class="classajoutsscatvoix" href="{{ path('sscategvoix_new', { 'idvoix': entity.id }) }}">
-	  		                        	<img alt="ajout" src="/web/css/images/add.png">
+&nbsp;
+{% set classajoutsscatvoix="ajoutsscatvoix"~entity.id %}
+			                        <a class="{{classajoutsscatvoix}}" href="{{ path('sscategvoix_new', { 'idvoix': entity.id }) }}">
+	  		                        	<img alt="Modification" src="/web/css/images/add.png">
+			                        
 			                        </a>
 								
 		                    </li>
@@ -56,21 +58,25 @@
 		                	{% if entity.libsouscateg!="" %}
 		                	<tr>
 		                		<td>&nbsp;</td>
-	
-			                <td><a href="{{ path('sscategvoix_show', { 'id': entity.idsouscat }) }}">{{ entity.libsouscateg }}</a></td>
+		                	
+		                		<td>
+			                	{{ entity.libsouscateg }}
+			                	
+			                	</td>
+			                	
 		               
 		               			<td>{{ entity.sscatactive==1 ? "O" : "N"}}</td>
 			                	
 				                <td>{% if entity.datcsouscateg %}{{ entity.datcsouscateg|date('d/m/Y') }}{% endif %}</td>
 			                	<td>
-				                	<ul>
-				                    <li>
-			                        <a href="{{ path('sscategvoix_edit', { 'id': entity.idsouscat }) }}">
-	  		                        	<img alt="Modification" src="/web/css/images/edit.png">
-			                        
-			                        </a>
-			                        </li>
-			                        </ul>
+			                	
+			                	
+		                	
+		                        <a href="{{ path('voix_edit', { 'id': entity.id }) }}">
+  		                        	<img alt="Modification" src="/web/css/images/edit.png">
+		                        
+		                        </a>		                	
+			                	
 			                	</td>
 	
 		                	</tr>
@@ -80,24 +86,20 @@
 	                	<!-- sous categ suivantes -->
 	                	<tr>
 	                		<td>&nbsp;</td>
-	                		
-			                <td><a href="{{ path('sscategvoix_show', { 'id': entity.idsouscat }) }}">{{ entity.libsouscateg }}</a></td>
-		                	
+	                	
+	                		<td>
+		                	{{ entity.libsouscateg }}  	
+		                	</td>
 
 	               			<td>{{ entity.sscatactive==1 ? "O" : "N"}}</td>
 		                	
 			                <td>{% if entity.datcsouscateg %}{{ entity.datcsouscateg|date('d/m/Y') }}{% endif %}</td>
 		                	<td>
 		                	
-	                			<ul>
-			                    <li>
-			                        <a href="{{ path('sscategvoix_edit', { 'id': entity.idsouscat }) }}">
-	  		                        	<img alt="Modification" src="/web/css/images/edit.png">
-			                        
-			                        </a>
-			                    </li>
-			                    </ul>
-			                        		                	
+		                        <a href="{{ path('voix_edit', { 'id': entity.id }) }}">
+  		                        	<img alt="Modification" src="/web/css/images/edit.png">
+		                        
+		                        </a>		                	
 		                	</td>
 
 	                	</tr>

@@ -21,6 +21,10 @@ oeuvres_voix:
     resource: "@oeuvresBundle/Resources/config/routing/voix.php"
     prefix:   /voix
 
+oeuvres_sscategvoix:
+    resource: "@oeuvresBundle/Resources/config/routing/sscategvoix.php"
+    prefix:   /sscategvoix
+    
 oeuvres_avancements:
     resource: "@oeuvresBundle/Resources/config/routing/avancements.php"
     prefix:   /avancements

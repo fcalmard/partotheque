@@ -1,0 +1,24 @@
+Sur la branche master
+Modifications qui ne seront pas validées :
+  (utilisez "git add <fichier>..." pour mettre à jour ce qui sera validé)
+  (utilisez "git checkout -- <fichier>..." pour annuler les modifications dans la copie de travail)
+
+	modifié:         src/oeuvresBundle/Controller/OeuvresController.php
+	modifié:         src/oeuvresBundle/Entity/Langues.php
+	modifié:         src/oeuvresBundle/Entity/Oeuvres.php
+	modifié:         src/oeuvresBundle/Form/OeuvresFiltreType.php
+	modifié:         src/oeuvresBundle/Form/OeuvresType.php
+	modifié:         src/oeuvresBundle/Repository/CompositeursRepository.php
+	modifié:         src/oeuvresBundle/Repository/LanguesRepository.php
+	modifié:         src/oeuvresBundle/Repository/OeuvresRepository.php
+	modifié:         src/oeuvresBundle/Resources/views/Oeuvres/edit.html.twig
+	modifié:         src/oeuvresBundle/Resources/views/Oeuvres/index.html.twig
+
+Fichiers non suivis:
+  (utilisez "git add <fichier>..." pour inclure dans ce qui sera validé)
+
+	dif4072016.txt
+	partotheque/
+	src/oeuvresBundle/Entity/langues_oeuvres.php
+
+aucune modification n'a été ajoutée à la validation (utilisez "git add" ou "git commit -a")

@@ -27,7 +27,7 @@ use Doctrine\ORM\Mapping\JoinColumns;
 use Doctrine\ORM\Mapping\inverseJoinColumn;
 use Doctrine\ORM\Mapping\inverseJoinColumns;
 
-use Compositeurs;
+//use Compositeurs;
 use oeuvresBundle\Repository\CompositeursRepository;
 
 /**
@@ -206,7 +206,6 @@ class Oeuvres
      * @var integer
      *
      * @ORM\ManyToMany(targetEntity="Langues")
-     * @JoinTable(name="langues_oeuvres"
      * ,joinColumns={@JoinColumn(name="oeuvres_id", referencedColumnName="id")}
      * ,inverseJoinColumns={@JoinColumn(name="langues_id", referencedColumnName="id")}
      * )
