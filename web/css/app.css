@@ -426,7 +426,22 @@ select[id^="oeuvresbundle_oeuvres_"]
  	padding-bottom: 6px;
  	 width:80%;
  	 height:400px;
+ 	 
+ 	 overflow: auto;
+ 	 
  }
+ .editform
+  {
+ 	margin-top:1%;
+ 	margin-left:2%;
+ 	padding-bottom: 6px;
+ 	 width:80%;
+ 	 height:600px;
+ 	 
+ 	  	 overflow: auto;
+ 	 
+ 	 
+ } 
  input[type="search"]{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}input[type="radio"],input[type="checkbox"]{margin:4px 0 0;margin-top:1px \9;line-height:normal}
  input[type="file"]{display:initial}
  input[type="range"]{display:block;width:100%}select[multiple],select[size]{height:auto}input[type="file"]:focus,input[type="radio"]:focus,input[type="checkbox"]:focus{outline:thin dotted;outline:5px auto -webkit-focus-ring-color;outline-offset:-2px}output{display:block;padding-top:11px;font-size:15px;line-height:1.42857;color:#2c3e50}

@@ -157,6 +157,15 @@ class Oeuvres
     private $voix_id;
     
     /**
+     *
+     * @var integer
+     *
+     * @ORM\Column(name="sscategvoix_id", type="integer",nullable=true)
+     *
+     */    
+    private $sscategvoix_id;
+    
+    /**
      * @ORM\Column(name="duree",type="float",nullable=true, scale=2,options={"default"= 0}))
      * egale somme de la duree des partitions
      */
@@ -422,11 +431,30 @@ class Oeuvres
      * @param integer $id
      * @return \oeuvresBundle\Entity\Oeuvres
      */
+    public function setSscategvoixId($id)
+    {
+    	$this->sscategvoix_id=$id;
+    	return $this;
+    }
+
+    /**
+     *
+     */
+    public function getSscategvoixId()
+    {
+    	return $this->sscategvoix_id;
+    }
+    /**
+     *
+     * @param integer $id
+     * @return \oeuvresBundle\Entity\Oeuvres
+     */
     public function setVoixId($id)
     {
     	$this->voix_id=$id;
     	return $this;
-    }    
+    }
+        
     /**
      * return string
      */

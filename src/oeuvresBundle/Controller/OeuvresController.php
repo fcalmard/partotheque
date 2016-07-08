@@ -887,6 +887,18 @@ class OeuvresController extends Controller
         	$voix=$voix->getLibelle();
         }
         
+        $sscategvoix='';
+        $idt=$entity->getSscategvoixId();
+        if(!is_null($idt) && $idt!=0)
+        {
+        	$sscategvoix = $em->getRepository('oeuvresBundle:Souscategvoix')->find($idt);
+        
+        	if (!$sscategvoix) {
+        		throw $this->createNotFoundException('pb de recherche de la ss categ de Voix.');
+        	}
+        	$sscategvoix=$sscategvoix->getLibelle();
+        }
+                
         $accompagnement='';
         $idt=$entity->getAccompagnementId();
         if(!is_null($idt) && $idt!=0)
@@ -939,7 +951,8 @@ class OeuvresController extends Controller
                 'Compositeur'=>$Compositeur,
                  'Fonction'=>$Fonction,
         		'Voix'=>$voix,
-                'Accompagnement'=>$accompagnement,
+        		'Sscategvoix'=>$sscategvoix,
+        		'Accompagnement'=>$accompagnement,
         		'sDossierTraductions'=>$sDossierTraductions,
         		'Genre'=>$genre,
         		'Langues'=>$Langues
@@ -969,6 +982,8 @@ class OeuvresController extends Controller
         $idfon=$entity->getFonctionId();
         
         $idvoix=$entity->getVoixId();
+        //
+        $sscatvoix_id=$entity->getSscategvoixId();
         
         $idGenre=$entity->getGenreId();
         
@@ -1000,6 +1015,7 @@ class OeuvresController extends Controller
         		'compositeur_id'=>$idcomp,
         		'fonction_id'=>$idfon,
         		 'voix_id'=>$idvoix,
+        		 'sscatvoix_id'=>$sscatvoix_id,
         		'accompagnement_id'=>$idAccompagnement,
         		'genre_id'=>$idGenre,
         		'avancement_id'=>$idAvancement,

@@ -570,10 +570,82 @@
 			    	OeuvresModifEnCours(1);
 			    });
 				
+			    $("[id^='oeuvresbundle_oeuvres_voix_id']").change(function() {
+
+			    	/*alert('oeuvresbundle_oeuvres_voix_id CHANGE');*/
+			    	RechercheVoixSousCateg(this.value);
+
+			    });
+			    
+			    $("[id^='oeuvresbundle_oeuvres_sscategvoix_id']").change(function() {
+
+			    	RechercheSousCategVoix(this.value);
+
+			    });			    
+				
+			    
 				/*alert('document ready FIN');*/
   	        	
 	        } ) ;
 			
+	        function RechercheVoixSousCateg(idvoix)
+	        {
+	    	    var DATA = "voix_id=" + idvoix;
+	    	    
+	    	    $.ajax({
+	    	        type: "POST",
+	    	        dataType: 'json',
+	    	        url:  "http://{{ app.request.httpHost }}/web/OeuvresVoixSousCateg.php",
+	    	        data: DATA,
+	    		    async: true, // Mode synchrone	        
+	    	        success: function(msg)
+	    	        {
+						var out = "";
+					    var i;
+				        
+				       // var myArr = JSON.parse(msg);
+				       
+
+				        
+				        $.each(msg, function(key, val)
+				                {
+
+
+				        		out+="<option value="+key+">"+val+"</option>";
+					        
+				                })
+
+			    	    $("#oeuvresbundle_oeuvres_sscategvoix_id").html("<option value=''>Selectionnez une Sous Categorie</option>" + out);				        
+
+    
+	    	        }
+	    	    });	 	        	
+	        }
+	        
+	        /*
+	        OeuvresSousCategVoix.php
+	        */
+	        function RechercheSousCategVoix(id)
+	        {
+	    	    var DATA = "id=" + id;
+	    	    
+	    	    $.ajax({
+	    	        type: "POST",
+	    	        dataType: 'text',
+	    	        url:  "http://{{ app.request.httpHost }}/web/OeuvresSousCategVoix.php",
+	    	        data: DATA,
+	    		    async: true, // Mode synchrone	        
+	    	        success: function(msg)
+	    	        {
+					    var obj = document.getElementById("oeuvresbundle_oeuvres_voix_id");
+					    if(obj)
+						    {
+							obj.value=msg;
+						    }
+	    	        }
+	    	    });	 	        	
+	        }
+	        
 	        function OeuvresModifEnCours(modif)
 			{
 	    	    var DATA = "modif=" + modif;

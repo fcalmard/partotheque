@@ -17,7 +17,7 @@
 
 	    
     <div class="listeetform">
-		<div class="showform">
+		<div class="editform">
 
 			
 			{{ form_start(edit_form) }}
@@ -70,6 +70,12 @@
 			{{ form_label(edit_form.voix_id, 'Voix') }}
 			{{ form_widget(edit_form.voix_id) }}
 			{{ form_errors(edit_form.voix_id) }}
+			
+<br/>
+
+			{{ form_label(edit_form.sscategvoix_id, 'Sous catégorie') }}
+			{{ form_widget(edit_form.sscategvoix_id) }}
+			{{ form_errors(edit_form.sscategvoix_id) }}			
 			
 <br/>						
 			
@@ -466,12 +472,25 @@
 				{% endif %}	
 
 				{% if voix_id is defined %}
-				    var obj = document.getElementById("oeuvresbundle_oeuvres_voix_id");
-				    if(obj)
-					    {
-						obj.value="{{voix_id}}";
-					    }
+
+				//RechercheVoixSousCateg({{voix_id}});
+
+			    var obj = document.getElementById("oeuvresbundle_oeuvres_voix_id");
+			    if(obj)
+				    {
+					obj.value="{{voix_id}}";
+				    }
 				{% endif %}
+			
+				{% if sscatvoix_id is defined %}
+				
+			    var obj = document.getElementById("oeuvresbundle_oeuvres_sscategvoix_id");
+			    if(obj)
+				    {
+					obj.value="{{sscatvoix_id}}";
+				    }
+				{% endif %}			
+								
 
 				{% if accompagnement_id is defined %}
 			    var obj = document.getElementById("oeuvresbundle_oeuvres_accompagnement_id");

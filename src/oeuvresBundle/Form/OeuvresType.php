@@ -17,6 +17,8 @@ use oeuvresBundle\Repository\TempsLiturgiquesRepository;
 use oeuvresBundle\Repository\CompositeursRepository;
 use oeuvresBundle\Repository\FonctionsRepository;
 use oeuvresBundle\Repository\VoixRepository;
+use oeuvresBundle\Repository\SouscategvoixRepository;
+
 use oeuvresBundle\Repository\AccompagnementsRepository;
 use oeuvresBundle\Repository\GenresRepository;
 use Doctrine\ORM\EntityRepository;
@@ -105,6 +107,28 @@ class OeuvresType extends AbstractType
     	'required'=>false,
     	'class'=>'oeuvresBundle:Voix')) 
     			
+    	/*
+    	 * sous catégorie de voix
+    	 */
+    	->add('sscategvoix_id','entity',array(
+    			'property'=>'libelle',
+    			'label'=>'Sous Categorie',
+    			'label_attr' => array('class' => 'clsLabelEntity'),
+    			'multiple'    => false,
+    			'empty_value' => 'Selectionnez une Sous Categorie',
+    			'empty_data'  => null,
+    	
+    			/*'query_builder' => function (SouscategvoixRepository $er) {
+    	
+    			return $er->createQueryBuilder('t')
+    			->where('t.active=1')
+    			->orderBy('t.libelle', 'ASC')
+    			;
+    	},*/
+    	'expanded'=>false,
+    	'required'=>false,
+    	'class'=>'oeuvresBundle:Souscategvoix'))
+    	    	
     	->add('avancement_id','entity',array(
     			'property'=>'libelle',
     			'label'=>'Avancement',

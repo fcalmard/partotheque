@@ -56,12 +56,20 @@
 		                 {% endif %}
 		            </tr>
 		            
-		            
 		            <tr class="ligneshow" >
-		                <th>Voix</th>
+		                <th>Catégorie de Voix</th>
+		                 <td>
 		                 {% if Voix is defined %}
-		                 <td>{{ Voix }}</td>
-		                 {% endif %}		                 
+		                 {{ Voix }}
+		                 {% endif %}
+		                 
+		                 {% if Sscategvoix is defined %}
+		                 &nbsp;/&nbsp;{{ Sscategvoix }}
+		                 {% endif %}
+		                 
+		                 </td>
+		                 
+		                 
 		            </tr>
 		            
 		            <tr class="ligneshow" >
