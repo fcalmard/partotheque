@@ -270,28 +270,32 @@ class PartitionsController extends Controller
     	     	 
     	
     	//var_dump($_FILES);
-    	
-    	$oFiles=$_FILES['oeuvresbundle_partitions'];
-    	//die("deplace_upload");
     	$stmpFile="?";
-    	
-    	if($oFiles)
+    	 
+    	if(isset($_FILES['oeuvresbundle_partitions']))
     	{
-
-    		$sTypeFile=$oFiles['type']['partitionFile'];
-    	
-    		$sFile=$oFiles['name']['partitionFile'];
+    		$oFiles=$_FILES['oeuvresbundle_partitions'];
+    		//die("deplace_upload");
+    		 
+    		if($oFiles)
+    		{
     		
-    		$stmpFile=$oFiles['tmp_name']['partitionFile'];
-    		   		
-    		$sPathCible = $em->getRepository('oeuvresBundle:Oeuvres')->getDossierPartitions();
+    			$sTypeFile=$oFiles['type']['partitionFile'];
+    			 
+    			$sFile=$oFiles['name']['partitionFile'];
     		
-    		$target_dir = $sPathCible . '/'.basename( $oFiles["name"]['partitionFile']);
-    		    	
-    		move_uploaded_file($stmpFile, $target_dir);
+    			$stmpFile=$oFiles['tmp_name']['partitionFile'];
+    				
+    			$sPathCible = $em->getRepository('oeuvresBundle:Oeuvres')->getDossierPartitions();
     		
+    			$target_dir = $sPathCible . '/'.basename( $oFiles["name"]['partitionFile']);
+    				
+    			move_uploaded_file($stmpFile, $target_dir);
+    		
+    		}
+    		//die($stmpFile);
     	}
-    	//die($stmpFile);
+
     	 
     	return $sFile;
     	     	

@@ -25,7 +25,7 @@ class OeuvresRepository extends EntityRepository
 	 * ChargeListe
 	 * @param array $aFiltre
 	 */
-	public function ChargeListe(array $aFiltre = null,$aTriOeuvresSession=null)
+	public function ChargeListe(array $aFiltre = null,$aTriOeuvresSession=null,$bAffAppPdf=false)
 	{
 		/*
 		 * 
@@ -286,7 +286,114 @@ class OeuvresRepository extends EntityRepository
 		// $query->andWhere('o.actif = ?', array(1));
 		//die('filtre');
 		try {
-			return $query->getResult();
+			if($bAffAppPdf)
+			{
+				$aArbre=array();
+				
+				$a=$query->getArrayResult();
+					
+				foreach ($a as $oeuvre)
+				{
+					$aoeuvre=array("id"=>$oeuvre['id']
+							,"compositeur"=>$oeuvre['compositeur']
+							,"titreOeuvre"=>$oeuvre['titreOeuvre']
+							,"traductiontitreOeuvre"=>$oeuvre['traductiontitreOeuvre']
+								
+							
+							,"genre"=>$oeuvre['genre']
+							,"tpslliturgique"=>$oeuvre['tpslliturgique']
+							,"fonction"=>$oeuvre['fonction']
+							,"voix"=>$oeuvre['voix']
+							,"reference"=>$oeuvre['reference']
+							,"cote"=>$oeuvre['cote']
+								
+							,"cote"=>$oeuvre['cote']
+								
+							
+							);
+					
+					
+					$aArbre[]=$aoeuvre;
+					
+					if($bAffAppPdf)
+					{
+						
+						/*
+						 * charger les partitions des oeuvres
+						 */
+						
+						foreach ($aoeuvre as $ko=>$aoeuvre2)
+						{
+						
+							$aListeSousMenus=array();
+						
+							switch ($ko)
+							{
+								case 'id':
+									
+									/*
+									 * charger les partitions de l'oeuvre
+									 */
+									$querypart = $this->getEntityManager()
+									->createQuery(
+											'SELECT DISTINCT
+											sm.id,
+											sm.libelle,
+											sm.active,
+											sm.duree,
+											sm.pathfichier,
+											sm.oeuvre_id
+												
+											FROM oeuvresBundle:Partitions sm
+											WHERE sm.oeuvre_id='.$aoeuvre2
+											.' order by sm.libelle'
+									);
+																		
+									try {
+										$aListePartitions=$querypart->getArrayResult();
+										
+										foreach ($aListePartitions as $kp=>$oPartition)
+										{
+
+											$aoP=array("id"=>0
+													,"oeuvre_id"=>$oPartition['oeuvre_id']
+													,"compositeur"=>''
+													,"titreOeuvre"=>$oPartition['libelle']
+													,"pathfichier"=>$oPartition['pathfichier']
+													,"traductiontitreOeuvre"=>''
+													,"genre"=>''
+													,"tpslliturgique"=>''
+													,"fonction"=>''
+													,"voix"=>''
+													,"reference"=>''
+													,"cote"=>''
+													,"partitionid"=>$oPartition['id']
+											
+											);
+											
+											$aArbre[]=$aoP;
+												
+										}
+
+										
+									} catch (\Doctrine\ORM\NoResultException $e) {
+										exit("ERREUR LISTE PARITIONS");
+									}
+									
+									break;
+								default:
+									break;
+							}
+						}					
+						
+					}
+				}
+				return $aArbre;				
+			}
+			else{
+				return $query->getResult();
+				
+			}
 		} catch (\Doctrine\ORM\NoResultException $e) {
 			return null;
 		}		

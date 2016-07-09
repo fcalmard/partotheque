@@ -17,6 +17,11 @@ $collection->add('oeuvres_affiche_filtres', new Route('/filtres', array(
 		'_controller' => 'oeuvresBundle:Oeuvres:affichefiltres',
 )));
 
+$collection->add('oeuvres_affiche_apppdf', new Route('/apppdf', array(
+		'_controller' => 'oeuvresBundle:Oeuvres:afficheapppdf',
+)));
+
+
 $collection->add('oeuvres_trier', new Route('/{tripar}/{ordretri}/trier', array(
 		'_controller' => 'oeuvresBundle:Oeuvres:trier',
 )));

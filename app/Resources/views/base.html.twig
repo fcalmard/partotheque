@@ -242,12 +242,28 @@
 	        $(document).ready( function () {
 
 
+	        	$('[data-toggle="popover"]').popover();
+	        	
+	            $(".lienaffapppdf").click(function(){
+	            	var url=$(this).attr("pdf");
+	            	            	
+	            	dialogshow(url);
+
+	            });
+
+	            $(".lienaffapppdf").hover(function(){
+	            },
+	            function(){
+	            }
+	            );
+	            
+	           	
 	            $("label[for='oeuvresbundle_filtre_oeuvres_titreOeuvre']").hover(function(){
 	            	tooltip.pop(this, '<h3>Saisissez un titre</h3>')
 	            },
 	            function(){
 	            }
-	            );
+	            );	            
 	            
 	            $("#oeuvresbundle_filtre_oeuvres_titreOeuvre").hover(function(){
 	            	tooltip.pop(this, '<h3>Saisissez un titre</h3>')
@@ -697,6 +713,38 @@
 			}
 			
 
+			
+			function dialogshow(url)
+			{
+				
+				var odial=document.getElementById("dialog");
+				if(odial)
+					{
+						
+						if ($("#dialog").is(":hidden")){
+							
+							var buttonclose="<center><input type='button' value='' onClick='dialoghide();' /></center>";
+							
+							var lienpdf="<iframe src="+url+"></iframe>";
+							
+							odial.innerHTML = lienpdf;
+							
+							$("#dialog").show()
+							
+						}else
+							{
+							$("#dialog").hide()
+							}
+				
+					}
+				
+
+
+			}
+			function dialoghide()
+			{
+				$("#dialog").hide()
+			}
 			
 		</script>
 		

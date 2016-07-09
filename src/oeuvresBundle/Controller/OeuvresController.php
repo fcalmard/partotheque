@@ -76,10 +76,14 @@ class OeuvresController extends Controller
     	 */
     	$aFiltre=$session->get($skFiltre);
     	 
-    	 //
+    	//
     	$aTriOeuvresSession=$session->get($gUserLoginLogged.'_oeuvres_tri');
     	    	 
-    	$entities = $em->getRepository('oeuvresBundle:Oeuvres')->ChargeListe($aFiltre,$aTriOeuvresSession);
+    	$afficheapppdf=$session->get($gUserLoginLogged.'_oeuvres_affiche_apppdf',0);
+    	
+    	$bAffAppPdf=($afficheapppdf==1);
+    	 
+    	$entities = $em->getRepository('oeuvresBundle:Oeuvres')->ChargeListe($aFiltre,$aTriOeuvresSession,$bAffAppPdf);
     	
     	/*
     	 * Défilement dans les enregistrements des œuvres memo dans cookie
@@ -166,7 +170,9 @@ class OeuvresController extends Controller
     	$filtre_form = $this->filtreCreateForm($entity);
     	   
     	$affiche=$session->get($gUserLoginLogged.'_oeuvres_affiche_filtre',0);
-    	
+    	 
+    	$sDossierPartitions=$em->getRepository('oeuvresBundle:Oeuvres')->getDossierPartitions();
+    	 
         return $this->render('oeuvresBundle:Oeuvres:index.html.twig', array(
             'entities' => $entities,
         		'filtre_form'   => $filtre_form->createView(),
@@ -176,11 +182,14 @@ class OeuvresController extends Controller
         		'siecle'=>$siecle,
         		'langue'=>$aLangues,
         		'affiche_filtre'=>$affiche,
+        		'afficheapppdf'=>$afficheapppdf,
         		'aTriOeuvresSession'=>$aTriOeuvresSession,
         		'genre_id'=>$genre_id,
         		'tps_litur_id'=>$tps_litur_id,
         		'fonction_id'=>$fonction_id,
-        		'voix_id'=>$voix_id
+        		'voix_id'=>$voix_id,
+        		'sDossierPartitions'=>$sDossierPartitions,
+        		
         ));
     }
     
@@ -334,7 +343,33 @@ class OeuvresController extends Controller
     	return new RedirectResponse($this->generateUrl('oeuvres'));
     	
     }
+    /*
+     * oeuvresBundle:Oeuvres:afficheapppdf
+     */
+    public function afficheapppdfAction()
+    {
+    	$gUserLoginLogged="";
+    	$session = $this->getRequest()->getSession();
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
     
+    
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		return new RedirectResponse($this->generateUrl('homepage'));
+    	}
+    
+    	$affiche=$session->get($gUserLoginLogged.'_oeuvres_affiche_apppdf',1);
+    
+    	$affiche=($affiche==1) ? 0 : 1;
+    	    
+    	$session->set($gUserLoginLogged.'_oeuvres_affiche_apppdf',$affiche);
+    
+    	return new RedirectResponse($this->generateUrl('oeuvres'));
+    	 
+    }    
     public function pagineAction($idxenreg,$sens,$action)
     {
     	$id=0;

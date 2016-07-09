@@ -2,8 +2,56 @@
 
 {% block body -%}
 
+
+
+<div class="container">
+  <a href="#" data-toggle="popover" title="Popover Header" data-content="Some content inside the popover">Toggle popover</a>
+</div>
+
+<div id="dialog" style="display:none" class="modal-dialog" >
+</div> 
+
+    <div class="modal fade" id="dialog2" role="dialog">
+	    <div class="modal-dialog">
+	    
+	      <!-- Modal content-->
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <h4 class="modal-title">Modal Header</h4>
+	        </div>
+	        <div class="modal-body">
+	          <p>Some text in the modal.</p>
+	        </div>
+	        <div class="modal-footer">
+	          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        </div>
+	      </div>
+	      
+	    </div>
+  	</div>
+  	
+  	
+
 	<div class="titrelisteetform">
    	 	<h1>Liste des œuvres
+				<!-- -->
+   	 	   	 	<a href="" >
+
+			         <a class="tooltip" href="{{ path('oeuvres_affiche_apppdf') }}" onmouseover="tooltip.pop(this, '<h3>Afficher apercus partitions</h3>')">
+
+					   	{% if afficheapppdf is defined and afficheapppdf ==1 %}
+
+			          	<img alt="Cacher apercus partitions" src="/web/images/acroread_grey.png"/>
+			          	
+   						{% else %}
+			          		<img alt="Afficher apercus partitions" src="/web/images/acroread.png"/>
+   						{% endif %}
+			          	
+					</a>
+								                
+				</a>
+				
    	 	   	 	<a href="" >
 
 			         <a class="tooltip" href="{{ path('oeuvres_affiche_filtres') }}" onmouseover="tooltip.pop(this, '<h3>Afficher ou cacher les critères de filtre</h3>')">
@@ -18,7 +66,7 @@
 			          	
 					</a>
 								                
-				</a>
+				</a>				
 		
    	 	
    	 	</h1>
@@ -252,12 +300,28 @@
 	        <tbody>
 	        {% for entity in entities %}
 	            <tr>
-
-	                <td><a href="{{ path('oeuvres_show', { 'id': entity.id }) }}">{{ entity.titreOeuvre }}
-	                {% if entity.traductiontitreOeuvre!="" %}
-	                ( {{ entity.traductiontitreOeuvre }} )
-	                {% endif %}
-	                </a></td>
+	                <td>
+					{% if entity.id!=0 %}
+		                <a href="{{ path('oeuvres_show', { 'id': entity.id }) }}">{{ entity.titreOeuvre }}
+		                {% if entity.traductiontitreOeuvre!="" %}
+		                ( {{ entity.traductiontitreOeuvre }} )
+		                {% endif %}
+		                </a>
+		            {% else %}
+		          		&nbsp;...
+		          		<a href="{{ path('partitions_edit', {'oeuvre_id':entity.oeuvre_id ,'id': entity.partitionid } ) }}">
+		            
+		            	{{ entity.titreOeuvre }}
+		            	
+		            	{% set sPathFichierPdf="../../../" ~ sDossierPartitions ~ "/"~ entity.pathfichier %}
+		            	
+		            	</a>
+		            	
+		            	
+		            {% endif %}
+	                </td>
+	                
+	                	
 
 	                <td>{{ entity.compositeur }}</td>	     
 	                <td>{{ entity.genre }}</td>
@@ -270,10 +334,20 @@
 		                <ul class="lstactionsul">
 	
 		                    <li>
+		                    	{% if entity.id!=0 %}                  
 		                        <a href="{{ path('oeuvres_edit', { 'id': entity.id }) }}">
 			                        	<img alt="Modification" src="/web/css/images/edit.png">
 		                        
 		                        </a>
+					            {% else %}
+					            	{% if entity.pathfichier!='' %}
+				                        <a href="#" class="lienaffapppdf" pdf="{{sPathFichierPdf}}">
+					                        <img alt="apperçu" src="/web/images/acroread.png">
+				                        </a>
+					            
+						            {% endif %}
+					            {% endif %}
+		                        
 		                    </li>
 		                </ul>
 	                </td>
