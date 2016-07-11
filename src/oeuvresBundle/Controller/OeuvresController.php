@@ -261,11 +261,13 @@ class OeuvresController extends Controller
     	$c=0;
     	foreach ($entities as $oOeuvre)
     	{
-    		$c++;
-    		 
+  		 
     		$id=$oOeuvre['id'];
-    		 
-    		$aEnregId[$c]=$id;
+    		if($id!=0) 
+    		{
+    			$c++;
+    			$aEnregId[$c]=$id;
+    		}
     		 
     		/*if($c=$iNbEnregParPage)
     		 {

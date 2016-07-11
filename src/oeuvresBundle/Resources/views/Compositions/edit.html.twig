@@ -1,0 +1,115 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+
+	    <div class="titrelisteetform">
+    		<h1>Saisie Composition </h1>		    		
+    	</h1>
+    
+		
+    <div class="listeetform">
+		<div class="showform">
+		<br/>
+	    	
+	    	{{ form_start(edit_form) }}
+	    
+	    	{{ form_label(edit_form.accompagnements_id, 'Accompagnement') }}
+			{{ form_widget(edit_form.accompagnements_id) }}
+			{{ form_errors(edit_form.accompagnements_id) }}
+			
+			{% if AccompagnementsId is defined %}
+			
+				<a href="{{ path('accompagnements_edit', { 'id': AccompagnementsId }) }}">
+                      	<img alt="Modification" src="/web/css/images/edit.png">
+                      
+                      </a>
+		    {% endif %}
+		    		
+	    	<br/>
+	    	{{ form_label(edit_form.quantite, 'Quantité') }}
+			{{ form_widget(edit_form.quantite) }}
+			{{ form_errors(edit_form.quantite) }}	    	<br/>
+	    	
+	    	{{ form_label(edit_form.instruments_id, 'Intrument') }}
+			{{ form_widget(edit_form.instruments_id) }}
+			{{ form_errors(edit_form.instruments_id) }}
+			
+			
+			{% if InstrumentsId is defined %}
+			
+				<a href="{{ path('instruments_edit', { 'id': InstrumentsId }) }}">
+                      	<img alt="Modification" src="/web/css/images/edit.png">
+                      
+                      </a>
+		    {% endif %}			
+			
+	    	<br/>
+
+	    	<br/>    		    	
+	    	{{ form_label(edit_form.active, 'Activé') }}
+			{{ form_widget(edit_form.active) }}
+			{{ form_errors(edit_form.active) }}			
+
+	    	{{ form_end(edit_form) }}
+			
+	    </div>
+
+
+
+	
+	</div>
+
+	<div class="finlisteetform">
+	
+			<table>
+				<tr>
+					<td class="tdtblactionsbdp">
+				        <a href="{{ path('accompagnements') }}">
+				            <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
+				        </a>				
+					</td>
+					{% if entity.id!=0 %}
+					<td class="tdtblactionsbdp">
+					    <a href="{{ path('compositions_confirm_action_delete', { 'id': entity.id }) }}">
+				             <img alt="Désactiver" src="/web/css/images/desactiver.png" width="64px" height="64px" >
+					    </a>					    
+				    </td>
+				    {% endif %}
+				</tr>
+			</table>
+		</div>
+	
+
+
+{% endblock %}
+
+
+{% block javascripts %}
+
+	{{ parent() }}
+
+       <script type="text/javascript">
+
+       
+		{% if AccompagnementsId is defined %}
+	    var obj = document.getElementById("oeuvresbundle_compositions_accompagnements_id")
+	    if(obj)
+		    {
+			obj.value="{{AccompagnementsId}}";
+		    }
+		{% endif %}	
+		
+		{% if InstrumentsId is defined %}
+	    var obj = document.getElementById("oeuvresbundle_compositions_instruments_id")
+	    if(obj)
+		    {
+			obj.value="{{InstrumentsId}}";
+		    }
+		{% endif %}	
+	    
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+       </script>    
+{% endblock %}    

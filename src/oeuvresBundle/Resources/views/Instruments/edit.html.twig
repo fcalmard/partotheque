@@ -4,62 +4,18 @@
 
     <div class="titrelisteetform">
 
-    <h1>Modification Accompagnement</h1>
+    <h1>Modification Instrument</h1>
 	</div>
 	
     <div class="listeetform">
 		<div class="showform">
 		
     		{{ form(edit_form) }}
-		
-		    {% if aCompositions is defined %}
-			   <table class="records_list table table-striped">
-		        <thead>
-	            <tr>
-	                <th>Intruments</th>
-	                <th>Activé</th>
-	                <th>Actions</th>
-	            </tr>
-		        </thead>
-		        
-		        <tbody>
-		     
-	        	{% for instr in aCompositions %}
-	
-					<tr>
-	            	
-			                <td><a href="{{ path('compositions_show', { 'id': instr.id }) }}">{{ instr.quantite }}&nbsp;{{ instr.libelleinst }}</a></td>
-			                <td>{{ entity.active==1 ? "O" : "N"}}</td>
-			                <td>
-			                    <a href="{{ path('compositions_edit', { 'id': entity.id }) }}">
-		                        	<img alt="Modification" src="/web/css/images/edit.png">
-		                        
-		                        </a>
-			                    
-		                        
-			                </td>
-			                	            	
-           			</tr>
-	           		        </tbody>
-	           
-			     {% endfor %}
-				    
-
-				
-		     	</table>
-				
-				<br/>	
-				<a class="classajoutsscatvoix" href="{{ path('compositions_new', { 'idaccomp': entity.id }) }}">
-						<img alt="ajout" src="/web/css/images/add.png">
-				</a>
-					
-		     {% endif %}
 		</div>
-		     		
 	</div>
 {% set CodeLoginEnCours=app.request.session.get("gUserLoginLogged") %}
 
-	{% set listeenregs=app.request.session.get(CodeLoginEnCours ~ '_accompagnements_tblenreg') %}
+	{% set listeenregs=app.request.session.get(CodeLoginEnCours ~ '_instruments_tblenreg') %}
 	
 	{% set enregencours= 1 %}
 	{% set nbenreg=0 %}
@@ -108,12 +64,12 @@
 		<table>
 			<tr>
 				<td class="tdtblactionsbdp">
-			        <a href="{{ path('accompagnements') }}">
+			        <a href="{{ path('instruments') }}">
 			            <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
 			        </a>
 			    </td>
 				<td class="tdtblactionsbdp">
-				    <a href="{{ path('accompagnements_confirm_action_delete', { 'id': entity.id }) }}">
+				    <a href="{{ path('instruments_confirm_action_delete', { 'id': entity.id }) }}">
 				     <img alt="Désactiver" src="/web/css/images/desactiver.png" width="64px" height="64px" >
 				    </a>			
 				</td>
@@ -121,7 +77,7 @@
 											
 				<td style="background-color:beige; " >
 				    {% if idenreg>1 %}
-					<a href="{{ path('accompagnements_pagine', { 'idxenreg': idenreg , 'sens': 'prec' , 'action': 'edit' }) }}">
+					<a href="{{ path('instruments_pagine', { 'idxenreg': idenreg , 'sens': 'prec' , 'action': 'edit' }) }}">
 			             <img alt="Précedente" src="/web/images/Actions-arrow-left-icon.png" width="64px" height="64px" >
 				    </a>
 				    {% endif %}
@@ -139,7 +95,7 @@
 				    {% endif %}
 					{% if idenreg<nbenreg %}
 					
-					<a href="{{ path('accompagnements_pagine', { 'idxenreg': idenreg , 'sens': 'suiv', 'action': 'edit' }) }}">
+					<a href="{{ path('instruments_pagine', { 'idxenreg': idenreg , 'sens': 'suiv', 'action': 'edit' }) }}">
 			             <img alt="Suivante" src="/web/images/Actions-arrow-right-icon.png" width="64px" height="64px" >
 				    </a>				    
 				    
@@ -160,7 +116,7 @@
 		{{ parent() }}
         
 	        <script type="text/javascript">
-	        			
+	        
 			$("#menu1").hide();
 			$("#menu2").hide();
 			$("#menu3").hide();

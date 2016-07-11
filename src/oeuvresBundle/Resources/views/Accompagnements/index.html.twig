@@ -11,6 +11,7 @@
 	        <thead>
             <tr>
                 <th>Libelle</th>
+                <th>Composition</th>
                 <th>Saisi le</th>
                 <th>Activé</th>
                 <th>Actions</th>
@@ -19,19 +20,39 @@
 	        <tbody>
 	        {% for entity in entities %}
 	            <tr>
-	                <td><a href="{{ path('accompagnements_show', { 'id': entity.id }) }}">{{ entity.libelle }}</a></td>
-	                <td>{% if entity.datecreateAt %}{{ entity.datecreateAt|date('d/m/Y') }}{% endif %}</td>
-	                <td>{{ entity.active==1 ? "O" : "N"}}</td>
-	                <td>
-		                <ul>
-		                    <li>
-		                        <a href="{{ path('accompagnements_edit', { 'id': entity.id }) }}">
+	            	{% if entity.instruments_id==0 %}
+	            	
+			                <td><a href="{{ path('accompagnements_show', { 'id': entity.id }) }}">{{ entity.libelle }}</a></td>
+			                <td>&nbsp;</td>
+			                <td>{% if entity.datecreateAt %}{{ entity.datecreateAt|date('d/m/Y') }}{% endif %}</td>
+			                <td>{{ entity.active==1 ? "O" : "N"}}</td>
+			                <td>
+			                    <a href="{{ path('accompagnements_edit', { 'id': entity.id }) }}">
 		                        	<img alt="Modification" src="/web/css/images/edit.png">
 		                        
 		                        </a>
-		                    </li>
-		                </ul>
-	                </td>
+		                        &nbsp;
+			                        <a class="classajoutsscatvoix" href="{{ path('compositions_new', { 'idaccomp': entity.id }) }}">
+									<img alt="ajout" src="/web/css/images/add.png">
+								</a>				                    
+		                        
+			                </td>
+			                	            	
+           	
+		           {% else %}
+
+
+	            		<td>&nbsp;</td>
+		                <td><a href="{{ path('compositions_show', { 'id': entity.id }) }}">{{ entity.quantite }}&nbsp;{{ entity.libelle }}(s)</a></td>
+		                <td>{% if entity.datecreateAt %}{{ entity.datecreateAt|date('d/m/Y') }}{% endif %}</td>
+		                <td>{{ entity.active==1 ? "O" : "N"}}</td>
+		                <td>
+	                        <a href="{{ path('compositions_edit', { 'id': entity.id }) }}">
+	                        	<img alt="Modification" src="/web/css/images/edit.png">
+	                        </a>
+		                </td>	 
+		                
+	              {% endif %}
 	            </tr>
 	        {% endfor %}
 	        </tbody>

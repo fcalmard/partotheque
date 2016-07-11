@@ -32,7 +32,15 @@ oeuvres_avancements:
 oeuvres_accompagnements:
     resource: "@oeuvresBundle/Resources/config/routing/accompagnements.php"
     prefix:   /accompagnements
+    
+oeuvres_instruments:
+    resource: "@oeuvresBundle/Resources/config/routing/instruments.php"
+    prefix:   /instruments
 
+oeuvres_compositions:
+    resource: "@oeuvresBundle/Resources/config/routing/compositions.php"
+    prefix:   /compositions
+        
 oeuvres_partitions:
     resource: "@oeuvresBundle/Resources/config/routing/partitions.php"
     prefix:   /partitions

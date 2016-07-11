@@ -1,0 +1,112 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+
+	<div class="titrelisteetform">
+
+    <h1>Composition</h1>
+
+	</div>
+
+    <div class="listeetform">
+
+		<div class="showform">
+				
+		    <table class="record_properties">
+		        <tbody>
+
+		            <tr>
+		                <th>Accompagnement&nbsp;&nbsp;&nbsp;&nbsp;</th>
+		            	<td>{{ accompagnement }}</td>
+		            	
+						{% if AccompagnementsId is defined %}
+							<td>
+							<a href="{{ path('accompagnements_edit', { 'id': AccompagnementsId }) }}">
+			                      	<img alt="Modification" src="/web/css/images/edit.png">
+			                      
+			                      </a>
+			                </td>
+					    {% endif %}
+					    		            	
+		            </tr>
+		            
+
+
+		    
+
+		            <tr>
+		                <th>Quantité&nbsp;&nbsp;&nbsp;</th>
+		                <td>{{ entity.quantite }}</td>
+		            </tr>
+		            
+
+		            
+		            <tr>
+		            <th>Instrument&nbsp;</th>
+		            <td>{{ instrument }}</td>
+		            
+		   			{% if InstrumentsId is defined %}
+						<td>
+							<a href="{{ path('instruments_edit', { 'id': InstrumentsId }) }}">
+                      			<img alt="Modification" src="/web/css/images/edit.png">
+                      
+                      		</a>
+                      	</td>
+		    		{% endif %}			
+			
+		            </tr>
+		            <tr>
+		                <th>Saisie le &nbsp;</th>
+		                <td>{{ entity.datecreateAt|date('d/m/Y') }}</td>
+		            </tr>
+		            <tr>
+		                <th>Actif&nbsp;&nbsp;&nbsp;</th>
+		                <td>{{ entity.active==1 ? "O" : "N"}}</td>
+		                
+		            </tr>
+		        </tbody>
+		    </table>
+		</div>
+	</div>
+
+	<div class="finlisteetform">
+
+		<table>
+			<tr>
+				<td class="tdtblactionsbdp">
+			        <a href="{{ path('accompagnements') }}">
+			            <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
+			        </a>
+				</td>
+				<td class="tdtblactionsbdp">
+			        <a href="{{ path('compositions_edit', { 'id': entity.id }) }}">
+			            <img alt="Modification" src="/web/css/images/edit.png">
+			        </a>
+				</td>
+				<td class="tdtblactionsbdp">
+				    <a href="{{ path('compositions_confirm_action_delete', { 'id': entity.id }) }}">
+			             <img alt="Désactiver" src="/web/css/images/desactiver.png" width="64px" height="64px" >
+				    </a>					    
+			    </td>
+				
+			</tr>
+		</table>
+	</div>	
+	
+	
+
+{% endblock %}
+
+
+{% block javascripts %}
+
+	{{ parent() }}
+
+       <script type="text/javascript">
+
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+       </script>    
+{% endblock %}    

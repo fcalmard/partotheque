@@ -5,27 +5,31 @@ namespace oeuvresBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use oeuvresBundle\Entity\Compositions;
+use oeuvresBundle\Form\CompositionsType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 use oeuvresBundle\Entity\Accompagnements;
-use oeuvresBundle\Form\AccompagnementsType;
+use oeuvresBundle\Repository\AccompagnementsRepository;
 
-use oeuvresBundle\Entity\Compositions;
-use oeuvresBundle\Repository\CompositionsRepository;
+use oeuvresBundle\Entity\Instruments;
+use oeuvresBundle\Repository\InstrumentsRepository;
 
 /**
- * Accompagnements controller.
+ * Compositions controller.
  *
  */
-class AccompagnementsController extends Controller
+class CompositionsController extends Controller
 {
 
     /**
-     * Lists all Accompagnements entities.
+     * Lists all Compositions entities.
      *
      */
     public function indexAction()
     {
+    	
     	$gUserLoginLogged="";
     	$session = $this->getRequest()->getSession();
     	if($session)
@@ -36,10 +40,13 @@ class AccompagnementsController extends Controller
     	{
     		return new RedirectResponse($this->generateUrl('homepage'));
     	}
-    	$em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('oeuvresBundle:Accompagnements')->ChargeListe();
+    	
+        $em = $this->getDoctrine()->getManager();
 
+        $entities = $em->getRepository('oeuvresBundle:Compositions')->ChargeListe();
+
+        
         $aEnregId=$this->listeDesIds($entities);
         
         $iEnreg=1;
@@ -48,12 +55,11 @@ class AccompagnementsController extends Controller
         $sColDeTriOrdre="";
         
         $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
-                        
-        return $this->render('oeuvresBundle:Accompagnements:index.html.twig', array(
+             
+        return $this->render('oeuvresBundle:Compositions:index.html.twig', array(
             'entities' => $entities,
         ));
     }
-    
     
     public function pagineAction($idxenreg,$sens,$action)
     {
@@ -77,10 +83,10 @@ class AccompagnementsController extends Controller
     		return new RedirectResponse($this->generateUrl('homepage'));
     	}
     
-    	$aSessionTblEnreg=$session->get($gUserLoginLogged.'_accompagnements_tblenreg');
+    	$aSessionTblEnreg=$session->get($gUserLoginLogged.'_compositions_tblenreg');
     
-    	//var_dump($aSessionTblEnreg);
-    	 
+    	  	var_dump($aSessionTblEnreg);
+    
     	$nbenreg=0;
     
     	$nbenreg=$aSessionTblEnreg['nbenreg'];
@@ -100,11 +106,10 @@ class AccompagnementsController extends Controller
     		$aTblIds[$iAe]=$aE;
     	}
     
-    	var_dump($aEnregId);
-    	 
     	$this->tblEnregSauveSession($aEnregId, $idxenreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
     
     
+    	//die("///325");
     
     	if($idxenreg>0 && $idxenreg<$nbenreg+1)
     	{
@@ -119,11 +124,7 @@ class AccompagnementsController extends Controller
     				$id=$aTblIds[$idxenreg];
     					
     			}
-    			
-    			//echo "<br/> IDXENREG=".$id;
-    			
-    			//die("<br/>///120");
-    			 
+    
     		}
     		if($sens=='suiv')
     		{
@@ -142,7 +143,7 @@ class AccompagnementsController extends Controller
     		 
     		 
     		 
-    		$aEnregTri=$aSessionTblEnreg['triaccompagnements'];
+    		$aEnregTri=$aSessionTblEnreg['tricompositions'];
     		foreach ($aEnregTri as $ket=>$aEnregTriPar)
     		{
     			//echo "<br/>A ENREGTRI PAR <br/>";
@@ -160,7 +161,7 @@ class AccompagnementsController extends Controller
     		$this->tblEnregSauveSession($aEnregId, $idxenreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
     
     	}
-    	
+    
     	/*
     	 *
     	*/
@@ -168,32 +169,33 @@ class AccompagnementsController extends Controller
     	{
     		if($action=='show')
     		{
-    			return $this->redirect($this->generateUrl('accompagnements_show', array('id' => $id)));
-    	
+    			return $this->redirect($this->generateUrl('compositions_show', array('id' => $id)));
+    
     		}
     		if($action=='edit')
     		{
     			//die("399");
-    			return $this->redirect($this->generateUrl('accompagnements_edit', array('id' => $id)));
-    	
+    			return $this->redirect($this->generateUrl('compositions_edit', array('id' => $id)));
+    
     		}
     	}else
     	{
     		echo ("<br/> ************* PROBLEME ID EN COURS : ".$id." ".$idxenreg);
     		die("427");
     	}
-    	
-    	return new RedirectResponse($this->generateUrl('accompagnements'));
-    	    	
+    
+    	return new RedirectResponse($this->generateUrl('compositions'));
+    
     }
+        
     /**
-     * Creates a new Accompagnements entity.
+     * Creates a new Compositions entity.
      *
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request,$idaccomp)
     {
-        $entity = new Accompagnements();
-        $form = $this->createCreateForm($entity);
+        $entity = new Compositions();
+        $form = $this->createCreateForm($entity,$idaccomp);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -201,26 +203,27 @@ class AccompagnementsController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('accompagnements_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('compositions_show', array('id' => $entity->getId())));
         }
 
-        return $this->render('oeuvresBundle:Accompagnements:new.html.twig', array(
+        return $this->render('oeuvresBundle:Compositions:edit.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+        	'mode'=>'modif',
+        	'edit_form'   => $form->createView(),
         ));
     }
 
     /**
-     * Creates a form to create a Accompagnements entity.
+     * Creates a form to create a Compositions entity.
      *
-     * @param Accompagnements $entity The entity
+     * @param Compositions $entity The entity
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(Accompagnements $entity)
+    private function createCreateForm(Compositions $entity,$idaccomp)
     {
-        $form = $this->createForm(new AccompagnementsType(), $entity, array(
-            'action' => $this->generateUrl('accompagnements_create'),
+        $form = $this->createForm(new CompositionsType(), $entity, array(
+            'action' => $this->generateUrl('compositions_create',array('idaccomp'=>$idaccomp)),
             'method' => 'POST',
         ));
 
@@ -230,80 +233,115 @@ class AccompagnementsController extends Controller
     }
 
     /**
-     * Displays a form to create a new Accompagnements entity.
+     * Displays a form to create a new Compositions entity.
      *
      */
-    public function newAction()
+    public function newAction($idaccomp)
     {
-        $entity = new Accompagnements();
-        $form   = $this->createCreateForm($entity);
+        $entity = new Compositions();
+        $form   = $this->createCreateForm($entity,$idaccomp);
 
-        return $this->render('oeuvresBundle:Accompagnements:new.html.twig', array(
+        return $this->render('oeuvresBundle:Compositions:edit.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+        	'mode'=>'new',
+        	'AccompagnementsId'=>$idaccomp,
+        	'edit_form'   => $form->createView(),
         ));
     }
 
     /**
-     * Finds and displays a Accompagnements entity.
+     * Finds and displays a Compositions entity.
      *
      */
     public function showAction($id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('oeuvresBundle:Accompagnements')->find($id);
+        $entity = $em->getRepository('oeuvresBundle:Compositions')->find($id);
         
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Accompagnements entity.('.$id.")");
+        	throw $this->createNotFoundException('Problème de lecture Composition.');
         }
-
-        $aComposition = $em->getRepository('oeuvresBundle:Accompagnements')->ChargeComposition($id);
         
-        return $this->render('oeuvresBundle:Accompagnements:show.html.twig', array(
+        
+        $idinst=$entity->getInstrumentsId();        
+        if($idinst!=0)
+        {
+        	$instrument = $em->getRepository('oeuvresBundle:Instruments')->find($idinst);
+        	if (!$instrument) {
+        		throw $this->createNotFoundException('Problème de lecture Instrument.');
+        	}else
+        	{
+        		$instrument=$instrument->getLibelle();
+        	}
+        }
+        
+        $idacc=$entity->getAccompagnementsId();        
+        if($idacc!=0)
+        {
+        	$accompagnement = $em->getRepository('oeuvresBundle:Accompagnements')->find($idacc);
+        	if (!$accompagnement) {
+        		throw $this->createNotFoundException('Problème de lecture Accompagnement.');
+        	}else
+        	{
+        		$accompagnement=$accompagnement->getLibelle();
+        	}        	
+        }        
+        
+        
+        
+        
+//die("show".$id);
+        return $this->render('oeuvresBundle:Compositions:show.html.twig', array(
             'entity'      => $entity,
-        	'aCompositions'=>$aComposition
+             'instrument'      => $instrument,
+             'accompagnement'      => $accompagnement,
+        	'AccompagnementsId'=>$idacc,
+        	'InstrumentsId'=>$idinst
         ));
     }
 
     /**
-     * Displays a form to edit an existing Accompagnements entity.
+     * Displays a form to edit an existing Compositions entity.
      *
      */
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('oeuvresBundle:Accompagnements')->find($id);
+        $entity = $em->getRepository('oeuvresBundle:Compositions')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Accompagnements entity.');
+            throw $this->createNotFoundException('Unable to find Compositions entity.');
         }
-
-        $aComposition = $em->getRepository('oeuvresBundle:Accompagnements')->ChargeComposition($id);
         
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $AccompagnementsId=$entity->getAccompagnementsId();
+        
+        $InstrumentsId=$entity->getInstrumentsId();
+        
 
-        return $this->render('oeuvresBundle:Accompagnements:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-        	'aCompositions'=>$aComposition,
-            'delete_form' => $deleteForm->createView(),
+        $editForm = $this->createEditForm($entity);
+
+        return $this->render('oeuvresBundle:Compositions:edit.html.twig', array(
+        	'entity'      => $entity,
+        	'mode'=>'modif',
+        	'AccompagnementsId'=>$AccompagnementsId,
+        	'InstrumentsId'=>$InstrumentsId,
+        	'edit_form'   => $editForm->createView(),
         ));
     }
 
     /**
-    * Creates a form to edit a Accompagnements entity.
+    * Creates a form to edit a Compositions entity.
     *
-    * @param Accompagnements $entity The entity
+    * @param Compositions $entity The entity
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm(Accompagnements $entity)
+    private function createEditForm(Compositions $entity)
     {
-        $form = $this->createForm(new AccompagnementsType(), $entity, array(
-            'action' => $this->generateUrl('accompagnements_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new CompositionsType(), $entity, array(
+            'action' => $this->generateUrl('compositions_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
@@ -312,98 +350,72 @@ class AccompagnementsController extends Controller
         return $form;
     }
     /**
-     * Edits an existing Accompagnements entity.
+     * Edits an existing Compositions entity.
      *
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('oeuvresBundle:Accompagnements')->find($id);
+        $entity = $em->getRepository('oeuvresBundle:Compositions')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Accompagnements entity.');
+            throw $this->createNotFoundException('Unable to find Compositions entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('accompagnements_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('compositions_edit', array('id' => $id)));
         }
 
-        return $this->render('oeuvresBundle:Accompagnements:edit.html.twig', array(
+        return $this->render('oeuvresBundle:Compositions:edit.html.twig', array(
             'entity'      => $entity,
+        	'mode'=>'modif',
             'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
         ));
     }
     /**
-     * Deletes a Accompagnements entity.
+     * Deletes a Compositions entity.
      *
      */
     public function deleteAction(Request $request, $id)
     {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('oeuvresBundle:Compositions')->find($id);
 
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('oeuvresBundle:Accompagnements')->find($id);
+        if (!$entity) {
+                throw $this->createNotFoundException('Problème de lecture Composition.');
+        }
 
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Accompagnements entity.');
-            }
-            $entity->setActive(false);
-            
-            $em->flush();
-
+        $entity->setActive(false);
+        
+        $em->flush();
         return $this->redirect($this->generateUrl('accompagnements'));
     }
 
-    /**
-     * Creates a form to delete a Accompagnements entity by id.
-     *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('accompagnements_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
-    }
     
-    /**
-     *
-     * @param Integer $id
-     */
     public function confirmdeleteAction($id)
     {
     	$em = $this->getDoctrine()->getManager();
-    	$entity = $em->getRepository('oeuvresBundle:Accompagnements')->find($id);
+    	$entity = $em->getRepository('oeuvresBundle:Compositions')->find($id);
     	if (!$entity) {
-    		throw $this->createNotFoundException('Problème de lecture Accompagnement.');
+    		throw $this->createNotFoundException('Problème de lecture Composition.');
     	}
-    	//createConfirmDeleteForm confirmDelete.html.twig
     
     	//confirm_form
     	$confirm_form=$this->createConfirmDeleteForm($id);
     
-    	return $this->render('oeuvresBundle:Accompagnements:confirmDelete.html.twig', array(
+    	return $this->render('oeuvresBundle:Compositions:confirmDelete.html.twig', array(
     			'entity'      => $entity,
     			'confirm_form'=>$confirm_form->createView()
     	));
     }
-    
     /**
-     * Creates a form to delete a accompagnements entity by id.
+     * Creates a form to delete a Composition entity by id.
      *
      * @param mixed $id The entity id
      *
@@ -412,12 +424,12 @@ class AccompagnementsController extends Controller
     private function createConfirmDeleteForm($id)
     {
     	return $this->createFormBuilder()
-    	->setAction($this->generateUrl('accompagnements_delete', array('id' => $id)))
+    	->setAction($this->generateUrl('compositions_delete', array('id' => $id)))
     	->add('submit', 'submit', array('label' => 'Oui'))
     	->getForm()
     	;
     }
-        
+
     
     private function listeDesIds(&$entities)
     {
@@ -425,12 +437,9 @@ class AccompagnementsController extends Controller
     	$c=0;
     	foreach ($entities as $entity)
     	{
-   			 if($entity['instruments_id']==0)
-   			 {
-    			$c++;
-   			 	$aEnregId[$c]=$entity['id'];
-   			 	
-   			 }
+    		$c++;
+    
+    		$aEnregId[$c]=$entity['id'];
     		 
     		/*if($c=$iNbEnregParPage)
     		 {
@@ -474,17 +483,17 @@ class AccompagnementsController extends Controller
     	$aEnreg=array('ordretrienreg'=>$sColDeTriOrdre);
     	$aEnregTri[]=$aEnreg;
     
-    	$aSessionTblEnreg['triaccompagnements']=$aEnregTri;
+    	$aSessionTblEnreg['tricompositions']=$aEnregTri;
     
     	$session = new Session();
     
-    	$session->set($gUserLoginLogged.'_accompagnements_tblenreg',$aSessionTblEnreg);
+    	$session->set($gUserLoginLogged.'_compositions_tblenreg',$aSessionTblEnreg);
     
     	//var_dump($aSessionTblEnreg);
     
     	//die('139');
     
     	return $bOk;
-    }    
+    }
         
 }

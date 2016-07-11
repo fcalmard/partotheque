@@ -1,0 +1,74 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+
+	<div class="titrelisteetform">
+
+    <h1>Compositions</h1>
+
+	</div>
+
+    <div class="listeetform avecscroll">
+		    <table class="records_list table table-striped">
+		    
+		        <thead>
+		            <tr>
+
+		                <th>Id</th>
+		                <th>Active</th>
+		                <th>Saisie le </th>
+		                <th>Actions</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		        {% for entity in entities %}
+		            <tr>
+		                <td><a href="{{ path('compositions_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+		                <td>{{ entity.active==1 ? "O" : "N"}}</td>
+		                
+		                <td>{% if entity.datecreateAt %}{{ entity.datecreateAt|date('d/m/Y') }}{% endif %}</td>
+		                <td>
+			                <ul>
+			
+			                    <li>
+			                        <a href="{{ path('compositions_edit', { 'id': entity.id }) }}">
+					                        	<img alt="Modification" src="/web/css/images/edit.png">
+			                        
+			                        </a>
+			                    </li>
+			                </ul>
+		                </td>
+		            </tr>
+		        {% endfor %}
+		        </tbody>
+		    </table>
+</div>
+	{% if idaccomp is defined and idaccomp!=0 %}
+		<div class="finlisteetform">
+	
+		     <ul>
+		        <li>
+		            <a href="{{ path('compositions_new',{idaccomp: idaccomp }) }}">
+				            <img alt="ajout" src="/web/css/images/add.png">
+		            </a>
+		        </li>
+		    </ul>
+		    
+	    </div>
+    
+    {% endif %}
+    
+    {% endblock %}
+
+{% block javascripts %}
+
+	{{ parent() }}
+
+       <script type="text/javascript">
+
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+       </script>    
+{% endblock %}    

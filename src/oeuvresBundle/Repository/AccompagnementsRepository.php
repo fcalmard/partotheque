@@ -13,7 +13,8 @@ class AccompagnementsRepository extends \Doctrine\ORM\EntityRepository
 	
 		public function ChargeListe()
 		{
-	
+			$aArbre=array();
+				
 			$query = $this->getEntityManager()
 			->createQuery(
 					'SELECT
@@ -21,16 +22,124 @@ class AccompagnementsRepository extends \Doctrine\ORM\EntityRepository
 					t.active,
 					t.libelle,
 					t.datecreateAt
-					FROM oeuvresBundle:Accompagnements t
-					WHERE t.active=1 order by t.libelle'
+					FROM oeuvresBundle:Accompagnements t order by t.libelle'
 			);
 				
 			try {
-				return $query->getResult();
+				$a=$query->getArrayResult();
+				
+				foreach ($a as $acc)
+				{
+					$aaComp=array("id"=>$acc['id']
+							,"active"=>$acc['active']
+							,"libelle"=>$acc['libelle']
+							,"instruments_id"=>0
+							,"quantite"=>0
+							,"datecreateAt"=>$acc['datecreateAt']
+					);
+						
+					$aArbre[]=$aaComp;
+					
+					/*
+					 * recherche Compositions Accompagnement et instrument
+					 */
+					$query = $this->getEntityManager()
+					->createQuery(
+							'SELECT
+							t.id,
+							t.active,
+							t.instruments_id,
+							t.accompagnements_id,
+							t.quantite,
+							t.datecreateAt,
+							i.id instid,
+							i.libelle libelleinst
+							
+							FROM oeuvresBundle:Compositions t
+							
+							LEFT JOIN oeuvresBundle:Instruments i WHERE i.id=t.instruments_id 
+							WHERE t.accompagnements_id='.$acc['id']
+					);
+					
+					$c=$query->getArrayResult();
+					
+					foreach ($c as $aCompo)
+					{
+						$aaCompo=array("id"=>$aCompo['id']
+								,"active"=>$aCompo['active']
+								,"instruments_id"=>$aCompo['instruments_id']
+								,"libelle"=>$aCompo['libelleinst']
+								,"quantite"=>$aCompo['quantite']
+								,"datecreateAt"=>$aCompo['datecreateAt']
+						);
+						
+						$aArbre[]=$aaCompo;
+						
+						
+					}
+					
+				}
+									
 			} catch (\Doctrine\ORM\NoResultException $e) {
-				return null;
+
 			}
 				
+			
+			return $aArbre;
 		}
+	/**
+	 * id acccompagnement
+	 * 
+	 * @param integer $id
+	 */
+	public function ChargeComposition($id)
+	{
+		$aArbre=array();
+		/*
+		 * recherche Compositions Accompagnement et instrument
+		*/
+		$query = $this->getEntityManager()
+		->createQuery(
+				'SELECT
+				t.id,
+				t.active,
+				t.instruments_id,
+				t.accompagnements_id,
+				t.quantite,
+				t.datecreateAt,
+				i.id instid,
+				i.libelle libelleinst
+					
+				FROM oeuvresBundle:Compositions t
+					
+				LEFT JOIN oeuvresBundle:Instruments i WHERE i.id=t.instruments_id
+				WHERE t.accompagnements_id='.$id
+		);
+			
+		try {
+			$c=$query->getArrayResult();
+			
+				foreach ($c as $aCompo)
+				{
+					$aaCompo=array("id"=>$aCompo['id']
+							,"active"=>$aCompo['active']
+							,"instruments_id"=>$aCompo['instruments_id']
+							,"libelleinst"=>$aCompo['libelleinst']
+							,"quantite"=>$aCompo['quantite']
+							,"datecreateAt"=>$aCompo['datecreateAt']
+					);
+						
+					$aArbre[]=$aaCompo;
+						
+				}
+			} catch (\Doctrine\ORM\NoResultException $e) {
+			
+			}
+						
+			return $aArbre;
+		}
+
+			
+		
 			
 }

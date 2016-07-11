@@ -29,7 +29,54 @@
 		            </tr>
 		        </tbody>
 		    </table>
+		    
+		    {% if aCompositions is defined %}
+			   <table class="records_list table table-striped">
+		        <thead>
+	            <tr>
+	                <th>Intruments</th>
+	                <th>Activé</th>
+	                <th>Actions</th>
+	            </tr>
+		        </thead>
+		        
+		        <tbody>
+		     
+	        	{% for instr in aCompositions %}
+	
+					<tr>
+	            	
+			                <td><a href="{{ path('compositions_show', { 'id': instr.id }) }}">{{ instr.quantite }}&nbsp;{{ instr.libelleinst }}</a></td>
+			                <td>{{ entity.active==1 ? "O" : "N"}}</td>
+			                <td>
+			                    <a href="{{ path('compositions_edit', { 'id': entity.id }) }}">
+		                        	<img alt="Modification" src="/web/css/images/edit.png">
+		                        
+		                        </a>
+			                    
+		                        
+			                </td>
+			                	            	
+           			</tr>
+	           		        </tbody>
+	           
+			     {% endfor %}
+				    
+
+				
+		     	</table>
+				
+				<br/>	
+				<a class="classajoutsscatvoix" href="{{ path('compositions_new', { 'idaccomp': entity.id }) }}">
+						<img alt="ajout" src="/web/css/images/add.png">
+				</a>
+					
+		     {% endif %}
 		</div>
+		
+		
+
+	        
 	</div>
 
 {% set CodeLoginEnCours=app.request.session.get("gUserLoginLogged") %}
@@ -61,6 +108,7 @@
 					{% set cptr=0 %}
 					{% for iden in listeenregs[enregkeys] %}	
 						{% set cptr=cptr+1 %}
+						<br/>iden={{ iden }}
 						{% if  entity.id==iden %}
 							<br/>iden:{{ iden }}
 							{% set idenreg = cptr %}
