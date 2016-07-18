@@ -84,6 +84,10 @@ class AccompagnementsController extends Controller
     	$nbenreg=0;
     
     	$nbenreg=$aSessionTblEnreg['nbenreg'];
+    	 
+    	//
+    	$triaccompagnements=$aSessionTblEnreg['triaccompagnements'];
+    	 
     
     	//echo ("<br/>NB ENREG=".$nbenreg);
     	//echo ("<br/>IDXENREG=".$idxenreg);
@@ -192,6 +196,19 @@ class AccompagnementsController extends Controller
      */
     public function createAction(Request $request)
     {
+    	
+    	$gUserLoginLogged="";
+    	$session = $this->getRequest()->getSession();
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		return new RedirectResponse($this->generateUrl('homepage'));
+    	}
+    	
+    	
         $entity = new Accompagnements();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -200,6 +217,63 @@ class AccompagnementsController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
+            
+            /*
+             * recalcul variable de session Accompagnements $aSessionTblEnreg
+            */
+            
+            $iPage=1;
+            
+            $entities = $em->getRepository('oeuvresBundle:Accompagnements')->ChargeListe();
+            
+            $aEnregId=$this->listeDesIds($entities);
+            
+            $aSessionTblEnreg=$session->get($gUserLoginLogged.'_accompagnements_tblenreg');
+
+            $aEnregTri=$aSessionTblEnreg['triaccompagnements'];
+            
+            $sColDeTri=(isset($aEnregTri['coltrienreg']) ? $aEnregTri['coltrienreg'] : "");
+            
+            $sColDeTriOrdre=(isset($aEnregTri['ordretrienreg']) ? $aEnregTri['coltrienreg'] : "");
+            
+            $nbenreg=$aSessionTblEnreg['nbenreg'];
+                      
+            $last=$entity->getId();
+            
+            //echo "<br/> \LAST ID >".$last."<";
+            $iEnreg=1;
+            
+            foreach ($aEnregId as $ki=>$ae)
+            {
+            	if($ae==$last)
+            	{
+            		$iEnreg=$ki;
+            		break;
+            		
+            		
+            	}
+            }
+            
+            $aEnregTri=array();
+            $aEnreg=array('coltrienreg'=>$sColDeTri);
+            $aEnregTri[]=$aEnreg;
+            $aEnreg=array('ordretrienreg'=>$sColDeTriOrdre);
+            $aEnregTri[]=$aEnreg;            
+           
+            $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
+            
+
+			/*
+			 * 
+            echo "<br/> \$nbenreg >".$nbenreg."<";
+            echo "<br/> \$iEnreg >".$iEnreg."<";
+            echo "<br/> coltrienreg >".$sColDeTri."<";
+            echo "<br/> ordretrienreg >".$sColDeTriOrdre."<";
+            			 * 
+    * 
+			             */
+			            
+			            //die('CREATE ACTION 208');
 
             return $this->redirect($this->generateUrl('accompagnements_show', array('id' => $entity->getId())));
         }
@@ -481,7 +555,7 @@ class AccompagnementsController extends Controller
     	$session->set($gUserLoginLogged.'_accompagnements_tblenreg',$aSessionTblEnreg);
     
     	//var_dump($aSessionTblEnreg);
-    
+    	   
     	//die('139');
     
     	return $bOk;

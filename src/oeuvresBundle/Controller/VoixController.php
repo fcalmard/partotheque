@@ -192,6 +192,21 @@ class VoixController extends Controller
      */
     public function createAction(Request $request)
     {
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$session = $this->getRequest()->getSession();
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    	
+    	
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		return new RedirectResponse($this->generateUrl('homepage'));
+    	}
+    	    	
         $entity = new Voix();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -200,8 +215,68 @@ class VoixController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
+           
+            /*
+             * recalcul variable de session Accompagnements $aSessionTblEnreg
+            */
+            $last=$entity->getId();
+            
+            $iPage=1;
+            
+            $entities = $em->getRepository('oeuvresBundle:Voix')->ChargeListe();
+            
+            $aEnregId=$this->listeDesIds($entities);
+            
+            $aSessionTblEnreg=$session->get($gUserLoginLogged.'_voix_tblenreg');
+            
+            $aEnregTri=$aSessionTblEnreg['trivoix'];
+            
+            $sColDeTri=(isset($aEnregTri['coltrienreg']) ? $aEnregTri['coltrienreg'] : "");
+            
+            $sColDeTriOrdre=(isset($aEnregTri['ordretrienreg']) ? $aEnregTri['coltrienreg'] : "");
+            
+            $nbenreg=$aSessionTblEnreg['nbenreg'];
+            
+            
+            //echo "<br/> \LAST ID >".$last."<";
+            
+            $iEnreg=1;
+            
+            foreach ($aEnregId as $ki=>$ae)
+            {
+            	if($ae==$last)
+            	{
+            		$iEnreg=$ki;
+            		break;
+            	}
+            }
+             
+            $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
+            
+            
+            
+            /*
+             echo "<br/> \$nbenreg >".$nbenreg."<";
+            echo "<br/> \$iEnreg >".$iEnreg."<";
+            echo "<br/> coltrienreg >".$sColDeTri."<";
+            echo "<br/> ordretrienreg >".$sColDeTriOrdre."<";
+            */
+            
+            $aEnregTri=array();
+            $aEnreg=array('coltrienreg'=>$sColDeTri);
+            $aEnregTri[]=$aEnreg;
+            $aEnreg=array('ordretrienreg'=>$sColDeTriOrdre);
+            $aEnregTri[]=$aEnreg;
+            
+             
+            //die('CREATE ACTION 208');
+            
+            /*
+             *
+            */
+                        
 
-            return $this->redirect($this->generateUrl('voix_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('voix_show', array('id' => $last)));
         }
 
         return $this->render('oeuvresBundle:Voix:new.html.twig', array(
@@ -420,10 +495,18 @@ class VoixController extends Controller
     	$c=0;
     	foreach ($entities as $entity)
     	{
-    		$c++;
-    
-    		$aEnregId[$c]=$entity['id'];
+    		/**
+    		 * ne prendre que les voix
+    		 */
+    		if($entity['libsouscateg']=='')
+    		{
+    			
+	    		$c++;
+	    
+	    		$aEnregId[$c]=$entity['id'];
     		 
+    		}
+    		
     		/*if($c=$iNbEnregParPage)
     		 {
     		 

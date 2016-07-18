@@ -129,6 +129,18 @@ class FonctionsController extends Controller
      */
     public function createAction(Request $request)
     {
+    	
+    	$gUserLoginLogged="";
+    	$session = $this->getRequest()->getSession();
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		return new RedirectResponse($this->generateUrl('homepage'));
+    	}
+    	
         $entity = new Fonctions();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -138,10 +150,54 @@ class FonctionsController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            $this->createListeResConfigRoutings($entity->getId());
+            /*
+             * recalcul variable de session Accompagnements $aSessionTblEnreg
+            */
+            $last=$entity->getId();
             
+            $iPage=1;
             
-            return $this->redirect($this->generateUrl('fonctions_show', array('id' => $entity->getId())));
+            $entities = $em->getRepository('oeuvresBundle:Fonctions')->ChargeListe();
+            
+            $aEnregId=$this->listeDesIds($entities);
+            
+            $aSessionTblEnreg=$session->get($gUserLoginLogged.'_fonctions_tblenreg');
+            
+            $aEnregTri=$aSessionTblEnreg['trifonctions'];
+            
+            $sColDeTri=(isset($aEnregTri['coltrienreg']) ? $aEnregTri['coltrienreg'] : "");
+            
+            $sColDeTriOrdre=(isset($aEnregTri['ordretrienreg']) ? $aEnregTri['coltrienreg'] : "");
+            
+            $nbenreg=$aSessionTblEnreg['nbenreg'];
+            
+            $iEnreg=1;
+            
+            foreach ($aEnregId as $ki=>$ae)
+            {
+            	if($ae==$last)
+            	{
+            		$iEnreg=$ki;
+            		break;
+            	}
+            }
+             
+            
+            $aEnregTri=array();
+            $aEnreg=array('coltrienreg'=>$sColDeTri);
+            $aEnregTri[]=$aEnreg;
+            $aEnreg=array('ordretrienreg'=>$sColDeTriOrdre);
+            $aEnregTri[]=$aEnreg;
+            
+            $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
+            
+             
+            /*
+             *
+            */            
+            $this->createListeResConfigRoutings($last);   
+            
+            return $this->redirect($this->generateUrl('fonctions_show', array('id' => $last)));
         }
 
         return $this->render('oeuvresBundle:Fonctions:new.html.twig', array(

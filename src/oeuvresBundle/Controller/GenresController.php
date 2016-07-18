@@ -187,6 +187,18 @@ class GenresController extends Controller
      */
     public function createAction(Request $request)
     {
+    	
+    	$gUserLoginLogged="";
+    	$session = $this->getRequest()->getSession();
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		return new RedirectResponse($this->generateUrl('homepage'));
+    	}
+    	    	
         $entity = new Genres();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -195,8 +207,53 @@ class GenresController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
+                       
+            /*
+             * recalcul variable de session Genres $aSessionTblEnreg
+            */
+            $last=$entity->getId();
+            
+            $iPage=1;
+            
+            $entities = $em->getRepository('oeuvresBundle:Genres')->ChargeListe();
+            
+            $aEnregId=$this->listeDesIds($entities);
+            
+            $aSessionTblEnreg=$session->get($gUserLoginLogged.'_genres_tblenreg');
+            
+            $aEnregTri=$aSessionTblEnreg['trigenres'];
+            
+            $sColDeTri=(isset($aEnregTri['coltrienreg']) ? $aEnregTri['coltrienreg'] : "");
+            
+            $sColDeTriOrdre=(isset($aEnregTri['ordretrienreg']) ? $aEnregTri['coltrienreg'] : "");
+            
+            $nbenreg=$aSessionTblEnreg['nbenreg'];
+            
+            $iEnreg=1;
+            
+            foreach ($aEnregId as $ki=>$ae)
+            {
+            	if($ae==$last)
+            	{
+            		$iEnreg=$ki;
+            		break;
+            	}
+            }
+             
+            
+            $aEnregTri=array();
+            $aEnreg=array('coltrienreg'=>$sColDeTri);
+            $aEnregTri[]=$aEnreg;
+            $aEnreg=array('ordretrienreg'=>$sColDeTriOrdre);
+            $aEnregTri[]=$aEnreg;
+             
+            $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
+            
+            /*
+             *
+            */            
 
-            return $this->redirect($this->generateUrl('genres_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('genres_show', array('id' => $last)));
         }
 
         return $this->render('oeuvresBundle:Genres:new.html.twig', array(

@@ -35,7 +35,7 @@ class GenresRepository extends EntityRepository
 				t.libelle,
 				t.datecreateAt
 				FROM oeuvresBundle:Genres t
-				WHERE t.active=1'
+				WHERE t.active=1 order by t.libelle'
 		);
 		
 		try {

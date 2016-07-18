@@ -23,7 +23,10 @@ class VoixRepository extends EntityRepository
 
 	public function ChargeListe()
 	{
-		/*
+		
+		$aArbre=array();
+		
+		
 		$query = $this->getEntityManager()
 		->createQuery(
 				'SELECT
@@ -32,9 +35,9 @@ class VoixRepository extends EntityRepository
 				t.libelle,
 				t.datecreateAt
 				FROM oeuvresBundle:Voix t
-				WHERE t.active=1 order by t.libelle'
+				order by t.libelle'
 		);
-			*/
+		/*
 		$query = $this->getEntityManager()
 		->createQuery(
 				'SELECT
@@ -49,13 +52,73 @@ class VoixRepository extends EntityRepository
 				t.datecreateAt
 				FROM oeuvresBundle:Voix t
 				 LEFT JOIN oeuvresBundle:Souscategvoix v WHERE v.voix_id=t.id
-				 WHERE t.active=1 order by t.libelle,v.libelle'
+				  order by t.libelle,v.libelle'
 		);		
+		*/
 		try {
-			return $query->getResult();
+				
+			$a=$query->getArrayResult();
+				
+			foreach ($a as $oM)			
+			{
+				
+				$aVoix=array("id"=>$oM['id'],"active"=>$oM['active']
+						,"libelle"=>$oM['libelle']
+						,"datecreateAt"=>$oM['datecreateAt']
+						,"active"=>$oM['active']
+						,"idsouscat"=>0
+						,"voix_id"=>0
+						,"sscatactive"=>""
+						,"libsouscateg"=>""
+						,"datcsouscateg"=>""
+				);
+				
+				$aArbre[]=$aVoix;
+				
+				$querysscat = $this->getEntityManager()
+				->createQuery(
+						'SELECT
+						v.id as idsouscat,
+						v.voix_id,
+						v.active as sscatactive,
+						v.libelle as libsouscateg,
+						v.datecreateAt as datcsouscateg
+						 FROM oeuvresBundle:Souscategvoix v
+						WHERE v.voix_id='.$oM['id'].
+						'order by v.libelle'
+				);
+				
+				$ascv=$querysscat->getArrayResult();
+				
+				foreach ($ascv as $ascat)
+				{
+					$aScVoix=array("id"=>0,"active"=>''
+							,"libelle"=>''
+							,"datecreateAt"=>''
+							,"active"=>''
+							,"idsouscat"=>$ascat['idsouscat']
+							,"voix_id"=>$ascat['voix_id']
+							,"sscatactive"=>$ascat['sscatactive']
+							,"libsouscateg"=>$ascat['libsouscateg']
+							,"datcsouscateg"=>$ascat['datcsouscateg']
+					);
+					
+					$aArbre[]=$aScVoix;
+						
+					
+				}
+				
+								
+			}			
+
+						
+			
+			
 		} catch (\Doctrine\ORM\NoResultException $e) {
-			return null;
 		}
+		
+		return $aArbre;
+		
 				
 	}
 }

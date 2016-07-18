@@ -329,11 +329,13 @@
 	    
 		<div style="background-color:beige; display:none;">
 	            		           	
-	modif en cours=
 		
-		{{ modifencours==1 ? "Oui" : "Non"}}
+		<!--
+			modif en cours=
 		
-		            		           	<br/>
+		 {{ modifencours==1 ? "Oui" : "Non"}}
+		
+		            		           	<br/>  -->
 		<!--  |keys affiche clé -->
 		
 		{% for enregoeuvreskeys in listeenregoeuvres|keys %}
@@ -350,6 +352,7 @@
 					{% set cptr=0 %}
 					{% for idoe in listeenregoeuvres[enregoeuvreskeys] %}	
 						{% set cptr=cptr+1 %}
+						<br/>idoe : {{ idoe }}
 						{% if  entity.id==idoe %}
 							{% set idenreg = cptr %}
 						{% endif %}

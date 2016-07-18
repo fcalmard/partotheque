@@ -111,8 +111,8 @@
 					{% set cptr=0 %}
 					{% for iden in listeenregs[enregkeys] %}	
 						{% set cptr=cptr+1 %}
-						{% if  entity.id==iden %}
 							<br/>iden:{{ iden }}
+						{% if  entity.id==iden %}
 							{% set idenreg = cptr %}
 						{% endif %}
 					{% endfor %}

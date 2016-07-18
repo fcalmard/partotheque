@@ -191,6 +191,18 @@ class AvancementsController extends Controller
      */
     public function createAction(Request $request)
     {
+    	
+    	$gUserLoginLogged="";
+    	$session = $this->getRequest()->getSession();
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		return new RedirectResponse($this->generateUrl('homepage'));
+    	}
+    	    	
         $entity = new Avancements();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -199,6 +211,50 @@ class AvancementsController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
+                       
+            /*
+             * recalcul variable de session Accompagnements $aSessionTblEnreg
+            */
+            $last=$entity->getId();
+            
+            $iPage=1;
+            
+            $entities = $em->getRepository('oeuvresBundle:Avancements')->ChargeListe();
+            
+            $aEnregId=$this->listeDesIds($entities);
+            
+            $aSessionTblEnreg=$session->get($gUserLoginLogged.'_avancements_tblenreg');
+            
+            $aEnregTri=$aSessionTblEnreg['triavancements'];
+            
+            $sColDeTri=(isset($aEnregTri['coltrienreg']) ? $aEnregTri['coltrienreg'] : "");
+            
+            $sColDeTriOrdre=(isset($aEnregTri['ordretrienreg']) ? $aEnregTri['coltrienreg'] : "");
+            
+            $nbenreg=$aSessionTblEnreg['nbenreg'];
+            
+            $iEnreg=1;
+            
+            foreach ($aEnregId as $ki=>$ae)
+            {
+            	if($ae==$last)
+            	{
+            		$iEnreg=$ki;
+            		break;
+            	}
+            }
+             
+            $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
+            
+            $aEnregTri=array();
+            $aEnreg=array('coltrienreg'=>$sColDeTri);
+            $aEnregTri[]=$aEnreg;
+            $aEnreg=array('ordretrienreg'=>$sColDeTriOrdre);
+            $aEnregTri[]=$aEnreg;
+             
+            /*
+             *
+            */            
 
             return $this->redirect($this->generateUrl('avancements_show', array('id' => $entity->getId())));
         }

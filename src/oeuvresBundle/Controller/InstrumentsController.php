@@ -182,6 +182,18 @@ class InstrumentsController extends Controller
      */
     public function createAction(Request $request)
     {
+    	
+    	$gUserLoginLogged="";
+    	$session = $this->getRequest()->getSession();
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		return new RedirectResponse($this->generateUrl('homepage'));
+    	}
+    	    	
         $entity = new Instruments();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -190,7 +202,51 @@ class InstrumentsController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
+            
+            /*
+             * recalcul variable de session Accompagnements $aSessionTblEnreg
+            */
+            $last=$entity->getId();
+            
+            $iPage=1;
+            
+            $entities = $em->getRepository('oeuvresBundle:Instruments')->ChargeListe();
+            
+            $aEnregId=$this->listeDesIds($entities);
+            
+            $aSessionTblEnreg=$session->get($gUserLoginLogged.'_instruments_tblenreg');
+            
+            $aEnregTri=$aSessionTblEnreg['triinstruments'];
+            
+            $sColDeTri=(isset($aEnregTri['coltrienreg']) ? $aEnregTri['coltrienreg'] : "");
+            
+            $sColDeTriOrdre=(isset($aEnregTri['ordretrienreg']) ? $aEnregTri['coltrienreg'] : "");
+            
+            $nbenreg=$aSessionTblEnreg['nbenreg'];
+                    
+            $iEnreg=1;
+            
+            foreach ($aEnregId as $ki=>$ae)
+            {           
+            	if($ae==$last)
+            	{
+            		$iEnreg=$ki;
+            		break;
+            	}
+            }
+             
+            $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
 
+            $aEnregTri=array();
+            $aEnreg=array('coltrienreg'=>$sColDeTri);
+            $aEnregTri[]=$aEnreg;
+            $aEnreg=array('ordretrienreg'=>$sColDeTriOrdre);
+            $aEnregTri[]=$aEnreg;
+                     
+            /*
+             *
+            */
+            
             return $this->redirect($this->generateUrl('instruments_show', array('id' => $entity->getId())));
         }
 

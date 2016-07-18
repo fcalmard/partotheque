@@ -264,16 +264,71 @@ class TempsLiturgiquesController extends Controller
      */
     public function createAction(Request $request)
     {
-        $entity = new TempsLiturgiques();
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$session = $this->getRequest()->getSession();
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    	
+    	
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		return new RedirectResponse($this->generateUrl('homepage'));
+    	}
+
+    	$entity = new TempsLiturgiques();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+        	$em = $this->getDoctrine()->getManager();
+        	$em->persist($entity);
+        	$em->flush();
+        	
+	        /*
+	         * recalcul variable de session Accompagnements $aSessionTblEnreg
+	        */
+	        $last=$entity->getId();
+	        
+	        $iPage=1;
+	        
+	        $entities = $em->getRepository('oeuvresBundle:TempsLiturgiques')->ChargeListe();
+	        
+	        $aEnregId=$this->listeDesIds($entities);
+	        
+	        $aSessionTblEnreg=$session->get($gUserLoginLogged.'_tempsliturgiques_tblenreg');
+	        
+	        $aEnregTri=$aSessionTblEnreg['tritempsliturgiques'];
+	        
+	        $sColDeTri=(isset($aEnregTri['coltrienreg']) ? $aEnregTri['coltrienreg'] : "");
+	        
+	        $sColDeTriOrdre=(isset($aEnregTri['ordretrienreg']) ? $aEnregTri['coltrienreg'] : "");
+	        
+	        $nbenreg=$aSessionTblEnreg['nbenreg'];
+	                
+	        $iEnreg=1;
+	        
+	        foreach ($aEnregId as $ki=>$ae)
+	        {
+	        	if($ae==$last)
+	        	{
+	        		$iEnreg=$ki;
+	        		break;
+	        	}
+	        }
+	         
+	        $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
+	                	        
+	        $aEnregTri=array();
+	        $aEnreg=array('coltrienreg'=>$sColDeTri);
+	        $aEnregTri[]=$aEnreg;
+	        $aEnreg=array('ordretrienreg'=>$sColDeTriOrdre);
+	        $aEnregTri[]=$aEnreg;
 
-            return $this->redirect($this->generateUrl('tempsliturgiques_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('tempsliturgiques_show', array('id' => $last)));
         }
 
         return $this->render('oeuvresBundle:TempsLiturgiques:new.html.twig', array(

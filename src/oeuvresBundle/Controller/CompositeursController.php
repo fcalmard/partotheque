@@ -186,7 +186,18 @@ class CompositeursController extends Controller
      *
      */
     public function createAction(Request $request)
-    {
+    {   	
+    	$gUserLoginLogged="";
+    	$session = $this->getRequest()->getSession();
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		return new RedirectResponse($this->generateUrl('homepage'));
+    	}  	
+    	
         $entity = new Compositeurs();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -195,6 +206,65 @@ class CompositeursController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
+            
+            /*
+             * recalcul variable de session Accompagnements $aSessionTblEnreg
+            */
+            $last=$entity->getId();
+            
+            $iPage=1;
+            
+            $entities = $em->getRepository('oeuvresBundle:Compositeurs')->ChargeListe();
+            
+            $aEnregId=$this->listeDesIds($entities);
+            
+            $aSessionTblEnreg=$session->get($gUserLoginLogged.'_compositeurs_tblenreg');
+            
+            $aEnregTri=$aSessionTblEnreg['tricompositeurs'];
+            
+            $sColDeTri=(isset($aEnregTri['coltrienreg']) ? $aEnregTri['coltrienreg'] : "");
+            
+            $sColDeTriOrdre=(isset($aEnregTri['ordretrienreg']) ? $aEnregTri['coltrienreg'] : "");
+            
+            $nbenreg=$aSessionTblEnreg['nbenreg'];
+            
+            
+            //echo "<br/> \LAST ID >".$last."<";
+            
+            $iEnreg=1;
+            
+            foreach ($aEnregId as $ki=>$ae)
+            {           	 
+            	if($ae==$last)
+            	{
+            		$iEnreg=$ki;
+            		break;            
+            	}
+            }
+             
+            $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
+            
+            
+            
+             /*
+            echo "<br/> \$nbenreg >".$nbenreg."<";
+            echo "<br/> \$iEnreg >".$iEnreg."<";
+            echo "<br/> coltrienreg >".$sColDeTri."<";
+            echo "<br/> ordretrienreg >".$sColDeTriOrdre."<";
+            */
+
+            $aEnregTri=array();
+            $aEnreg=array('coltrienreg'=>$sColDeTri);
+            $aEnregTri[]=$aEnreg;
+            $aEnreg=array('ordretrienreg'=>$sColDeTriOrdre);
+            $aEnregTri[]=$aEnreg;
+
+             
+            //die('CREATE ACTION 208');            
+            
+            /*
+             * 
+             */
 
             return $this->redirect($this->generateUrl('compositeurs_show', array('id' => $entity->getId())));
         }

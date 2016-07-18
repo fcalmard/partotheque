@@ -4,7 +4,11 @@
 
     <div class="titrelisteetform">
 
+	{% if id is defined %}
     <h1>Modification Compositeur</h1>
+    {% else %}
+    <h1>Nouveau Compositeur</h1>
+    {% endif %}
 
 	</div>
     <div class="listeetform">
@@ -108,6 +112,7 @@
 				{% endif %}
 								
 				<td style="background-color:beige; " >
+					<div id="compositeurs_divdefildansenreg" >
 				    {% if idenreg>1 %}
 					<a href="{{ path('compositeurs_pagine', { 'idxenreg': idenreg , 'sens': 'prec' , 'action': 'edit' }) }}">
 			             <img alt="Précedente" src="/web/images/Actions-arrow-left-icon.png" width="64px" height="64px" >
@@ -130,7 +135,7 @@
 					<a href="{{ path('compositeurs_pagine', { 'idxenreg': idenreg , 'sens': 'suiv', 'action': 'edit' }) }}">
 			             <img alt="Suivante" src="/web/images/Actions-arrow-right-icon.png" width="64px" height="64px" >
 				    </a>				    
-				    
+				    </div>
 				    {% endif %}
 				
 				</td>	
@@ -152,7 +157,11 @@
 		       {
 				obj.checked = true;;
 		       }
+	   	
+	       {% if id is not defined %}
+			$("#compositeurs_divdefildansenreg").hide();
 
+			{% endif %}
 			$("#menu1").hide();
 			$("#menu2").hide();
 			$("#menu3").hide();

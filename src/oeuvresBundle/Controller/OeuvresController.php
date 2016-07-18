@@ -779,6 +779,18 @@ class OeuvresController extends Controller
      */
     public function createAction(Request $request)
     {
+    	
+    	$gUserLoginLogged="";
+    	$session = $this->getRequest()->getSession();
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		return new RedirectResponse($this->generateUrl('homepage'));
+    	}
+    	    	
         $entity = new Oeuvres();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -787,10 +799,58 @@ class OeuvresController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
+            $newid=$entity->getId();
             
             $sFile=$this->deplace_upload($em);
             
-            return $this->redirect($this->generateUrl('oeuvres_show', array('id' => $entity->getId())));
+            $iPage=1;
+            
+            $entities = $em->getRepository('oeuvresBundle:Oeuvres')->ChargeListe();
+            
+            $aEnregId=$this->listeDesIds($entities);
+            
+            $aSessionTblEnreg=$session->get($gUserLoginLogged.'_oeuvres_tblenreg');
+            
+            $aEnregTri=$aSessionTblEnreg['trioeuvres'];
+            
+            $sColDeTri=(isset($aEnregTri['coltrienreg']) ? $aEnregTri['coltrienreg'] : "");
+            
+            $sColDeTriOrdre=(isset($aEnregTri['ordretrienreg']) ? $aEnregTri['coltrienreg'] : "");
+            
+            $nbenreg=$aSessionTblEnreg['nbenreg'];
+            
+            
+            //echo "<br/> \LAST ID >".$last."<";
+            
+            $iEnreg=1;
+            
+            foreach ($aEnregId as $ki=>$ae)
+            {
+            	if($ae==$newid)
+            	{
+            		$iEnreg=$ki;
+            		break;
+            	}
+            }
+             
+            $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
+            
+            
+            
+            /*
+             echo "<br/> \$nbenreg >".$nbenreg."<";
+            echo "<br/> \$iEnreg >".$iEnreg."<";
+            echo "<br/> coltrienreg >".$sColDeTri."<";
+            echo "<br/> ordretrienreg >".$sColDeTriOrdre."<";
+            */
+            
+            $aEnregTri=array();
+            $aEnreg=array('coltrienreg'=>$sColDeTri);
+            $aEnregTri[]=$aEnreg;
+            $aEnreg=array('ordretrienreg'=>$sColDeTriOrdre);
+            $aEnregTri[]=$aEnreg;            
+            
+            return $this->redirect($this->generateUrl('oeuvres_show', array('id' => $newid)));
         }
 
         $idoeuvre=$entity->getId();

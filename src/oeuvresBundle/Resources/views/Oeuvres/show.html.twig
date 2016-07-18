@@ -181,8 +181,9 @@
 					{% set cptr=0 %}
 					{% for idoe in listeenregoeuvres[enregoeuvreskeys] %}	
 						{% set cptr=cptr+1 %}
+						<br/>idoe:{{ idoe }}
 						{% if  entity.id==idoe %}
-							<br/>idoe:{{ idoe }}
+							
 							{% set idenreg = cptr %}
 						{% endif %}
 					{% endfor %}
