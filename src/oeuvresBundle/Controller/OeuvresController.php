@@ -818,10 +818,7 @@ class OeuvresController extends Controller
             $sColDeTriOrdre=(isset($aEnregTri['ordretrienreg']) ? $aEnregTri['coltrienreg'] : "");
             
             $nbenreg=$aSessionTblEnreg['nbenreg'];
-            
-            
-            //echo "<br/> \LAST ID >".$last."<";
-            
+                        
             $iEnreg=1;
             
             foreach ($aEnregId as $ki=>$ae)
@@ -834,15 +831,6 @@ class OeuvresController extends Controller
             }
              
             $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
-            
-            
-            
-            /*
-             echo "<br/> \$nbenreg >".$nbenreg."<";
-            echo "<br/> \$iEnreg >".$iEnreg."<";
-            echo "<br/> coltrienreg >".$sColDeTri."<";
-            echo "<br/> ordretrienreg >".$sColDeTriOrdre."<";
-            */
             
             $aEnregTri=array();
             $aEnreg=array('coltrienreg'=>$sColDeTri);

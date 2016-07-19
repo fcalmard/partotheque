@@ -25,14 +25,10 @@ class TypesmusiquesRepository extends EntityRepository
 				t.libelle,
 				t.datecreateAt
 				FROM oeuvresBundle:Typesmusiques t
-				WHERE t.active=1'
+				ORDER BY t.libelle'
 		);
-		
-		// $query->andWhere('o.actif = ?', array(1));
-		
-		try {
-			//return $query->getSingleResult();
 				
+		try {				
 			return $query->getResult();
 		} catch (\Doctrine\ORM\NoResultException $e) {
 			return null;

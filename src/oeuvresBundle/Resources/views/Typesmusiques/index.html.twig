@@ -10,6 +10,8 @@
 	        <thead>
 	            <tr>
 	                <th>Libelle</th>
+		                <th>Active</th>
+	                
 	                <th>Actions</th>
 	            </tr>
 	        </thead>
@@ -17,6 +19,9 @@
 		        {% for entity in entities %}
 		            <tr>
 		                <td><a href="{{ path('typesmusiques_show', { 'id': entity.id }) }}">{{ entity.libelle }}</a></td>
+		                
+		                <td>{{ entity.active==1 ? "O" : "N"}}</td>
+		                
 		                <td>
 			                <ul  class="lstactionsul">
 			                    <li>

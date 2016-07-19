@@ -14,13 +14,15 @@
 		        <tbody>
 
 		            <tr class="ligneshow" >
-		                <th>Active</th>
-		                <td>{{ entity.active==1 ? "O" : "N"}}</td>
-		            </tr>
-		            <tr class="ligneshow" >
 		                <th>Libelle</th>
 		                <td>{{ entity.libelle }}</td>
 		            </tr>
+		            
+		            <tr class="ligneshow" >
+		                <th>Active</th>
+		                <td>{{ entity.active==1 ? "O" : "N"}}</td>
+		            </tr>
+
 		            <tr class="ligneshow" >
 		                <th>Date de saisie</th>
 		                <td>{{ entity.datecreateAt|date('d/m/Y') }}</td>

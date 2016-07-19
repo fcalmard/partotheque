@@ -21,8 +21,7 @@ class AvancementsRepository extends \Doctrine\ORM\EntityRepository
 					t.active,
 					t.libelle,
 					t.datecreateAt
-					FROM oeuvresBundle:Avancements t
-					WHERE t.active=1 order by t.libelle'
+					FROM oeuvresBundle:Avancements t order by t.libelle'
 			);
 			
 			try {

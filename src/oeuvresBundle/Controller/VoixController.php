@@ -253,24 +253,12 @@ class VoixController extends Controller
              
             $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
             
-            
-            
-            /*
-             echo "<br/> \$nbenreg >".$nbenreg."<";
-            echo "<br/> \$iEnreg >".$iEnreg."<";
-            echo "<br/> coltrienreg >".$sColDeTri."<";
-            echo "<br/> ordretrienreg >".$sColDeTriOrdre."<";
-            */
-            
             $aEnregTri=array();
             $aEnreg=array('coltrienreg'=>$sColDeTri);
             $aEnregTri[]=$aEnreg;
             $aEnreg=array('ordretrienreg'=>$sColDeTriOrdre);
             $aEnregTri[]=$aEnreg;
-            
-             
-            //die('CREATE ACTION 208');
-            
+                         
             /*
              *
             */
