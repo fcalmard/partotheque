@@ -108,15 +108,28 @@ public class ArticleDataSource {
 				MySQLiteHelper.COLUMN_ID + " = " + id, null);
 	}
 
-	public List<Article> getAllArticles() {
+	public List<Article> getAllArticles(long ifam) {
 		List<Article> articles = new ArrayList<Article>();
 
-		Cursor cursor = database.query(MySQLiteHelper.TABLE_ARTICLES,
-				allColumns, null, null, null, null, null);
+		Cursor cursor;
+
+		if (ifam!=0)
+		{
+			//TABLE_ARTICLES_FAMILLE
+			cursor = database.query(MySQLiteHelper.TABLE_ARTICLES,allColumns,MySQLiteHelper.COLUMN_ID_FAMILLE+" = "+ifam,
+					null,null,null,null,null);
+		}else
+		{
+			cursor = database.query(MySQLiteHelper.TABLE_ARTICLES,
+					allColumns, null, null, null, null, null);
+		}
+
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			Article article = cursorToArticle(cursor);
+
+			long ifam2=article.getFamilleId();
 			articles.add(article);
 			cursor.moveToNext();
 		}

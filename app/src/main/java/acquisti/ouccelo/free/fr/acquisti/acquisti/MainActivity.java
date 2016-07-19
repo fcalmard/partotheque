@@ -1,11 +1,16 @@
 package acquisti.ouccelo.free.fr.acquisti.acquisti;
 
+import android.app.ListActivity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,13 +25,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -41,6 +50,7 @@ public class MainActivity extends AppCompatActivity
     private GoogleApiClient client;
 
     private ArrayAdapter<Famille> myAdapter;
+    private ArrayAdapter<Article> myAdapterArt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +58,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        final Context context = this;
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -239,8 +251,6 @@ public class MainActivity extends AppCompatActivity
         spinner_famille.setAdapter(myAdapter);
         spinner_famille.setOnItemSelectedListener(this);
 
-
-
         ParamDataSource dtsparam = new ParamDataSource(this);
         dtsparam.open();
 
@@ -254,7 +264,12 @@ public class MainActivity extends AppCompatActivity
 
         mysqlhlpr.majBaseDeDonnees(this,dtsparam.getDatabase(),nversion);
 
-        Log.v("MAIN","FIN TRAITEMENT MAJ STRUCTURE DATABASE >"+nversion+"<");
+        /*
+        chargement liste des articles
+         */
+        this.AfficheArticles(0);
+
+      //  Log.v("MAIN","FIN TRAITEMENT MAJ STRUCTURE DATABASE >"+nversion+"<");
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -270,6 +285,142 @@ public class MainActivity extends AppCompatActivity
                 Uri.parse("android-app://acquisti.ouccelo.free.fr.acquisti.acquisti/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    private void AfficheArticles(long idfamille)
+    {
+
+
+        AppBarLayout.LayoutParams lp1 = new AppBarLayout.LayoutParams(DrawerLayout.LayoutParams.MATCH_PARENT,
+                DrawerLayout.LayoutParams.MATCH_PARENT);
+
+        AppBarLayout.LayoutParams lp2 = new AppBarLayout.LayoutParams(DrawerLayout.LayoutParams.WRAP_CONTENT,
+                DrawerLayout.LayoutParams.WRAP_CONTENT);
+
+        AppBarLayout.LayoutParams lp3 = new AppBarLayout.LayoutParams(DrawerLayout.LayoutParams.MATCH_PARENT,
+                DrawerLayout.LayoutParams.WRAP_CONTENT);
+
+        ArticleDataSource datasourceart = new ArticleDataSource(this);
+        datasourceart.open();
+
+        List<Article> listValuesArt = datasourceart.getAllArticles(idfamille);
+
+        myAdapterArt = new ArrayAdapter<Article>(this, R.layout.row_layout_article,
+                R.id.listText, listValuesArt);
+
+/*
+        Spinner spinner_famille = (Spinner) findViewById(R.id.spinner_famille);
+
+ */
+        final LinearLayout LinearLayoutlisteproduits = (LinearLayout) findViewById(R.id.idlisteproduits);
+
+        		    /*
+		     *
+		     */
+
+        LinearLayout gabaritListeDet = new LinearLayout (this);
+        gabaritListeDet. setGravity(Gravity.LEFT);
+        //gabaritListeDet . setGravity(Gravity.END);
+        //LayoutParams.FILL_PARENT WRAP_CONTENT
+
+        gabaritListeDet.setOrientation(LinearLayout.VERTICAL);
+
+
+        int iart=0;
+
+        for (Article art : listValuesArt)
+        {
+
+            iart++;
+
+            final Context context = this;
+
+            final ImageButton btnach= new ImageButton(context);
+
+            btnach.setId(iart);
+
+            LinearLayout gabaritDet = new LinearLayout (this);
+
+            gabaritDet.setLayoutParams(lp3);
+
+            gabaritDet.setOrientation(LinearLayout.HORIZONTAL);
+
+            gabaritDet. setGravity(Gravity.LEFT);
+
+            gabaritDet.setClickable(false);
+
+
+            Log.v("ARTICLE",art.toString());
+
+            String slibProduit = art.getLibelle();
+
+
+            TextView texttv = new TextView(context);
+
+            texttv.setText(slibProduit);
+            texttv.setHeight(100);
+
+//            tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.txt_size));
+
+            texttv.setTextSize(TypedValue.COMPLEX_UNIT_PX, 60);
+
+            //texttv.setTextSize(500,40);
+            //setFont(textView3,"CURSTOM-FONT2.ttf");
+
+           // setFont(texttv,"Roboto-Light.ttf");
+           // setFont(texttv,"RobotoCondensed-Bold.ttf");
+            setFont(texttv,"Roboto-Italic.ttf");
+
+            //texttv.setFontFeatureSettings();
+
+            texttv.setWidth(500);
+
+            Log.v("ARTICLE","1");
+
+            //libelle produit
+            gabaritDet.addView(texttv);
+
+            btnach.setImageResource(R.drawable.ajout);
+
+            gabaritDet.addView(btnach);
+
+            Log.v("ARTICLE","2");
+
+            gabaritDet.setPadding(10,10,10,10);
+
+            gabaritDet.setLayoutParams(lp2);
+
+            gabaritDet.setMinimumWidth(500);
+
+            gabaritListeDet.addView(gabaritDet);
+            Log.v("ARTICLE","3");
+
+
+        }
+
+        Log.v("APRES BOUCLE ARTICLE ","1");
+
+        LinearLayoutlisteproduits.addView(gabaritListeDet);
+
+       // final View viewart = findViewById(R.id.idlisteproduits);
+        // setListAdapter (myAdapterArt);
+
+       // LinearLayoutlisteproduits.
+
+    }
+
+    public void setFont(TextView textView, String fontName) {
+        if(fontName != null){
+            try {
+                Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/" + fontName);
+                textView.setTypeface(typeface);
+            } catch (Exception e) {
+                Log.e("FONT", fontName + " not found", e);
+            }
+        }
+
+        Log.v("FONT OK", fontName);
+
     }
 
     @Override

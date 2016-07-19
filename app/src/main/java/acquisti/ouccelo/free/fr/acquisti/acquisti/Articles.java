@@ -70,7 +70,7 @@ public class Articles extends ListActivity implements AdapterView.OnItemSelected
         spin = (Spinner) findViewById(R.id.spinner_famille);
 
         // on récupère les articles
-        List<Article> listValuesArt = datasource.getAllArticles();
+        List<Article> listValuesArt = datasource.getAllArticles(0);
 
         editText = (EditText) findViewById(R.id.editText1);
         spin = (Spinner) findViewById(R.id.spinner_famille);
@@ -145,7 +145,14 @@ public class Articles extends ListActivity implements AdapterView.OnItemSelected
                         datasource.updateArticle(articleSelected);
                     } else {
                         // CREATE
-                        myAdapterArt.add(datasource.createArticle(editText.getText().toString(), spin.getSelectedItemId()));
+
+                        Article newarticle = new Article(0,editText.getText().toString(), spin.getSelectedItemId());
+
+
+                        datasource.createArticle(newarticle);
+
+                        //myAdapterArt.add(datasource.createArticle(editText.getText().toString(), spin.getSelectedItemId()));
+
                         editText.setText("");
                     }
                     myAdapter.notifyDataSetChanged();

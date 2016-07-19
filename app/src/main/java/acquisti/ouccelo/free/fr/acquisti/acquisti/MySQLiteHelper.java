@@ -28,7 +28,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID_FAMILLE = "FamilleId";
     public static final String COLUMN_IMG = "img";
 
-	public static final String TABLE_FAMILLES = "familles";
+
+    public static final String TABLE_FAMILLES = "familles";
 
     public static final String RECH_TABLE_PARAM_ALL = "select "+COLUMN_ID+","+PARAM_COLUMN_VBD+","+PARAM_COLUMN_MODEENCOURS+" from "+TABLE_PARAM;
 
