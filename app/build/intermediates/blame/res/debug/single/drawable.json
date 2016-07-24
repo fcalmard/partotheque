@@ -4,12 +4,12 @@
         "source": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable/abc_ratingbar_indicator_material.xml"
     },
     {
-        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/drawable/abc_seekbar_thumb_material.xml",
-        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable/abc_seekbar_thumb_material.xml"
-    },
-    {
         "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/drawable/accept.png",
         "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/drawable/accept.png"
+    },
+    {
+        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/drawable/abc_seekbar_thumb_material.xml",
+        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable/abc_seekbar_thumb_material.xml"
     },
     {
         "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/drawable/abc_seekbar_track_material.xml",

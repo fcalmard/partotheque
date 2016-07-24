@@ -28,12 +28,12 @@
         "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/layout/activity_familles.xml"
     },
     {
-        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/layout/abc_alert_dialog_material.xml",
-        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/layout/abc_alert_dialog_material.xml"
-    },
-    {
         "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/layout/abc_screen_simple_overlay_action_mode.xml",
         "source": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/layout/abc_screen_simple_overlay_action_mode.xml"
+    },
+    {
+        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/layout/abc_alert_dialog_material.xml",
+        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/layout/abc_alert_dialog_material.xml"
     },
     {
         "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/layout/row_layout_article.xml",
@@ -44,12 +44,12 @@
         "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/layout/nav_header_main.xml"
     },
     {
-        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/layout/notification_template_big_media_narrow.xml",
-        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/layout/notification_template_big_media_narrow.xml"
-    },
-    {
         "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/layout/notification_media_action.xml",
         "source": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/layout/notification_media_action.xml"
+    },
+    {
+        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/layout/notification_template_big_media_narrow.xml",
+        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/layout/notification_template_big_media_narrow.xml"
     },
     {
         "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/layout/select_dialog_singlechoice_material.xml",
@@ -128,12 +128,12 @@
         "source": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/layout/abc_list_menu_item_checkbox.xml"
     },
     {
-        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/layout/content_familles.xml",
-        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/layout/content_familles.xml"
-    },
-    {
         "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/layout/notification_template_lines.xml",
         "source": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/layout/notification_template_lines.xml"
+    },
+    {
+        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/layout/content_familles.xml",
+        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/layout/content_familles.xml"
     },
     {
         "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/layout/design_navigation_item_separator.xml",

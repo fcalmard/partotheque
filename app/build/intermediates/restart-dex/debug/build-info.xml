@@ -4,16 +4,15 @@
     api-level="23"
     density="xhdpi"
     format="7"
-    timestamp="112353685662402"
-    token="-383641526185748015"
-    verifier="COMPATIBLE" >
+    timestamp="206238881940113"
+    token="-383641526185748015" >
 
     <task
         name="javac"
-        duration="66" />
+        duration="51" />
     <task
         name="instant-run-dex"
-        duration="399" />
+        duration="0" />
     <task
         name="instant-run-transform"
         duration="11" />
@@ -22,41 +21,23 @@
         duration="1" />
 
     <artifact
-        location="/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/reload-dex/debug/classes.dex"
-        type="RELOAD_DEX" />
+        location="/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_3/classes.dex"
+        type="DEX" />
 
-    <build timestamp="112123661255934" >
+    <build timestamp="202163349698834" >
         <artifact
             location="/home/francois/AndroidStudioProjects/Acquisti/app/build/outputs/apk/app-debug.apk"
             type="MAIN" />
     </build>
-    <build
-        timestamp="112327494195659"
-        verifier="COMPATIBLE" >
+    <build timestamp="206112834695093" >
         <artifact
-            location="/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/builds/debug/112327494195659/classes.dex"
-            type="RELOAD_DEX" />
+            location="/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/resources-debug.ap_"
+            type="RESOURCES" />
     </build>
-    <build
-        timestamp="112338142013573"
-        verifier="COMPATIBLE" >
+    <build timestamp="206238881940113" >
         <artifact
-            location="/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/builds/debug/112338142013573/classes.dex"
-            type="RELOAD_DEX" />
-    </build>
-    <build
-        timestamp="112346603744541"
-        verifier="COMPATIBLE" >
-        <artifact
-            location="/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/builds/debug/112346603744541/classes.dex"
-            type="RELOAD_DEX" />
-    </build>
-    <build
-        timestamp="112353685662402"
-        verifier="COMPATIBLE" >
-        <artifact
-            location="/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/reload-dex/debug/classes.dex"
-            type="RELOAD_DEX" />
+            location="/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_3/classes.dex"
+            type="DEX" />
     </build>
 
 </instant-run>

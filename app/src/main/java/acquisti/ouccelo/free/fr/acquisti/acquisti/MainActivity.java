@@ -1,28 +1,26 @@
 package acquisti.ouccelo.free.fr.acquisti.acquisti;
 
-import android.app.ListActivity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -35,8 +33,9 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
+import static acquisti.ouccelo.free.fr.acquisti.acquisti.MySQLiteHelper.*;
 
 
 public class MainActivity extends AppCompatActivity
@@ -120,9 +119,12 @@ public class MainActivity extends AppCompatActivity
 
         spinner_famille.setAdapter(adapterfamilles);
 
-/*
+        ParamDataSource dtsparam = new ParamDataSource(context);
+        dtsparam.open();
 
- */
+        MySQLiteHelper mysqlhlpr=new MySQLiteHelper(context);
+
+        String modeEnCours= mysqlhlpr.ModeEnCours(context,dtsparam.getDatabase(),false);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -135,6 +137,8 @@ public class MainActivity extends AppCompatActivity
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        dtsparam.close();
     }
 
     @Override
@@ -265,6 +269,34 @@ public class MainActivity extends AppCompatActivity
         mysqlhlpr.majBaseDeDonnees(this,dtsparam.getDatabase(),nversion);
 
         /*
+        ParamDataSource dtsparam = new ParamDataSource(context);
+        dtsparam.open();
+
+        MySQLiteHelper mysqlhlpr=new MySQLiteHelper(context);
+         */
+
+        String modeEnCours= mysqlhlpr.ModeEnCours(this,dtsparam.getDatabase(),false);
+
+        //Log.d("ON START ","MODE EN COURS >"+modeEnCours+"<");
+
+        final ImageButton btnmode = (ImageButton) findViewById(R.id.imageBtnMode);
+
+        boolean modeliste=modeEnCours.equals(PARAM_MODEENCOURS_LISTE);
+
+        //Log.d("MAIN ACTIVITY ", "LECTURE MODE EN COURS >" + modeEnCours + "< resultOfComparison=" + modeliste);
+
+
+        if (modeliste)
+        {
+
+            btnmode.setBackgroundResource(R.drawable.liste);
+
+        }else
+        {
+            btnmode.setBackgroundResource(R.drawable.caddy);
+        }
+
+        /*
         chargement liste des articles
          */
         this.AfficheArticles(0);
@@ -285,6 +317,10 @@ public class MainActivity extends AppCompatActivity
                 Uri.parse("android-app://acquisti.ouccelo.free.fr.acquisti.acquisti/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
+
+        datasourcefam.close();
+
+        dtsparam.close();
     }
 
     private void AfficheArticles(long idfamille)
@@ -308,28 +344,28 @@ public class MainActivity extends AppCompatActivity
         myAdapterArt = new ArrayAdapter<Article>(this, R.layout.row_layout_article,
                 R.id.listText, listValuesArt);
 
-/*
-        Spinner spinner_famille = (Spinner) findViewById(R.id.spinner_famille);
-
- */
         final LinearLayout LinearLayoutlisteproduits = (LinearLayout) findViewById(R.id.idlisteproduits);
 
-        		    /*
-		     *
-		     */
+        LinearLayoutlisteproduits.removeAllViewsInLayout();
 
-        LinearLayout gabaritListeDet = new LinearLayout (this);
+        LinearLayoutlisteproduits.setBackgroundColor(Color.LTGRAY);
+
+        final LinearLayout gabaritListeDet = new LinearLayout (this);
         gabaritListeDet. setGravity(Gravity.LEFT);
-        //gabaritListeDet . setGravity(Gravity.END);
         //LayoutParams.FILL_PARENT WRAP_CONTENT
 
         gabaritListeDet.setOrientation(LinearLayout.VERTICAL);
+
+        gabaritListeDet.removeAllViewsInLayout();
+
+        gabaritListeDet.setPadding(25,25,0,0);
 
 
         int iart=0;
 
         for (Article art : listValuesArt)
         {
+            LinearLayout gabaritDet = new LinearLayout (this);
 
             iart++;
 
@@ -337,75 +373,173 @@ public class MainActivity extends AppCompatActivity
 
             final ImageButton btnach= new ImageButton(context);
 
+            //String sid;
+
+           // sid = String.valueOf(art.getId());
+
             btnach.setId(iart);
 
-            LinearLayout gabaritDet = new LinearLayout (this);
+            btnach.setTag(art);
+
+
+            btnach.setOnClickListener(new View.OnClickListener() {
+
+                //int idbtn=btnach.getId();
+
+                @Override
+                public void onClick(View view)
+                {
+
+                    final Context context = view.getContext();
+
+                    //AlertDialog.Builder adb = new AlertDialog.Builder(context);
+
+                    //adb.setTitle(dlgslib);
+
+                    int id=view.getId();
+
+                    Article art = (Article) view.getTag();
+
+                    Log.v("ONCLICK",art.toString());
+
+                    //adb.setPositiveButton("Ok", null);
+
+                    //View idv = findViewById(R.id.txtid);
+
+                    // tv = new TextView();
+
+                    //TextView tv = (TextView) findViewById(R.id.txtid);
+                    //AchatBDD locmbd= new AchatBDD(context);
+
+                    /*
+
+                    //int iv=idv.getId();
+                    Boolean res=locmbd.MajListeAchat((long) id,argmode);
+
+
+                    String msgctrl="pas ok";
+                    if(res)
+                    {
+                        msgctrl="ok ";
+                    }
+                    String s=" id achat = "+String.valueOf(id)+" " + argmode;
+
+                    Log.d("**************** CONTROLE ", msgctrl);
+                    Log.d("**************** trace", s);
+
+                    */
+
+                    //int i=tv.getId();
+
+                    //adb.setMessage(msgctrl);
+
+
+                    finish();
+                    startActivity(getIntent());
+
+
+                }
+            });
+
 
             gabaritDet.setLayoutParams(lp3);
 
             gabaritDet.setOrientation(LinearLayout.HORIZONTAL);
 
-            gabaritDet. setGravity(Gravity.LEFT);
+            gabaritDet. setGravity(Gravity.LEFT|Gravity.START);
 
             gabaritDet.setClickable(false);
 
-
-            Log.v("ARTICLE",art.toString());
-
-            String slibProduit = art.getLibelle();
-
-
             TextView texttv = new TextView(context);
 
-            texttv.setText(slibProduit);
-            texttv.setHeight(100);
+            texttv.setText(art.getLibelle());
 
-//            tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.txt_size));
+           // Log.v("COMPTEUR ", String.valueOf(Integer.valueOf(iart)));
+
+            texttv.setHeight(100);
 
             texttv.setTextSize(TypedValue.COMPLEX_UNIT_PX, 60);
 
             //texttv.setTextSize(500,40);
             //setFont(textView3,"CURSTOM-FONT2.ttf");
+            texttv.setTextColor(Color.BLUE);
 
            // setFont(texttv,"Roboto-Light.ttf");
-           // setFont(texttv,"RobotoCondensed-Bold.ttf");
-            setFont(texttv,"Roboto-Italic.ttf");
+            setFont(texttv,"RobotoCondensed-Bold.ttf");
+           // setFont(texttv,"Roboto-Italic.ttf");
 
             //texttv.setFontFeatureSettings();
 
             texttv.setWidth(500);
 
-            Log.v("ARTICLE","1");
-
             //libelle produit
             gabaritDet.addView(texttv);
 
-            btnach.setImageResource(R.drawable.ajout);
+            /*
+            tester statut dans liste ou achat en fonction du mode
+             */
+            btnach.setImageResource(R.drawable.liste);
+           // btnach.setImageResource(R.drawable.caddy);
 
             gabaritDet.addView(btnach);
 
-            Log.v("ARTICLE","2");
-
-            gabaritDet.setPadding(10,10,10,10);
+           // gabaritDet.setPadding(10,10,10,10);
 
             gabaritDet.setLayoutParams(lp2);
 
             gabaritDet.setMinimumWidth(500);
 
+
+
             gabaritListeDet.addView(gabaritDet);
-            Log.v("ARTICLE","3");
 
 
+            final ImageButton imagebuttonMode = (ImageButton) findViewById(R.id.imageBtnMode);
+
+            imagebuttonMode.setOnClickListener(new View.OnClickListener() {
+
+                //int idbtn=btnach.getId();
+
+                @Override
+                public void onClick(View view)
+                {
+
+                    final Context context = view.getContext();
+
+
+                    ParamDataSource dtsparam = new ParamDataSource(context);
+                    dtsparam.open();
+
+                    MySQLiteHelper mysqlhlpr=new MySQLiteHelper(context);
+
+                    String modeEnCours= mysqlhlpr.ModeEnCours(context,dtsparam.getDatabase(),true);
+
+                    boolean modeliste=modeEnCours.equals(PARAM_MODEENCOURS_LISTE);
+
+                    //Log.d("MAIN ACTIVITY CLICK", "LECTURE MODE EN COURS >" + modeEnCours + "< resultOfComparison=" + modeliste);
+
+
+                    //mysqlhlpr.ControleVersionBaseDeDonnees(context,dtsparam.getDatabase());
+
+                    //Log.v("MAIN","FIN TRAITEMENT VERSIONDATABASE >"+nversion+"<");
+
+
+                    dtsparam.close();
+
+
+                    finish();
+
+                    startActivity(getIntent());
+
+
+                }
+            });
         }
 
-        Log.v("APRES BOUCLE ARTICLE ","1");
 
         LinearLayoutlisteproduits.addView(gabaritListeDet);
 
-       // final View viewart = findViewById(R.id.idlisteproduits);
-        // setListAdapter (myAdapterArt);
 
-       // LinearLayoutlisteproduits.
 
     }
 
@@ -418,8 +552,6 @@ public class MainActivity extends AppCompatActivity
                 Log.e("FONT", fontName + " not found", e);
             }
         }
-
-        Log.v("FONT OK", fontName);
 
     }
 
