@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="acquisti.ouccelo.free.fr.acquisti.acquisti.MainActivity"
+    tools:showIn="@layout/app_bar_main">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentRight="true"
+        android:weightSum="1"
+        android:gravity="top">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|top">
+
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_liste"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:spinnerMode="dropdown"
+                android:clickable="false"
+                android:background="@android:color/holo_orange_light"
+                android:popupBackground="@android:color/holo_blue_dark" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:weightSum="1">
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:id="@+id/spinner_famille"
+                android:background="@android:color/holo_blue_dark"
+                android:popupBackground="@android:color/holo_orange_light" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/scrollView"
+                android:layout_weight="0.22">
+
+                <LinearLayout
+                    android:id="@+id/idlisteproduits"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:padding="0dp"
+                    android:paddingRight="0dp"
+                    android:scrollIndicators="right"
+                    android:gravity="top"
+                    android:paddingLeft="0dp"
+                    android:paddingBottom="0dp"
+                    android:paddingTop="0dp"
+                    android:showDividers="none">
+    
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|top"
+            android:gravity="left">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageBtnMode"
+                android:layout_alignParentTop="true"
+                style="@style/AppTheme"
+                android:background="@drawable/liste2" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageBtnActiverModeCtrl    "
+                style="@style/AppTheme"
+                android:background="@drawable/controleb"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/imageBtnMode"
+                android:layout_toEndOf="@+id/imageBtnMode" />
+
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
+</RelativeLayout>
