@@ -25,7 +25,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String PARAM_COLUMN_MODECONTROLE = "modecontrole";
     public static final String PARAM_COLUMN_LISTEENCOURS = "idlisteencours";
 
-    public static final String RECH_TABLE_PARAM = "select "+PARAM_COLUMN_VBD+" from "+TABLE_PARAM;
+    public static final String PARAM_COLUMN_FAMENCOURS = "idfamencours";
+
+    public static final String RECH_TABLE_PARAM_VBD = "select "+PARAM_COLUMN_VBD+" from "+TABLE_PARAM;
 
 
     public static final String TABLE_ARTICLES = "articles";

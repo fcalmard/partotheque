@@ -45,9 +45,8 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:layout_weight="0.15">
+            android:layout_height="400dp"
+            android:weightSum="1">
 
             <Spinner
                 android:layout_width="match_parent"
@@ -59,23 +58,22 @@
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/scrollView" >
+                android:id="@+id/scrollView"
+                android:layout_weight="0.22">
 
                 <LinearLayout
                     android:id="@+id/idlisteproduits"
                     android:layout_width="match_parent"
-                    android:layout_height="110dp"
-                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_weight="0.55"
                     android:padding="0dp"
-                    android:paddingTop="50dp"
                     android:paddingRight="0dp"
                     android:scrollIndicators="right"
                     android:gravity="top"
                     android:paddingLeft="0dp"
                     android:paddingBottom="0dp"
-                   >
+                    android:paddingTop="0dp">
 
                 </LinearLayout>
             </ScrollView>
@@ -84,23 +82,21 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="47dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="left|top"
-            android:gravity="bottom|left"
-            android:layout_weight="0.23">
+            android:gravity="left">
 
             <ImageButton
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/imageBtnMode"
                 android:layout_alignParentTop="true"
                 style="@style/AppTheme"
-                android:layout_centerVertical="true"
                 android:background="@drawable/liste2" />
 
             <ImageButton
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/imageBtnActiverModeCtrl    "
                 style="@style/AppTheme"
                 android:background="@drawable/controleb"

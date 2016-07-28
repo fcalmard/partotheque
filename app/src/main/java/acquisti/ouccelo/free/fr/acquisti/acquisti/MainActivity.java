@@ -403,10 +403,7 @@ public class MainActivity extends AppCompatActivity
         myAdapterArt = new ArrayAdapter<Article>(this, R.layout.row_layout_article,
                 R.id.listText, listValuesArt);
 
-
-
         final LinearLayout LinearLayoutlisteproduits = (LinearLayout) findViewById(R.id.idlisteproduits);
-        //final  LinearLayoutlisteproduits = (LinearLayout) findViewById(R.id.idlisteproduits);
 
         LinearLayoutlisteproduits.removeAllViewsInLayout();
 
@@ -414,24 +411,12 @@ public class MainActivity extends AppCompatActivity
 
         final LinearLayout gabaritListeDet = new LinearLayout (this);
         gabaritListeDet. setGravity(Gravity.LEFT);
-        //LayoutParams.FILL_PARENT WRAP_CONTENT
 
         gabaritListeDet.setOrientation(LinearLayout.VERTICAL);
 
         gabaritListeDet.removeAllViewsInLayout();
 
         gabaritListeDet.setPadding(25,25,0,0);
-
-        gabaritListeDet.setVerticalScrollBarEnabled(true);
-
-        //gabaritListeDet.setOrientation(View.OVER_SCROLL_ALWAYS);
-
-        //gabaritListeDet.setOrientation(View.SCROLLBAR_POSITION_RIGHT);
-
-        //gabaritListeDet.setScrollContainer(true);
-
-
-       // gabaritListeDet.setLayoutParams(lpfill);
 
         final Context context = this;
 
@@ -549,13 +534,13 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        Log.v("MAIN","560");
+        //Log.v("MAIN","560");
 
         LinearLayoutlisteproduits.addView(gabaritListeDet);
 
         LinearLayoutlisteproduits.setScrollContainer(true);
 
-        Log.v("MAIN","566");
+        //Log.v("MAIN","566");
 
         // LinearLayoutlisteproduits.setLayoutParams(lpfill);
        //wrap content height LinearLayoutlisteproduits.setLayoutParams(lp3);
@@ -744,31 +729,19 @@ public class MainActivity extends AppCompatActivity
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
         Integer idview = view.getId();
+        //if(idview==R.id.spinner_famille)
 
-        if(idview==R.id.spinner_famille)
-        {
+            //Log.v("MAINACT","750 ");
 
             Spinner spinner_famille = (Spinner) findViewById(R.id.spinner_famille);
 
             Long lidfamille=spinner_famille.getSelectedItemId();
+            //Log.v("MAINACT","755 IDFAMILLE="+lidfamille.toString());
 
-            MySQLiteHelper mysqlhlpr=new MySQLiteHelper(this);
-
-            ParamDataSource dtsparam = new ParamDataSource(this);
-            dtsparam.open();
-
-            Param nParam=new Param();
-
-            Param oParam = mysqlhlpr.MiseAJourParam(this,dtsparam.getDatabase(),false,0,nParam);
-            String modeEnCours=oParam.getModeencours();
-
-            dtsparam.close();
-
-            boolean modeliste=modeEnCours.equals(PARAM_MODEENCOURS_LISTE);
 
             AfficheArticles(lidfamille);
 
-        }
+
 
     }
 
