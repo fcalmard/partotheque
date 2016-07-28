@@ -4,6 +4,7 @@ public class Param {
 	private long id;
 	private int versionbd;
 	private String modeencours;
+	private boolean bmodectrl;
 
 
 	public Param(){}
@@ -40,6 +41,14 @@ public class Param {
 		return this.modeencours;
 	}
 
+	public void setBmodectrl(boolean bctrl)
+	{
+		this.bmodectrl=bctrl;
+	}
+	public boolean getBmodectrl()
+	{
+		return this.bmodectrl;
+	}
 	@Override
 	public String toString() {
 		return "version bd:"+this.versionbd+" mode en cours :"+this.modeencours;

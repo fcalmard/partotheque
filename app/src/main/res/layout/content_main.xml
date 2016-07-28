@@ -55,24 +55,30 @@
                 android:id="@+id/spinner_famille"
                 android:background="@android:color/holo_blue_dark"
                 android:popupBackground="@android:color/holo_orange_light" />
-        </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/idlisteproduits"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical"
-            android:layout_weight="0.27"
-            android:padding="0dp"
-            android:paddingTop="50dp"
-            android:paddingRight="0dp"
-            android:scrollIndicators="right"
-            android:gravity="top"
-            android:paddingLeft="0dp"
-            android:paddingBottom="0dp"
-            android:theme="@style/AlertDialog.AppCompat">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/scrollView" >
 
+                <LinearLayout
+                    android:id="@+id/idlisteproduits"
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:layout_weight="0.55"
+                    android:padding="0dp"
+                    android:paddingTop="50dp"
+                    android:paddingRight="0dp"
+                    android:scrollIndicators="right"
+                    android:gravity="top"
+                    android:paddingLeft="0dp"
+                    android:paddingBottom="0dp"
+                   >
+
+                </LinearLayout>
+            </ScrollView>
         </LinearLayout>
 
 
@@ -90,7 +96,17 @@
                 android:layout_alignParentTop="true"
                 style="@style/AppTheme"
                 android:layout_centerVertical="true"
-                android:background="@drawable/liste" />
+                android:background="@drawable/liste2" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:id="@+id/imageBtnActiverModeCtrl    "
+                style="@style/AppTheme"
+                android:background="@drawable/controleb"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/imageBtnMode"
+                android:layout_toEndOf="@+id/imageBtnMode" />
 
         </RelativeLayout>
 

@@ -84,7 +84,6 @@
                         android:id="@+id/imageButton4"
                         android:src="@android:drawable/arrow_up_float" />
 
-
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"

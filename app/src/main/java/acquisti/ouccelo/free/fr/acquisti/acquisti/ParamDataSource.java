@@ -34,7 +34,7 @@ public class ParamDataSource {
         this.database=null;
 	}
 
-	public Param createParam(int versionbd,String modeencours) {
+	public Param createParam(int versionbd,String modeencours,int modectrl) {
         Param newParam=null;
 
 		ContentValues values = new ContentValues();
@@ -43,7 +43,18 @@ public class ParamDataSource {
         //MySQLiteHelper.PARAM_MODEENCOURS_LISTE;
 
         values.put(MySQLiteHelper.PARAM_COLUMN_VBD, versionbd);
+
+
         values.put(MySQLiteHelper.PARAM_COLUMN_MODEENCOURS, modeencours);
+
+		switch (versionbd)
+		{
+			case 2:
+
+				break;
+
+		}
+        values.put(MySQLiteHelper.PARAM_COLUMN_MODECONTROLE, modectrl);
 
         long insertId=0;
 
@@ -71,7 +82,7 @@ public class ParamDataSource {
             Cursor cursor = database.query(MySQLiteHelper.TABLE_PARAM,
                     allColumns, MySQLiteHelper.COLUMN_ID + " = " + insertId, null,
                     null, null, null);
-            Log.d("*** NEWPARAM OK","PARAM COUNT ="+cursor.getCount());
+            //Log.d("*** NEWPARAM OK","PARAM COUNT ="+cursor.getCount());
             if(cursor.getCount()>0)
             {
                 cursor.moveToFirst();
@@ -91,11 +102,14 @@ public class ParamDataSource {
 
         values.put(MySQLiteHelper.PARAM_COLUMN_VBD, param.getversionBd());
 
-        values.put(MySQLiteHelper.PARAM_COLUMN_MODEENCOURS, param.getModeencours());
+		values.put(MySQLiteHelper.PARAM_COLUMN_MODEENCOURS, param.getModeencours());
 
-        Log.d("UPDATEPARAM"," >ID >"+param.getId()+"<<<<<<");
+		values.put(MySQLiteHelper.PARAM_COLUMN_MODECONTROLE, param.getBmodectrl());
+
+        /*Log.d("UPDATEPARAM"," >ID >"+param.getId()+"<<<<<<");
 		Log.d("UPDATEPARAM"," VBD >>>>>>>"+param.getversionBd()+"<<<<<<");
 		Log.d("UPDATEPARAM"," MODE >>>>>>>"+param.getModeencours()+"<<<<<<");
+		Log.d("UPDATEPARAM"," MODECTRL >>>>>>>"+param.getBmodectrl()+"<<<<<<");*/
 
 		database.update(MySQLiteHelper.TABLE_PARAM, values,
 				MySQLiteHelper.COLUMN_ID + " = ? ",
@@ -120,8 +134,12 @@ public class ParamDataSource {
         String[] allColumns = { MySQLiteHelper.COLUMN_ID,
                 MySQLiteHelper.PARAM_COLUMN_VBD,MySQLiteHelper.PARAM_COLUMN_MODEENCOURS };
 
+		//Log.v("PARAM DATA SOURCE, LISTE PARAMETRES ","134");
+
 		Cursor cursor = database.query(MySQLiteHelper.TABLE_PARAM,
 				allColumns, null, null, null, null, null);
+
+		//Log.v("PARAM DATA SOURCE, LISTE PARAMETRES ","139");
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
@@ -140,9 +158,11 @@ public class ParamDataSource {
 
         String[] allColumns = { MySQLiteHelper.COLUMN_ID,
                 MySQLiteHelper.PARAM_COLUMN_VBD,MySQLiteHelper.PARAM_COLUMN_MODEENCOURS };
+		//Log.v("PARAM DATA SOURCE, LISTE PARAMETRES ","158");
 
 		Cursor cursor = database.query(MySQLiteHelper.TABLE_PARAM,
 				allColumns,null,null,null,null,order);
+		//Log.v("PARAM DATA SOURCE, LISTE PARAMETRES ","162");
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
@@ -169,12 +189,14 @@ public class ParamDataSource {
     public String ParamChangeMode()
     {
         String snouveaumode=MySQLiteHelper.PARAM_MODEENCOURS_LISTE;
+		//Log.v("PARAM DATA SOURCE, CHANGE MODE ","189");
 
         String[] allColumns = { MySQLiteHelper.COLUMN_ID,
                 MySQLiteHelper.PARAM_COLUMN_VBD,MySQLiteHelper.PARAM_COLUMN_MODEENCOURS };
 
         Cursor cursor = database.query(MySQLiteHelper.TABLE_PARAM,
                 allColumns,null,null,null,null,null);
+		//Log.v("PARAM DATA SOURCE, CHANGE MODE ","196");
 
         //Log.d("PARAMCHANGEMODE"," GETCOUNT >"+cursor.getCount()+"<");
 
@@ -186,9 +208,6 @@ public class ParamDataSource {
             Param param = cursorToParam(cursor);
 
             String smode=param.getModeencours();
-
-
-
 
             switch (smode) {
                 case MySQLiteHelper.PARAM_MODEENCOURS_ACHAT:
