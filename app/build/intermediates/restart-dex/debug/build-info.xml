@@ -4,7 +4,7 @@
     api-level="23"
     density="xhdpi"
     format="7"
-    timestamp="2758093297391"
+    timestamp="33893560592041"
     token="-383641526185748015" >
 
     <task
@@ -24,12 +24,12 @@
         location="/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/resources-debug.ap_"
         type="RESOURCES" />
 
-    <build timestamp="716831780969" >
+    <build timestamp="31699577249932" >
         <artifact
             location="/home/francois/AndroidStudioProjects/Acquisti/app/build/outputs/apk/app-debug.apk"
             type="MAIN" />
     </build>
-    <build timestamp="2758093297391" >
+    <build timestamp="33893560592041" >
         <artifact
             location="/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/resources-debug.ap_"
             type="RESOURCES" />

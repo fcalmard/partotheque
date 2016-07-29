@@ -26,7 +26,7 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_gravity="left|top">
 
             <Spinner
@@ -50,10 +50,18 @@
 
             <Spinner
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="50dp"
                 android:id="@+id/spinner_famille"
                 android:background="@android:color/holo_blue_dark"
-                android:popupBackground="@android:color/holo_orange_light" />
+                android:popupBackground="@android:color/holo_orange_light"
+                android:padding="0dp"
+                android:paddingLeft="0dp"
+                android:paddingTop="0dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="0dp"
+                android:paddingEnd="0dp"
+                android:paddingStart="0dp"
+                android:theme="@style/AlertDialog.AppCompat" />
 
             <ScrollView
                 android:layout_width="match_parent"

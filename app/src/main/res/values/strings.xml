@@ -16,5 +16,6 @@
     <string name="libelle_activity_initbd">Initialiser base de données</string>
     <string name="libelle_activity_articles">Gestion des articles</string>
     <string name="libelle_activity_familles">Gestion des familles</string>
+    <string name="msgsaisiefam">Saisissez une famille</string>
 
 </resources>

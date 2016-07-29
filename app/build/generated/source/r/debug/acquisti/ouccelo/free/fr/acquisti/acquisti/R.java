@@ -2651,14 +2651,15 @@ containing a value of this type.
         public static final int msggestart=0x7f06003c;
         public static final int msggestfam=0x7f06003d;
         public static final int msgquit=0x7f06003e;
-        public static final int navigation_drawer_close=0x7f06003f;
-        public static final int navigation_drawer_open=0x7f060040;
-        public static final int no=0x7f060041;
+        public static final int msgsaisiefam=0x7f06003f;
+        public static final int navigation_drawer_close=0x7f060040;
+        public static final int navigation_drawer_open=0x7f060041;
+        public static final int no=0x7f060042;
         public static final int status_bar_notification_info_overflow=0x7f060031;
-        public static final int title_activity_articles=0x7f060042;
-        public static final int title_activity_familles=0x7f060043;
-        public static final int title_activity_initbd=0x7f060044;
-        public static final int yes=0x7f060045;
+        public static final int title_activity_articles=0x7f060043;
+        public static final int title_activity_familles=0x7f060044;
+        public static final int title_activity_initbd=0x7f060045;
+        public static final int yes=0x7f060046;
     }
     public static final class style {
         public static final int AlertDialog_AppCompat=0x7f090088;

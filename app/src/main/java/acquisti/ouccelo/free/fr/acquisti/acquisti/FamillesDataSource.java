@@ -2,6 +2,7 @@ package acquisti.ouccelo.free.fr.acquisti.acquisti;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,9 +18,11 @@ public class FamillesDataSource {
 	private MySQLiteHelper dbHelper;
 	private String[] allColumns = { MySQLiteHelper.COLUMN_ID,
 			MySQLiteHelper.COLUMN_LIBELLE };
+	private Context context;
 
 	public FamillesDataSource(Context context) {
 		dbHelper = new MySQLiteHelper(context);
+		this.context=context;
 	}
 
 	public void open() throws SQLException {
@@ -100,7 +103,18 @@ public class FamillesDataSource {
 
 		if(spin)
 		{
-			Famille famille0 = new Famille(0,"Saisissez une famille");
+            //getres R.string.msgsaisiefam
+
+           //String s= R.string.msgsaisiefam.getString();
+			// Resources res = new Resources();
+			String s="Famille";
+
+s=			this.context.getResources().getString(R.string.msgsaisiefam);
+
+//
+
+           // String s=Resources.getSystem().getString(R.string.msgsaisiefam);
+            Famille famille0 = new Famille(0,s);
 			familles.add(famille0);
 		}
 
