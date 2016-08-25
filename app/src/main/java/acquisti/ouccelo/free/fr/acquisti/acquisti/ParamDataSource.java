@@ -211,7 +211,7 @@ public class ParamDataSource {
 
         param.setModeencours(s);
         //Log.v("PARAMDTS","cursorToParam 214 PARAM_COLUMN_MODEENCOURS "+param.getModeencours());
-        Log.v("PARAMDTS","cursorToParam 214 FAMILLE="+param.getFamilleEnCours());
+       // Log.v("PARAMDTS","cursorToParam 214 FAMILLE="+param.getFamilleEnCours());
 
         int ctrlactive=cursor.getInt(3);
 
