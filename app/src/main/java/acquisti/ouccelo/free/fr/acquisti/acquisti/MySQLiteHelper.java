@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 public class MySQLiteHelper extends SQLiteOpenHelper {
 
@@ -21,10 +22,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     public static final int PARAM_MAJ_MODEENCOURS = 1;
     public static final int PARAM_MAJ_CTRLMODE = 2;
+    public static final int PARAM_MAJ_FAMENCOURS = 3;
 
     public static final String PARAM_COLUMN_MODECONTROLE = "modecontrole";
-    public static final String PARAM_COLUMN_LISTEENCOURS = "idlisteencours";
 
+
+    public static final String PARAM_COLUMN_LISTEENCOURS = "idlisteencours";
     public static final String PARAM_COLUMN_FAMENCOURS = "idfamencours";
 
     public static final String RECH_TABLE_PARAM_VBD = "select "+PARAM_COLUMN_VBD+" from "+TABLE_PARAM;
@@ -55,7 +58,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             + TABLE_PARAM + "(" + COLUMN_ID
             + " integer primary key autoincrement, "
             + PARAM_COLUMN_VBD + " integer not null,"
-            + PARAM_COLUMN_MODEENCOURS + " text not null"
+            + PARAM_COLUMN_MODEENCOURS + " text not null,"
+            + PARAM_COLUMN_MODECONTROLE + " LONG DEFAULT 0,"
+            + PARAM_COLUMN_LISTEENCOURS + " LONG DEFAULT 0,"
+            + PARAM_COLUMN_FAMENCOURS + " LONG DEFAULT 0"
             +");";
 	private static final String TABLE_CREATE_ARTICLE = "create table "
 			+ TABLE_ARTICLES + "(" + COLUMN_ID
@@ -75,214 +81,101 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
-    public Param MiseAJourParam(Context context,SQLiteDatabase db,boolean bMaj,int iTypeMaj,Param oParam)
+    public boolean MiseAJourParam2(Context context,SQLiteDatabase db,boolean bMaj,int iTypeMaj,Param oParam)
     {
-        int vbd=0;
-        String modeencours="";
-        int ctrlactive=0;
+        boolean bres;
 
-        Long idparam= Long.valueOf(0);
+        //Param newParam = new Param(1,4,PARAM_MODEENCOURS_LISTE,0,0,oParam.getFamilleEnCours());
 
-        Param newParam = new Param();
-        //Log.v("MYSQL HELPER MAJ PARAM","85");
-        //lire depuis bd
+        final ParamDataSource pds = new ParamDataSource(context);
 
-        try {
+        pds.open();
 
-            // Log.d("RECH_TABLE_PARAM0",RECH_TABLE_PARAM);
+        bres=false;
+        if(bMaj)
+            switch (iTypeMaj) {
+                case PARAM_MAJ_MODEENCOURS:
 
-            String[] allColumns = { MySQLiteHelper.COLUMN_ID,
-                    MySQLiteHelper.PARAM_COLUMN_VBD,MySQLiteHelper.PARAM_COLUMN_MODEENCOURS,MySQLiteHelper.PARAM_COLUMN_MODECONTROLE };
+                   // String modeec = oParam.getModeencours();
+                    pds.updateParam(oParam);
+                   //Log.v("MYSQLHELPER", "PARAM_MAJ_MODEENCOURS,MiseAJourParam2 modeec=" + modeec);
+                    bres = true;
 
-            Cursor cursor = db.query(MySQLiteHelper.TABLE_PARAM,
-                    allColumns, null, null,
-                    null, null, null);
+                    break;
+                case PARAM_MAJ_FAMENCOURS:
 
-            //Log.d("RECH_TABLE_PARAM1"," LECTURE "+TABLE_PARAM+" COUNT ="+cursor.getCount());
-            int nbc=cursor.getCount();
-            //Log.v("MYSQL HELPER MAJ PARAM","101 NBC="+nbc);
+                    long famid = oParam.getFamilleEnCours();
+                    //oParam.setFamilleEnCours();
+                    //newParam.setFamilleEnCours(famid);
 
-            if(nbc>0)
-            {
-                cursor.moveToFirst();
+                    //pds.updateParam(newParam);
+                    pds.updateParam(oParam);
 
-                vbd=cursor.getInt(1);
+                    //Log.v("MYSQL HELPER MAJ PARAM ", "PARAM_MAJ_FAMENCOURS 107 famid=" + famid);
 
-                modeencours=cursor.getString(2);
+                   //Toast.makeText(context, " 116 PARAM_MAJ_FAMENCOURS FAMILLEID="+famid, Toast.LENGTH_LONG).show();
 
-                ctrlactive=cursor.getInt(3);
-                //Log.v("MYSQL HELPER MAJ PARAM","112");
+                    bres = true;
 
-                if(bMaj)
-                {
-                    final ParamDataSource pds = new ParamDataSource(context);
-                    pds.open();
-
-                    newParam = pds.cursorToParam(cursor);
-
-                    boolean modeliste=modeencours.equals(PARAM_MODEENCOURS_LISTE);
-                    //Log.v("MYSQL HELPER MAJ PARAM","122");
-
-                    switch (iTypeMaj)
-                    {
-                        case PARAM_MAJ_MODEENCOURS:
-
-                            //Log.d("MODE EN COURS ", "LECTURE MODE EN COURS >" + modeencours + "< resultOfComparison=" + modeliste);
-
-                            if (modeliste)
-                            {
-                                modeencours=MySQLiteHelper.PARAM_MODEENCOURS_ACHAT;
-                                //Log.d("MODE EN COURS ","PASSAGE EN MODE ACHAT");
-                            }else
-                            {
-                                modeencours=MySQLiteHelper.PARAM_MODEENCOURS_LISTE;
-                                // Log.d("MODE EN COURS ","PASSAGE EN MODE LISTE");
-
-                            }
-
-                            //Log.d("MODE EN COURS ","maj MODE EN COURS >"+modeencours+"< mode LISTE >"+MySQLiteHelper.PARAM_MODEENCOURS_LISTE+"<");
-
-                            newParam.setModeencours(modeencours);
-
-                            //newParam.setBmodectrl(ctrlactive==1);
-                            //Log.v("MYSQL HELPER MAJ PARAM","146");
-
-                            pds.updateParam(newParam);
-                            //Log.v("MYSQL HELPER MAJ PARAM","149");
-
-                            pds.close();
-
-                            break;
-
-
-                        case PARAM_MAJ_CTRLMODE:
-
-                            //Log.d("MODE EN COURS ", "LECTURE MODE EN COURS >" + modeencours + "< resultOfComparison=" + modeliste);
-
-
-
-                            //Log.d("MODE EN COURS ","maj MODE EN COURS >"+modeencours+"< mode LISTE >"+MySQLiteHelper.PARAM_MODEENCOURS_LISTE+"<");
-                            newParam.setversionBd(vbd);
-
-                            if(ctrlactive==1)
-                            {
-                                ctrlactive=0;
-                            }else{
-                                ctrlactive=1;
-                            }
-
-                            newParam.setBmodectrl(ctrlactive==1);
-
-                            pds.updateParam(newParam);
-
-                            pds.close();
-                            break;
-                    }
-                }
-                //Log.v("MYSQL HELPER MAJ PARAM","180");
-
-                if(iTypeMaj==PARAM_MAJ_MODEENCOURS)
-                {
-
-
-                }
-
-
-
-            }else{
-
-                //Log.d("NOMBREZERO"," LECTURE NBC=0");
-                //Log.v("MYSQL HELPER MAJ PARAM","193");
-
-                vbd=1;
-
-                ctrlactive=0;
-
-                //newParam.setversionBd(vbd);
-
-                //Log.d("NOMBREZERO"," VERSION BASE DE DONNEES ");
-
-                //newParam.setModeencours(MySQLiteHelper.PARAM_MODEENCOURS_LISTE);
-
-                //Log.d("NOMBREZERO"," MODE EN COURS ");
-
-                ParamDataSource pds = new ParamDataSource(context);
-                pds.open();
-                //Log.v("MYSQL HELPER MAJ PARAM","209");
-
-                newParam=pds.createParam(3,MySQLiteHelper.PARAM_MODEENCOURS_LISTE,0);
-
-                //Log.v("MYSQL HELPER MAJ PARAM","213");
-
-                idparam=newParam.getId();
-
-                //Log.d("NOMBREZERO"," ID NOUVEAU PARAM = "+idparam);
-
-                pds.close();
-
+                    break;
             }
 
-            cursor.close();
+        pds.close();
 
-            //Log.d("RECH_TABLE_PARAM1"," RECHERCHE  1 ID PARAM = "+idparam.toString());
+        return bres;
 
-        }catch (SQLiteException e)//Exception
-        {
+    }
 
+    public Param LectureParam(Context context,SQLiteDatabase db)
+    {
+        Param newParam = new Param();
 
-            //String smode=PARAM_MODEENCOURS_LISTE;
+        String[] allColumns = { MySQLiteHelper.COLUMN_ID,
+                MySQLiteHelper.PARAM_COLUMN_VBD
+                ,MySQLiteHelper.PARAM_COLUMN_MODEENCOURS
+                ,MySQLiteHelper.PARAM_COLUMN_MODECONTROLE
+                ,MySQLiteHelper.PARAM_COLUMN_LISTEENCOURS
+                ,MySQLiteHelper.PARAM_COLUMN_FAMENCOURS};
 
-            //Param nparam = new Param(0,versionBd,smode);
+        Cursor cursor = db.query(MySQLiteHelper.TABLE_PARAM,
+                allColumns, null, null,
+                null, null, null);
 
-            //Log.d("ERREURCONTROLEVERSIONBD"," ERREURSTRING  "+e.toString()+" CAUSE "+e.getCause());
-            //Log.d("ERREURCONTROLEVERSIONBD"," RECHERCHE  "+e.getMessage());
-/**/
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARAM);
+        //Log.d("RECH_TABLE_PARAM1"," LECTURE "+TABLE_PARAM+" COUNT ="+cursor.getCount());
+        int nbc=cursor.getCount();
 
-            db.execSQL(TABLE_CREATE_PARAM);
+        //Log.v("MYSQL, LECTURE PARAM","141 NBC="+nbc);
 
-            // newParam.setversionBd(1);
-            vbd=1;
-            // newParam.setModeencours(MySQLiteHelper.PARAM_MODEENCOURS_LISTE);
+        if(nbc>0) {
+            cursor.moveToFirst();
 
-            ParamDataSource pds = new ParamDataSource(context);
+            final ParamDataSource pds = new ParamDataSource(context);
+
+            //cursorToParam
+
             pds.open();
-            newParam=pds.createParam(vbd,MySQLiteHelper.PARAM_MODEENCOURS_LISTE,0);
 
-            /* idparam=newParam.getId(); */
+            //long ifam=cursor.getLong(5);
 
-            //Log.d("ERREURCONTROLEVERSIONBD",TABLE_CREATE_PARAM+" IDPARAM="+idparam);
+            //newParam.setFamilleEnCours(ifam);
+
+            newParam = pds.cursorToParam(cursor);
+
+            //Log.v("MYSQL, LECTURE PARAM","158 IFAM=getColumnCount="+cursor.getColumnCount()+" ID="+cursor.getLong(0));
 
             pds.close();
 
         }
-
-        switch (modeencours)
-        {
-            case PARAM_MODEENCOURS_ACHAT:
-                break;
-            case PARAM_MODEENCOURS_LISTE:
-                break;
-        default:
-            modeencours=PARAM_MODEENCOURS_LISTE;
-        }
-
-        // maj bd
-
-        //return modeencours;
-
-        newParam.setBmodectrl(ctrlactive==1);
-
-        newParam.setModeencours(modeencours);
-
+        cursor.close();
         return newParam;
 
     }
 
-
     public int ControleVersionBaseDeDonnees(Context context,SQLiteDatabase db)
     {
-        //Log.d("CtrlVBD",RECH_TABLE_PARAM);
+        //Log.d("ControleVersionBaseDeDonnees"," RECHERCHE "+TABLE_PARAM);
+       // db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARAM);
+        //Log.d("ControleVersionBaseDeDonnees"," APRES DROP "+TABLE_PARAM);
 
         int vbd=0;
         Long idparam= Long.valueOf(0);
@@ -313,17 +206,25 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
             }else{
 
-                //Log.d("RECH_TABLE_PARAM1"," 302 LECTURE NBC=0");
+                //Log.d("RECH_TABLE_PARAM1"," 330 LECTURE NBC=0");
 
                 vbd=1;
 
                 this.majBaseDeDonnees(context,db,vbd);
+                //Log.d("RECH_TABLE_PARAM1"," 335");
 
                 vbd=2;
                 this.majBaseDeDonnees(context,db,vbd);
+                //Log.d("RECH_TABLE_PARAM1"," 339");
 
                 vbd=3;
                 this.majBaseDeDonnees(context,db,vbd);
+                //Log.d("RECH_TABLE_PARAM1"," 343");
+
+
+                vbd=4;
+                this.majBaseDeDonnees(context,db,vbd);
+                //Log.d("RECH_TABLE_PARAM1"," 348");t
 
 
                 //newParam.setversionBd(vbd);
@@ -357,11 +258,23 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         }catch (SQLiteException e)//Exception
         {
+            //Log.v("RECH_TABLE_PARAM1","ERREUR 378 ");
 
+            //db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARAM);
 
+            db.execSQL(TABLE_CREATE_PARAM);
+
+            //Log.v("MYSQLHELPER TABLE_CREATE_PARAM",TABLE_CREATE_PARAM);
+
+            //Log.v("MYSQLHELPER"," 388");
             this.majBaseDeDonnees(context,db,1);
+            //Log.v("MYSQLHELPER"," 390");
             this.majBaseDeDonnees(context,db,2);
+            //Log.v("MYSQLHELPER"," 392");
             this.majBaseDeDonnees(context,db,3);
+            //Log.v("MYSQLHELPER"," 394");
+            this.majBaseDeDonnees(context,db,4);
+            //Log.v("MYSQLHELPER"," 396");
 
             //Log.d("CtrlVBD","333");
 
@@ -373,9 +286,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             //Log.d("ERREURCONTROLEVERSIONBD"," ERREURSTRING  "+e.toString()+" CAUSE "+e.getCause());
             //Log.d("ERREURCONTROLEVERSIONBD"," RECHERCHE  "+e.getMessage());
 /**/
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARAM);
 
-            db.execSQL(TABLE_CREATE_PARAM);
 
            // newParam.setversionBd(1);
             vbd=1;
@@ -383,7 +294,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
             ParamDataSource pds = new ParamDataSource(context);
             pds.open();
+            //Log.v("MYSQLHELPER"," 416");
             newParam=pds.createParam(vbd,MySQLiteHelper.PARAM_MODEENCOURS_LISTE,0);
+            //Log.v("MYSQLHELPER"," 418");
 
             /* idparam=newParam.getId(); */
 
@@ -394,16 +307,16 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         }
 
 
-        //Log.d("RECH_TABLE_PARAM2"," RECHERCHE  2 VERSION BASE DE DONNEES "+vbd);
+       //Log.d("RECH_TABLE_PARAM2"," 428, RECHERCHE  2 VERSION BASE DE DONNEES "+vbd);
 
         return vbd;
     }
 
     public void majBaseDeDonnees(Context context,SQLiteDatabase db,int version)
     {
-        Param param = new Param();
+        //Param param = new Param();
 
-        //Log.d("majBaseDeDonnees", "378 version "+ version);
+       //Log.d("majBaseDeDonnees", "427 version "+ version);
 
         switch (version)
         {
@@ -504,8 +417,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                 sqlart = sqlart +"ALTER TABLE "+TABLE_ARTICLES+" ADD COLUMN "+COLUMN_DSLISTE+" INTEGER DEFAULT 0;";
                 sqlart = sqlart +"ALTER TABLE "+TABLE_ARTICLES+" ADD COLUMN "+COLUMN_DSACHATS+" INTEGER DEFAULT 0;";
 
-                String sqlparam= "ALTER TABLE "+TABLE_PARAM+" ADD COLUMN "+PARAM_COLUMN_MODECONTROLE+" INTEGER DEFAULT 0;";
-                sqlparam = sqlparam +"ALTER TABLE "+TABLE_PARAM+" ADD COLUMN "+PARAM_COLUMN_LISTEENCOURS+" STRING DEFAULT '';";
+                String sqlparam= "ALTER TABLE "+TABLE_PARAM+" ADD COLUMN "+PARAM_COLUMN_MODECONTROLE+" INTEGER DEFAULT 0";
+                String sqlparam2 = "ALTER TABLE "+TABLE_PARAM+" ADD COLUMN "+PARAM_COLUMN_LISTEENCOURS+" STRING DEFAULT '';";
 
                 String sqlalterart = "ALTER TABLE "+TABLE_ARTICLES+" DROP COLUMN "+COLUMN_PUHT;
 
@@ -516,18 +429,43 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                 sqlalterart = sqlalterart + " DROP COLUMN "+COLUMN_DSLISTE;
                 sqlalterart = sqlalterart + " DROP COLUMN "+COLUMN_DSACHATS;
 
-                String sqlalterparam = "ALTER TABLE "+TABLE_PARAM+" DROP COLUMN "+PARAM_COLUMN_MODECONTROLE;
-                sqlalterparam=sqlalterparam+ "ALTER TABLE "+TABLE_PARAM+" DROP COLUMN "+PARAM_COLUMN_LISTEENCOURS;
+                //String sqlalterparam = "ALTER TABLE "+TABLE_PARAM+" DROP COLUMN "+PARAM_COLUMN_MODECONTROLE;
+                //sqlalterparam=sqlalterparam+ "ALTER TABLE "+TABLE_PARAM+" DROP COLUMN "+PARAM_COLUMN_FAMENCOURS;
+
+                //Log.v("MYSQLHELPER","543");
+                //Log.v("MYSQLHELPER maj table PARAM ",sqlparam);
 
                 try {
                     db.execSQL(sqlart);
                     db.execSQL(sqlparam);
+                    db.execSQL(sqlparam2);
 
 
                     //db.execSQL(sqlalterart);
                     //db.execSQL(sqlalterparam);
 
-                    this.MiseAJourParamVersionBase(context,db,2);
+                    this.MiseAJourParamVersionBase(context,db,3);
+
+
+                }catch (SQLiteException e)
+                {
+                    //Log.d("ERREUR MAJVBD",e.getMessage().toString());
+                    //Log.v("MYSQLHELPER","ERREUR 572");
+
+                }
+
+                break;
+            case 4:
+                sqlparam= "ALTER TABLE "+TABLE_PARAM+" ADD COLUMN "+PARAM_COLUMN_FAMENCOURS+" LONG DEFAULT 0;";
+                try {
+                    db.execSQL(sqlparam);
+                    Toast.makeText(context,sqlparam,Toast.LENGTH_LONG).show();
+
+
+                    //db.execSQL(sqlalterart);
+                    //db.execSQL(sqlalterparam);
+
+                    this.MiseAJourParamVersionBase(context,db,4);
 
 
                 }catch (SQLiteException e)
@@ -535,11 +473,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                     //Log.d("ERREUR MAJVBD",e.getMessage().toString());
 
                 }
-
-                break;
             default:
                 break;
         }
+       //Log.d("majBaseDeDonnees", "585");
+
     }
 
     public void MiseAJourParamVersionBase(Context context,SQLiteDatabase db,int version)
@@ -549,9 +487,17 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         ParamDataSource pds = new ParamDataSource(context);
         pds.open();
 
-        String[] allColumns = { MySQLiteHelper.COLUMN_ID,
-                MySQLiteHelper.PARAM_COLUMN_VBD,MySQLiteHelper.PARAM_COLUMN_MODEENCOURS };
+       // String[] allColumns = { MySQLiteHelper.COLUMN_ID,
+        //        MySQLiteHelper.PARAM_COLUMN_VBD,MySQLiteHelper.PARAM_COLUMN_MODEENCOURS };
 
+        String[] allColumns = { MySQLiteHelper.COLUMN_ID,
+                MySQLiteHelper.PARAM_COLUMN_VBD
+                ,MySQLiteHelper.PARAM_COLUMN_MODEENCOURS
+                ,MySQLiteHelper.PARAM_COLUMN_MODECONTROLE
+                ,MySQLiteHelper.PARAM_COLUMN_LISTEENCOURS
+                ,MySQLiteHelper.PARAM_COLUMN_FAMENCOURS};
+
+       //Log.d("MiseAJourParamVersionBase", "599");
 
 
         //db.query(TABLE_ARTICLES,allColumns,"",allColumns,"","","");
@@ -589,6 +535,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         pds.close();
 
         cursor.close();
+       //Log.d("MiseAJourParamVersionBase", "637");
 
     }
 	@Override

@@ -156,6 +156,13 @@ public class Articles extends ListActivity implements AdapterView.OnItemSelected
                         editText.setText("");
                     }
                     myAdapter.notifyDataSetChanged();
+
+                    // recharger liste
+                    finish();
+                    startActivity(getIntent());
+                    Toast toast = Toast.makeText(this, "Article crée",
+                            Toast.LENGTH_SHORT);
+                    toast.show();
                 } else {
                     Toast toast = Toast.makeText(this, "Famille invalide !",
                             Toast.LENGTH_SHORT);

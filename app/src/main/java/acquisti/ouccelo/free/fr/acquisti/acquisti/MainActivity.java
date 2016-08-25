@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -14,6 +16,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
@@ -28,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -49,15 +54,19 @@ public class MainActivity extends AppCompatActivity
      */
     private GoogleApiClient client;
 
+    private boolean bSelectionFamille;
     private ArrayAdapter<Famille> myAdapter;
     private ArrayAdapter<Article> myAdapterArt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Log.v("MAIN ON CREATE","ONCREATE 58");
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        this.bSelectionFamille=true;
 
         final Context context = this;
 
@@ -133,7 +142,7 @@ public class MainActivity extends AppCompatActivity
         boolean modeachat=modeEnCours.equals(PARAM_MODEENCOURS_ACHAT);
 
         //ACTIVATION MODE CTRL MODE ACHAT
-        final ImageButton btnactmodectrl = (ImageButton) findViewById(R.id.imageBtnActiverModeCtrl);
+        final ImageButton btnactmodectrl = (ImageButton) findViewById(R.id.BtnActiverModeCtrl);
 
 
 
@@ -153,7 +162,7 @@ public class MainActivity extends AppCompatActivity
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-        //Log.v("MAIN ONCREATE","160");
+        //Log.v("MAIN ONCREATE","157");
 
     }
 
@@ -213,6 +222,9 @@ public class MainActivity extends AppCompatActivity
              */
             final Intent intent = new Intent(MainActivity.this, Familles.class);
             startActivity(intent);
+
+
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -255,6 +267,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
+        //Log.v("MAIN ON START","ONSTART 266");
 
         /* on récupère les familles */
 
@@ -299,35 +312,43 @@ public class MainActivity extends AppCompatActivity
         String modeEnCours= MySQLiteHelper.PARAM_MODEENCOURS_LISTE;
 
         //Param oParam= mysqlhlpr.MiseAJourParam(this,dtsparam.getDatabase(),false,0,nParam);
+        Long lidfamille=Long.valueOf(0);
+
+        Param oParam= mysqlhlpr.LectureParam(this,dtsparam.getDatabase());
+
+        lidfamille=oParam.getFamilleEnCours();
 
         //oParam= mysqlhlpr.MiseAJourParam(this,dtsparam.getDatabase(),false,0,nParam);
 
         //Log.v("MAIN ONSTART","305");
 
-        //String modeEnCours=oParam.getModeencours();
+        modeEnCours=oParam.getModeencours();
 
-        //Log.d("ON START ","MODE EN COURS >"+modeEnCours+"<");
+       //Log.d("ON START ","326,MODE EN COURS >"+modeEnCours+"<");
 
         final ImageButton btnmode = (ImageButton) findViewById(R.id.imageBtnMode);
 
         boolean modeliste=modeEnCours.equals(PARAM_MODEENCOURS_LISTE);
 
-        //Log.d("MAIN ACTIVITY ", "LECTURE MODE EN COURS >" + modeEnCours + "< resultOfComparison=" + modeliste);
+       //Log.d("MAIN ACTIVITY ", "332, LECTURE MODE EN COURS >" + modeEnCours + "< modeliste=" + modeliste);
 
         //ACTIVATION MODE CTRL MODE ACHAT
-        final ImageButton btnactmodectrl = (ImageButton) findViewById(R.id.imageBtnActiverModeCtrl);
+        final ImageButton btnactmodectrl = (ImageButton) findViewById(R.id.BtnActiverModeCtrl);
 
         if (modeliste)
         {
             //btnactmodectrl.setVisibility(0);
-            //btnmode.setBackgroundResource(R.drawable.liste2);
+            btnmode.setBackgroundResource(R.drawable.liste2);
+           //Log.v("MAIN ONSTART","341 "+modeEnCours);
+
         }else
         {
             //btnactmodectrl.setVisibility(1);
-            //btnmode.setBackgroundResource(R.drawable.caddy);
+            btnmode.setBackgroundResource(R.drawable.caddy);
+           //Log.v("MAIN ONSTART","347 "+modeEnCours);
         }
 
-        final ImageButton imageBtnActiverModeCtrl = (ImageButton) findViewById(R.id.imageBtnActiverModeCtrl);
+        final ImageButton imageBtnActiverModeCtrl = (ImageButton) findViewById(R.id.BtnActiverModeCtrl);
 
         /*
         boolean bCtrlActive=oParam.getBmodectrl();
@@ -346,22 +367,49 @@ public class MainActivity extends AppCompatActivity
         chargement liste des articles
          */
 
-        //Log.v("MAIN ONSTART","348");
+        //Log.v("MAIN ONSTART","358");
 
-        Long lidfamille=spinner_famille.getSelectedItemId();
 
-        //Log.d("MAIN ACTIVITY",lidfamille.toString());
+        //spinner_famille.setSelection(lidfamille.intValue());
+        //lidfamille=spinner_famille.getSelectedItemId();
+
+        //Log.v("MAIN ONSTART","362");
+
+        //MiseAJourParam
+        //mysqlhlpr.MiseAJourParam(this,dtsparam.getDatabase(),false,0,nParam);
+
+        /*
+        Param oParam= mysqlhlpr.MiseAJourParam(this,dtsparam.getDatabase(),false,0,nParam);
+
+        if(oParam !=null)
+        {
+            lidfamille=oParam.getFamilleEnCours();
+
+           //Log.d("MAIN ACTIVITY","373 LIDFAMILLE="+lidfamille.toString());
+
+            //FamillesDataSource dtsfam = new FamillesDataSource(this);
+            //dtsfam.open();
+            //
+            //dtsfam.close();
+            //
+
+        }
+        */
+
+        spinner_famille.setSelection(lidfamille.intValue(),true);
 
         this.AfficheArticles(lidfamille);
 
-      //  Log.v("MAIN","FIN TRAITEMENT MAJ STRUCTURE DATABASE >"+nversion+"<");
+        //Log.v("MAIN ONSTART","378");
+
+        //Log.v("MAIN","FIN TRAITEMENT MAJ STRUCTURE DATABASE >"+nversion+"<");
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
         Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
+                "Main Page", // TODO: Define a title for the content shotn.
                 // TODO: If you have web page content that matches this app activity's content,
                 // make sure this auto-generated web page URL is correct.
                 // Otherwise, set the URL to null.
@@ -375,13 +423,13 @@ public class MainActivity extends AppCompatActivity
 
         dtsparam.close();
 
-        //Log.v("MAIN ONSTART","377");
+        //Log.v("MAIN ONSTART","388");
 
     }
 
     private void AfficheArticles(long idfamille)
     {
-
+        final Context context = this;
 
         AppBarLayout.LayoutParams lp1 = new AppBarLayout.LayoutParams(DrawerLayout.LayoutParams.MATCH_PARENT,
                 DrawerLayout.LayoutParams.MATCH_PARENT);
@@ -397,6 +445,20 @@ public class MainActivity extends AppCompatActivity
 
         ArticleDataSource datasourceart = new ArticleDataSource(this);
         datasourceart.open();
+
+        Param nParam=new Param();
+
+        MySQLiteHelper mysqlhlpr=new MySQLiteHelper(context);
+
+        ParamDataSource dtsparam = new ParamDataSource(context);
+        dtsparam.open();
+
+        nParam=dtsparam.LectureParam();
+        String modeEnCours=nParam.getModeencours();
+
+       //Log.v("MAIN","455 modeencours >"+modeEnCours);
+
+        //Param oParam=mysqlhlpr.MiseAJourParam(context,dtsparam.getDatabase(),false,MySQLiteHelper.PARAM_MAJ_CTRLMODE,nParam);
 
         List<Article> listValuesArt = datasourceart.getAllArticles(idfamille);
 
@@ -418,20 +480,12 @@ public class MainActivity extends AppCompatActivity
 
         gabaritListeDet.setPadding(25,25,0,0);
 
-        final Context context = this;
-
-        Param nParam=new Param();
-
-        MySQLiteHelper mysqlhlpr=new MySQLiteHelper(context);
-
-        ParamDataSource dtsparam = new ParamDataSource(context);
-        dtsparam.open();
-
-        Param oParam=mysqlhlpr.MiseAJourParam(context,dtsparam.getDatabase(),false,MySQLiteHelper.PARAM_MAJ_CTRLMODE,nParam);
-
-        String modeEnCours = oParam.getModeencours();
+        //String modeEnCours = MySQLiteHelper.PARAM_MODEENCOURS_LISTE;//                oParam.getModeencours();
 
         boolean bmodeliste=modeEnCours.equals(PARAM_MODEENCOURS_LISTE);
+
+        //famille selectionnees
+        int ifamsel = 0;// oParam.
 
         int iart=0;
 
@@ -489,11 +543,11 @@ public class MainActivity extends AppCompatActivity
 
             texttv.setText(art.getLibelle());
 
-           // Log.v("COMPTEUR ", String.valueOf(Integer.valueOf(iart)));
+           //Log.v("COMPTEUR ", String.valueOf(Integer.valueOf(iart)));
 
             texttv.setHeight(100);
 
-            texttv.setTextSize(TypedValue.COMPLEX_UNIT_PX, 60);
+            texttv.setTextSize(TypedValue.COMPLEX_UNIT_PX, 40);
 
             //texttv.setTextSize(500,40);
             //setFont(textView3,"CURSTOM-FONT2.ttf");
@@ -503,11 +557,28 @@ public class MainActivity extends AppCompatActivity
             setFont(texttv,"RobotoCondensed-Bold.ttf");
            // setFont(texttv,"Roboto-Italic.ttf");
 
-            //texttv.setFontFeatureSettings();
+            int w=700;
+            //OrientationHelper.HORIZONTAL
 
-            texttv.setWidth(500);
+            int oi = getResources().getConfiguration().orientation ;
+            //Log.v("MAIN ACTIVITY","Portrait-517 OI="+oi);
+
+            if (oi == 1)
+            {
+                w=400;//portrait
+            }
+            else
+            {
+                if (oi == 2)
+                {
+                    w=700;//paysage
+                }
+            }
 
             //libelle produit
+
+            texttv.setWidth(w);
+
             gabaritDet.addView(texttv);
 
             /*
@@ -516,9 +587,12 @@ public class MainActivity extends AppCompatActivity
             if(bmodeliste)
             {
                 btnach.setImageResource(R.drawable.ajout2);
+                //Log.v("MAIN ACTIVITY","MODE 586 "+MySQLiteHelper.PARAM_MODEENCOURS_LISTE);
+
 
             }else{
                 btnach.setImageResource(R.drawable.caddy);
+                //Log.v("MAIN ACTIVITY","MODE 591 "+MySQLiteHelper.PARAM_MODEENCOURS_ACHAT);
             }
             gabaritDet.addView(btnach);
 
@@ -564,17 +638,61 @@ public class MainActivity extends AppCompatActivity
 
                 MySQLiteHelper mysqlhlpr=new MySQLiteHelper(context);
 
-                Param nParam=new Param();
-//
-                Param oParam=mysqlhlpr.MiseAJourParam(context,dtsparam.getDatabase(),true,MySQLiteHelper.PARAM_MAJ_MODEENCOURS,nParam);
-                //String modeEnCours=oParam.getModeencours();
-                //Param oParam=mysqlhlpr.MiseAJourParam(context,dtsparam.getDatabase(),false,MySQLiteHelper.PARAM_MAJ_CTRLMODE,nParam);
-                //Log.v("MAIN ACT","546");
+                Param nParam=dtsparam.LectureParam();
 
-                String modeEnCours=oParam.getModeencours();
-                //Log.v("MAIN ACT","548 >"+modeEnCours+"<");
-                boolean modeachat=modeEnCours.equals(PARAM_MODEENCOURS_ACHAT);
-               // Log.v("MAIN ACT","550");
+                String modeEnCours=nParam.getModeencours();
+               //Log.v("MAINACTIVITY","644 "+nParam.getModeencours());
+
+                boolean modeliste=modeEnCours.equals(MySQLiteHelper.PARAM_MODEENCOURS_LISTE);
+
+                if(modeliste)
+                {
+                    nParam.setModeencours(MySQLiteHelper.PARAM_MODEENCOURS_ACHAT);
+                    //Toast.makeText(MainActivity.this, " 647 getModeencours= "+nParam.getModeencours(), Toast.LENGTH_LONG).show();
+                   //Log.v("MAINACTIVITY","652 PASSAGEENMODEACHAT"+nParam.getModeencours());
+
+                }else
+                {
+                    nParam.setModeencours(MySQLiteHelper.PARAM_MODEENCOURS_LISTE);
+                   //Log.v("MAINACTIVITY","657 PASSAGEENMODELISTE"+nParam.getModeencours());
+                    //Toast.makeText(MainActivity.this, " 652 getModeencours= "+nParam.getModeencours(), Toast.LENGTH_LONG).show();
+                }
+
+                boolean bmaj=mysqlhlpr.MiseAJourParam2(context,dtsparam.getDatabase(),true,MySQLiteHelper.PARAM_MAJ_MODEENCOURS,nParam);
+                if(bmaj)
+                {
+
+                    //dtsparam.LectureParam();
+
+                    //
+                    //
+                    //Toast.makeText(MainActivity.this, " PARAMETRES MISE A JOUR getModeencours= "+nParam.getModeencours(), Toast.LENGTH_LONG).show();
+
+                }
+//
+
+                //Toast.makeText(MainActivity.this, " BUTTON MODE ", Toast.LENGTH_LONG).show();
+
+                //Log.v("MAIN ACT","621");
+
+               // Param oParam=mysqlhlpr.MiseAJourParam(context,dtsparam.getDatabase(),true,MySQLiteHelper.PARAM_MAJ_MODEENCOURS,nParam);
+
+               // Log.v("MAIN ACT","625 OPARAM="+oParam.toString());
+
+
+
+                //String modeEnCours=MySQLiteHelper.PARAM_MODEENCOURS_LISTE;//oParam.getModeencours();
+
+                //Param oParam=mysqlhlpr.MiseAJourParam(context,dtsparam.getDatabase(),false,MySQLiteHelper.PARAM_MAJ_CTRLMODE,nParam);
+
+
+                //String modeEnCours=oParam.getModeencours();
+
+                //Log.v("MAIN ACT","629 >"+modeEnCours+"<");
+
+                //boolean modeachat=modeEnCours.equals(PARAM_MODEENCOURS_ACHAT);
+
+               //Log.v("MAIN ACT","550");
 
                 // boolean modeliste=modeEnCours.equals(PARAM_MODEENCOURS_LISTE);
 
@@ -596,49 +714,54 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        final ImageButton imageBtnActiverModeCtrl = (ImageButton) findViewById(R.id.imageBtnActiverModeCtrl);
+        final ImageButton imageBtnActiverModeCtrl = (ImageButton) findViewById(R.id.imageBtnActiverModeCtrl    );
 
         if (bmodeliste)
         {
-            //Log.v("MAIN ACT","587");
+         //Log.v("MAIN ACT","702 MODE LISTE "+MySQLiteHelper.PARAM_MODEENCOURS_LISTE);
             //btnactmodectrl.setVisibility(0);
             imagebuttonMode.setBackgroundResource(R.drawable.liste2);
         }else
         {
-            //Log.v("MAIN ACT","592");
+          //Log.v("MAIN ACT","707 MODE ACHAT "+MySQLiteHelper.PARAM_MODEENCOURS_ACHAT);
             //btnactmodectrl.setVisibility(1);
             imagebuttonMode.setBackgroundResource(R.drawable.caddy);
         }
+        //Log.v("MAIN ACT","711");
 
-        boolean ctrlact=oParam.getBmodectrl();
+        boolean ctrlact=false;//oParam.getBmodectrl();
         if(ctrlact)
         {
-            imageBtnActiverModeCtrl.setBackgroundResource(R.drawable.checklist2);
+            //imageBtnActiverModeCtrl.setBackgroundResource(R.drawable.checklist2);
 
         }else
         {
-            imageBtnActiverModeCtrl.setBackgroundResource(R.drawable.controleb);
+            //imageBtnActiverModeCtrl.setBackgroundResource(R.drawable.controleb);
 
         }
+        //Log.v("MAIN ACT","723");
         //String modeEnCours=oParam.getModeencours();
         boolean modeachat=modeEnCours.equals(PARAM_MODEENCOURS_ACHAT);
+        //Log.v("MAIN ACT","726");
 
-        final ImageButton btnactmodectrl = (ImageButton) findViewById(R.id.imageBtnActiverModeCtrl);
+        final ImageButton btnactmodectrl = (ImageButton) findViewById(R.id.BtnActiverModeCtrl);
+        //Log.v("MAIN ACT","729");
 
         if(modeachat)
         {
-            btnactmodectrl.setVisibility(View.VISIBLE);
+            imageBtnActiverModeCtrl.setVisibility(View.VISIBLE);
 
         }else
         {
-            btnactmodectrl.setVisibility(View.GONE);
+            imageBtnActiverModeCtrl.setVisibility(View.GONE);
         }
+        //Log.v("MAIN ACT","739");
 
         dtsparam.close();
 
        // btnactmodectrl.setVisibility(modeachat);
 
-        //Log.v("MAIN","621 MODEENCOURS>"+modeEnCours+"<");
+        //Log.v("MAIN","704 MODEENCOURS>"+modeEnCours+"<");
 
         imageBtnActiverModeCtrl.setOnClickListener(new View.OnClickListener() {
 
@@ -658,8 +781,8 @@ public class MainActivity extends AppCompatActivity
 
                 Param nParam=new Param();
 
-                Param oParam=mysqlhlpr.MiseAJourParam(context,dtsparam.getDatabase(),true,MySQLiteHelper.PARAM_MAJ_CTRLMODE,nParam);
-                boolean ctrlact=oParam.getBmodectrl();
+                //Param oParam=mysqlhlpr.MiseAJourParam(context,dtsparam.getDatabase(),true,MySQLiteHelper.PARAM_MAJ_CTRLMODE,nParam);
+                //boolean ctrlact=oParam.getBmodectrl();
 
                 //view.
 
@@ -682,6 +805,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        Toast.makeText(MainActivity.this, " Fin Affichage Articles FAMILLE="+idfamille+" MODE="+modeEnCours, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -728,25 +852,95 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-        Integer idview = view.getId();
-        //if(idview==R.id.spinner_famille)
+
+        if(view !=null && this.bSelectionFamille)
+        {
+            //Log.v("MAIN ONITEMSELECTED","798");
+            Integer idview = view.getId();
+            //Log.v("MAIN ONITEMSELECTED","800");
+            //if(idview==R.id.spinner_famille)
 
             //Log.v("MAINACT","750 ");
 
             Spinner spinner_famille = (Spinner) findViewById(R.id.spinner_famille);
 
             Long lidfamille=spinner_famille.getSelectedItemId();
-            //Log.v("MAINACT","755 IDFAMILLE="+lidfamille.toString());
+
+            //spinner_famille.getAdapter().getItem(1);
+
+            //Log.v("MAINACT","861 IDFAMILLE="+lidfamille.toString());
+
+            if(lidfamille!=-1)
+            {
+
+                MySQLiteHelper mysqlhlpr=new MySQLiteHelper(this);
+
+                //Param nParam=new Param();
 
 
-            AfficheArticles(lidfamille);
 
+                //Log.v("MAINACT","824 IDFAMILLE="+lidfamille.toString()+" NPARAM="+nParam.toString());
+
+                ParamDataSource dtsparam = new ParamDataSource(this);
+                dtsparam.open();
+
+                Param nParam=dtsparam.LectureParam();
+
+                nParam.setFamilleEnCours(lidfamille);
+
+                //MiseAJourParam(Context context,SQLiteDatabase db,boolean bMaj,int iTypeMaj,Param oParam)
+                final Context context = this;
+
+                //mysqlhlpr.majBaseDeDonnees(context,true,dtsparam.getDatabase(), MySQLiteHelper.PARAM_MAJ_FAMENCOURS,nParam);
+
+                boolean bmaj=false;
+              //Log.v("MAINACT","894 ONITEMSELECTED IDFAMILLE="+lidfamille.toString()+" GETMODENCOURS >"+nParam.getModeencours()+"<");
+                //Log.v("MAINACT","895 ONITEMSELECTED GETMODENCOURS >"+nParam.getModeencours()+"<");
+
+/**/
+                bmaj=mysqlhlpr.MiseAJourParam2(context,dtsparam.getDatabase(),true,MySQLiteHelper.PARAM_MAJ_FAMENCOURS,nParam);
+                if(bmaj)
+                {
+
+//                    Toast.makeText(MainActivity.this, " PARAMETRES MISE A JOUR getFamilleEnCours= "+nParam.getFamilleEnCours(), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(MainActivity.this, " PARAMETRES MISE A JOUR lidfamille= "+lidfamille, Toast.LENGTH_LONG).show();
+
+                }
+                /**/
+
+                dtsparam.close();
+
+                if(lidfamille!=0)
+                {
+
+                    long ifam=spinner_famille.getSelectedItemId();
+
+                    String slibfam;
+                    Famille famensel= (Famille) spinner_famille.getAdapter().getItem((int)ifam);
+
+                    slibfam=famensel.getLibelle();
+
+                    //Toast.makeText(MainActivity.this, " FAMILLE SELECTIONNEE="+lidfamille+" GETITEM="+slibfam, Toast.LENGTH_LONG).show();
+
+                }
+                //Log.v("MAIN ACT 872"," FAMILLE SELECTIONNEE IDFAMILLE="+lidfamille);
+
+                AfficheArticles(lidfamille);
+
+            }
+
+
+        }
+
+
+        this.bSelectionFamille=true;
 
 
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
+        Log.v("MAIN ACT 942"," ON NOTHING SELECTED");
 
     }
 }

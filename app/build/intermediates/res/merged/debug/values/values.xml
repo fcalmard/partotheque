@@ -342,7 +342,7 @@
     <string name="msggestart">Gestion des articles</string>
     <string name="msggestfam">Gestion des familles</string>
     <string name="msgquit">Voulez vous quitter Acquisti</string>
-    <string name="msgsaisiefam">Saisissez une famille***</string>
+    <string name="msgsaisiefam">Saisissez une famille</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="no">Non</string>

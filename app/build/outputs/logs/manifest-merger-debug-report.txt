@@ -42,7 +42,7 @@ MERGED from [com.android.support:support-v4:23.4.0] /home/francois/AndroidStudio
 	android:allowBackup
 		ADDED from /home/francois/AndroidStudioProjects/Acquisti/app/src/main/AndroidManifest.xml:6:9-35
 	android:icon
-		ADDED from /home/francois/AndroidStudioProjects/Acquisti/app/src/main/AndroidManifest.xml:7:9-43
+		ADDED from /home/francois/AndroidStudioProjects/Acquisti/app/src/main/AndroidManifest.xml:7:9-41
 	android:theme
 		ADDED from /home/francois/AndroidStudioProjects/Acquisti/app/src/main/AndroidManifest.xml:10:9-40
 activity#acquisti.ouccelo.free.fr.acquisti.acquisti.MainActivity

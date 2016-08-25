@@ -94,7 +94,7 @@
                     <ListView
                         android:id="@android:id/list"
                         android:layout_width="wrap_content"
-                        android:layout_height="274dp"
+                        android:layout_height="170dp"
                         android:background="@color/button_material_light"
                         style="@style/AppTheme"
                         android:layout_gravity="top" />
