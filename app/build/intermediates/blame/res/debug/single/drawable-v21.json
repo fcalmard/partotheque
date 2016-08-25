@@ -1,11 +1,11 @@
 [
     {
-        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/drawable-v21/ic_menu_manage.xml",
-        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/drawable-v21/ic_menu_manage.xml"
-    },
-    {
         "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/drawable-v21/abc_edit_text_material.xml",
         "source": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-v21/abc_edit_text_material.xml"
+    },
+    {
+        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/drawable-v21/ic_menu_manage.xml",
+        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/drawable-v21/ic_menu_manage.xml"
     },
     {
         "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/drawable-v21/ic_menu_camera.xml",
