@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Log.v("MAIN ON CREATE","ONCREATE 58");
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -894,8 +893,6 @@ public class MainActivity extends AppCompatActivity
                 //mysqlhlpr.majBaseDeDonnees(context,true,dtsparam.getDatabase(), MySQLiteHelper.PARAM_MAJ_FAMENCOURS,nParam);
 
                 boolean bmaj=false;
-              //Log.v("MAINACT","894 ONITEMSELECTED IDFAMILLE="+lidfamille.toString()+" GETMODENCOURS >"+nParam.getModeencours()+"<");
-                //Log.v("MAINACT","895 ONITEMSELECTED GETMODENCOURS >"+nParam.getModeencours()+"<");
 
 /**/
                 bmaj=mysqlhlpr.MiseAJourParam2(context,dtsparam.getDatabase(),true,MySQLiteHelper.PARAM_MAJ_FAMENCOURS,nParam);
@@ -923,7 +920,6 @@ public class MainActivity extends AppCompatActivity
                     //Toast.makeText(MainActivity.this, " FAMILLE SELECTIONNEE="+lidfamille+" GETITEM="+slibfam, Toast.LENGTH_LONG).show();
 
                 }
-                //Log.v("MAIN ACT 872"," FAMILLE SELECTIONNEE IDFAMILLE="+lidfamille);
 
                 AfficheArticles(lidfamille);
 
