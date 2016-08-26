@@ -15,7 +15,14 @@ public class ArticleDataSource {
 	private SQLiteDatabase database;
 	private MySQLiteHelper dbHelper;
 	private String[] allColumns = { MySQLiteHelper.COLUMN_ID,
-			MySQLiteHelper.COLUMN_LIBELLE,MySQLiteHelper.COLUMN_ID_FAMILLE };
+			MySQLiteHelper.COLUMN_LIBELLE,MySQLiteHelper.COLUMN_ID_FAMILLE
+            ,MySQLiteHelper.COLUMN_DSLISTE
+            ,MySQLiteHelper.COLUMN_DSACHATS
+            ,MySQLiteHelper.COLUMN_PUHT
+            ,MySQLiteHelper.COLUMN_TXTVA
+            ,MySQLiteHelper.COLUMN_PUTTC
+            ,MySQLiteHelper.COLUMN_QTE
+    };
 
 	public ArticleDataSource(Context context) {
 		dbHelper = new MySQLiteHelper(context);
@@ -95,7 +102,11 @@ public class ArticleDataSource {
 		ContentValues values = new ContentValues();
 
         values.put(MySQLiteHelper.COLUMN_LIBELLE, article.getLibelle());
-        values.put(MySQLiteHelper.COLUMN_ID_FAMILLE, article.getFamilleId());
+		values.put(MySQLiteHelper.COLUMN_ID_FAMILLE, article.getFamilleId());
+		long lidliste=article.getIdliste();
+		values.put(MySQLiteHelper.COLUMN_DSLISTE, lidliste);
+
+		Log.v("ARTDATASOURCE******","102,lidliste="+lidliste);
 
 		database.update(MySQLiteHelper.TABLE_ARTICLES, values,
 				MySQLiteHelper.COLUMN_ID + " = ? ",
@@ -157,11 +168,12 @@ public class ArticleDataSource {
 
 	}
 
-	private Article cursorToArticle(Cursor cursor) {
+	public Article cursorToArticle(Cursor cursor) {
 		Article article = new Article();
         article.setId(cursor.getLong(0));
 		article.setLibelle(cursor.getString(1));
         article.setFamilleId(cursor.getLong(2));
+        article.setIdliste(cursor.getLong(3));
 		return article;
 	}
 

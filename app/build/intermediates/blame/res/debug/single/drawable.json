@@ -68,6 +68,10 @@
         "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/drawable/caddy.png"
     },
     {
+        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/drawable/kaddy.gif",
+        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/drawable/kaddy.gif"
+    },
+    {
         "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/drawable/delete5.png",
         "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/drawable/delete5.png"
     },
@@ -86,6 +90,10 @@
     {
         "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/drawable/abc_dialog_material_background_dark.xml",
         "source": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable/abc_dialog_material_background_dark.xml"
+    },
+    {
+        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/drawable/caddie.png",
+        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/drawable/caddie.png"
     },
     {
         "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/drawable/abc_item_background_holo_light.xml",
@@ -154,6 +162,10 @@
     {
         "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/drawable/checklist4.png",
         "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/drawable/checklist4.png"
+    },
+    {
+        "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/drawable/box.png",
+        "source": "/home/francois/AndroidStudioProjects/Acquisti/app/src/main/res/drawable/box.png"
     },
     {
         "merged": "/home/francois/AndroidStudioProjects/Acquisti/app/build/intermediates/res/merged/debug/drawable/liste2.png",

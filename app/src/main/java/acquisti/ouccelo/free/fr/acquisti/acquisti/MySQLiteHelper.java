@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-//import android.util.Log;
+import android.util.Log;
 import android.widget.Toast;
 
 public class MySQLiteHelper extends SQLiteOpenHelper {
@@ -39,13 +39,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID_FAMILLE = "FamilleId";
     public static final String COLUMN_IMG = "img";
 
-    public static final String COLUMN_DSLISTE = "idliste";// SI MODE LISTE INTEGER OU IDENTIFIANT LISTE SELECTIONEE OUI 1 0
-    public static final String COLUMN_DSACHATS = "estachete";// SI MODE ACHAT INTEGER OUI O 10
 
     public static final String COLUMN_PUHT = "puht";
     public static final String COLUMN_TXTVA = "txtva";
     public static final String COLUMN_PUTTC = "puttc";
     public static final String COLUMN_QTE = "qte";
+
+    public static final String COLUMN_DSLISTE = "idliste";// SI MODE LISTE INTEGER OU IDENTIFIANT LISTE SELECTIONEE OUI 1 0
+    public static final String COLUMN_DSACHATS = "estachete";// SI MODE ACHAT INTEGER OUI O 10
 
     public static final String TABLE_FAMILLES = "familles";
 
@@ -173,9 +174,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     public int ControleVersionBaseDeDonnees(Context context,SQLiteDatabase db)
     {
-        //Log.d("ControleVersionBaseDeDonnees"," RECHERCHE "+TABLE_PARAM);
-       // db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARAM);
-        //Log.d("ControleVersionBaseDeDonnees"," APRES DROP "+TABLE_PARAM);
+       //Log.v("MYSQLHELPER","CTRLVERSIONBD,177");
+        //Log.d("MYSQLHELPER"," RECHERCHE "+TABLE_PARAM);
+        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARAM);
+        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_ARTICLES);
+        //db.execSQL(MySQLiteHelper.TABLE_CREATE_PARAM);
+        //db.execSQL(MySQLiteHelper.TABLE_CREATE_ARTICLE);
+
+        //Log.d("MYSQLHELPER"," 180,APRES DROP "+TABLE_PARAM);
 
         int vbd=0;
         Long idparam= Long.valueOf(0);
@@ -194,21 +200,36 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                     allColumns, null, null,
                     null, null, null);
 
-            //Log.d("RECH_TABLE_PARAM1","290 LECTURE "+TABLE_PARAM+" COUNT ="+cursor.getCount());
 
             int nbc=cursor.getCount();
+            //Log.d("RECH_TABLE_PARAM1","205 LECTURE "+TABLE_PARAM+" COUNT ="+nbc);
 
             if(nbc>0)
             {
                 cursor.moveToFirst();
 
                 vbd=cursor.getInt(1);
+                //Log.v("MYSQLHELPER","MYSQLHELPER,212 VERSION BASE DE DONNÉES"+vbd);
 
+                //for(int l=0; l<=5; l++){
+                for(int version=vbd; version<=4; version++){
+                    //Log.v("MYSQLHELPER","MYSQLHELPER,215 VERSION BASE DE DONNÉES"+version);
+                    this.majBaseDeDonnees(context,db,version);
+
+                }
             }else{
 
                 //Log.d("RECH_TABLE_PARAM1"," 330 LECTURE NBC=0");
 
                 vbd=1;
+
+                // createParam
+                ParamDataSource pds = new ParamDataSource(context);
+
+                pds.open();
+                newParam=pds.createParam(vbd,MySQLiteHelper.PARAM_MODEENCOURS_LISTE,0);
+
+                pds.close();
 
                 this.majBaseDeDonnees(context,db,vbd);
                 //Log.d("RECH_TABLE_PARAM1"," 335");
@@ -258,7 +279,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         }catch (SQLiteException e)//Exception
         {
-            //Log.v("RECH_TABLE_PARAM1","ERREUR 378 ");
+           //Log.v("RECH_TABLE_PARAM1","ERREUR 264 ");
 
             //db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARAM);
 
@@ -306,8 +327,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         }
 
-
-       //Log.d("RECH_TABLE_PARAM2"," 428, RECHERCHE  2 VERSION BASE DE DONNEES "+vbd);
+       //Log.v("RECH_TABLE_PARAM2"," 316, RECHERCHE  2 VERSION BASE DE DONNEES "+vbd);
 
         return vbd;
     }
@@ -316,7 +336,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     {
         //Param param = new Param();
 
-       //Log.d("majBaseDeDonnees", "427 version "+ version);
+       //Log.v("majBaseDeDonnees", "325 version "+ version);
 
         switch (version)
         {
@@ -325,12 +345,17 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                 break;
             case 2:/* ajout champ COLUMN_IMG à la TABLE_ARTICLES*/
 
-                String sql = "ALTER TABLE "+TABLE_ARTICLES+" ADD COLUMN "+COLUMN_IMG+" BLOB DEFAULT NULL";
+                String sql = "ALTER TABLE "+TABLE_ARTICLES+" ADD COLUMN "+COLUMN_IMG+" BLOB DEFAULT NULL;";
+               //Log.v("majBaseDeDonnees", "336 SQL >"+sql);
 
                 try {
                     db.execSQL(sql);
-                    sql = "ALTER TABLE "+TABLE_ARTICLES+" DROP COLUMN "+COLUMN_IMG;
-                    db.execSQL(sql);
+                    /*
+                    openDB.execSQL("ALTER TABLE favs" + " DROP COLUMN favsCount");
+                     */
+                    sql = "ALTER TABLE "+TABLE_ARTICLES+" DROP COLUMN "+COLUMN_IMG+";";
+                    //Log.v("majBaseDeDonnees", "344 SQL >"+sql);
+                    //db.execSQL(sql);
 
                 }catch (SQLiteException e)
                 {
@@ -409,57 +434,81 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
 
                  */
-                String sqlart = "ALTER TABLE "+TABLE_ARTICLES+" ADD COLUMN "+COLUMN_PUHT+" REAL DEFAULT 0;";
-                sqlart = sqlart  +"ALTER TABLE "+TABLE_ARTICLES+" ADD COLUMN "+COLUMN_TXTVA+" REAL DEFAULT 20.00;";
-                sqlart = sqlart +"ALTER TABLE "+TABLE_ARTICLES+" ADD COLUMN "+COLUMN_PUTTC+" REAL DEFAULT 0;";
-                sqlart = sqlart +"ALTER TABLE "+TABLE_ARTICLES+" ADD COLUMN "+COLUMN_QTE+" REAL DEFAULT 1;";
+                String sqlart1 ="ALTER TABLE "+TABLE_ARTICLES+" ADD COLUMN "+COLUMN_PUHT+" REAL DEFAULT 0;";
+                String sqlart2 ="ALTER TABLE "+TABLE_ARTICLES+" ADD COLUMN "+COLUMN_TXTVA+" REAL DEFAULT 20.00;";
+                String sqlart3 ="ALTER TABLE "+TABLE_ARTICLES+" ADD COLUMN "+COLUMN_PUTTC+" REAL DEFAULT 0;";
+                String sqlart4 ="ALTER TABLE "+TABLE_ARTICLES+" ADD COLUMN "+COLUMN_QTE+" REAL DEFAULT 1;";
 
-                sqlart = sqlart +"ALTER TABLE "+TABLE_ARTICLES+" ADD COLUMN "+COLUMN_DSLISTE+" INTEGER DEFAULT 0;";
-                sqlart = sqlart +"ALTER TABLE "+TABLE_ARTICLES+" ADD COLUMN "+COLUMN_DSACHATS+" INTEGER DEFAULT 0;";
+                String sqlart5 ="ALTER TABLE "+TABLE_ARTICLES+" ADD COLUMN "+COLUMN_DSLISTE+" INTEGER DEFAULT 0;";
+                String sqlart6 ="ALTER TABLE "+TABLE_ARTICLES+" ADD COLUMN "+COLUMN_DSACHATS+" INTEGER DEFAULT 0;";
 
-                String sqlparam= "ALTER TABLE "+TABLE_PARAM+" ADD COLUMN "+PARAM_COLUMN_MODECONTROLE+" INTEGER DEFAULT 0";
-                String sqlparam2 = "ALTER TABLE "+TABLE_PARAM+" ADD COLUMN "+PARAM_COLUMN_LISTEENCOURS+" STRING DEFAULT '';";
+                //String sqlparam= "ALTER TABLE "+TABLE_PARAM+" ADD COLUMN "+PARAM_COLUMN_MODECONTROLE+" INTEGER DEFAULT 0";
+                //String sqlparam2 = "ALTER TABLE "+TABLE_PARAM+" ADD COLUMN "+PARAM_COLUMN_LISTEENCOURS+" STRING DEFAULT '';";
 
-                String sqlalterart = "ALTER TABLE "+TABLE_ARTICLES+" DROP COLUMN "+COLUMN_PUHT;
+                String sqlalterart2 = "ALTER TABLE "+TABLE_ARTICLES+" DROP COLUMN "+COLUMN_PUHT;
 
-                sqlalterart = sqlalterart + " DROP COLUMN "+COLUMN_TXTVA;
+                /*sqlalterart = sqlalterart + " DROP COLUMN "+COLUMN_TXTVA;
                 sqlalterart = sqlalterart + " DROP COLUMN "+COLUMN_PUTTC;
                 sqlalterart = sqlalterart + " DROP COLUMN "+COLUMN_QTE;
 
                 sqlalterart = sqlalterart + " DROP COLUMN "+COLUMN_DSLISTE;
-                sqlalterart = sqlalterart + " DROP COLUMN "+COLUMN_DSACHATS;
+                sqlalterart = sqlalterart + " DROP COLUMN "+COLUMN_DSACHATS;*/
 
                 //String sqlalterparam = "ALTER TABLE "+TABLE_PARAM+" DROP COLUMN "+PARAM_COLUMN_MODECONTROLE;
                 //sqlalterparam=sqlalterparam+ "ALTER TABLE "+TABLE_PARAM+" DROP COLUMN "+PARAM_COLUMN_FAMENCOURS;
 
-                //Log.v("MYSQLHELPER","543");
+               // Log.v("MYSQLHELPER","436 sqlalterart"+sqlalterart);
                 //Log.v("MYSQLHELPER maj table PARAM ",sqlparam);
 
                 try {
-                    db.execSQL(sqlart);
-                    db.execSQL(sqlparam);
-                    db.execSQL(sqlparam2);
-
-
-                    //db.execSQL(sqlalterart);
-                    //db.execSQL(sqlalterparam);
-
-                    this.MiseAJourParamVersionBase(context,db,3);
-
-
+                    db.execSQL(sqlart1);
+                   //Log.v("MYSQLHELPER","451 SQLART1>"+sqlart1);
                 }catch (SQLiteException e)
                 {
-                    //Log.d("ERREUR MAJVBD",e.getMessage().toString());
-                    //Log.v("MYSQLHELPER","ERREUR 572");
-
+                   //Log.v("MYSQLHELPER","ERROR LIGNE 454 "+e.getMessage());
+                }
+                try {
+                    db.execSQL(sqlart2);
+                   //Log.v("MYSQLHELPER","459 SQLART2>"+sqlart2);
+                }catch (SQLiteException e)
+                {
+                   //Log.v("MYSQLHELPER","ERROR LIGNE 461 "+e.getMessage());
+                }
+                try {
+                    db.execSQL(sqlart3);
+                   //Log.v("MYSQLHELPER","463 SQLART3>"+sqlart3);
+                }catch (SQLiteException e)
+                {
+                   //Log.v("MYSQLHELPER","ERROR LIGNE 468 "+e.getMessage());
+                }
+                try {
+                    db.execSQL(sqlart4);
+                   //Log.v("MYSQLHELPER","469 SQLART4>"+sqlart4);
+                }catch (SQLiteException e)
+                {
+                   //Log.v("MYSQLHELPER","ERROR LIGNE 475 "+e.getMessage());
+                }
+                try {
+                    db.execSQL(sqlart5);
+                   //Log.v("MYSQLHELPER","475 SQLART5>"+sqlart5);
+                }catch (SQLiteException e)
+                {
+                   //Log.v("MYSQLHELPER","ERROR LIGNE 482 "+e.getMessage());
+                }
+                try {
+                    db.execSQL(sqlart6);
+                   //Log.v("MYSQLHELPER","481 sqlart1"+sqlart6);
+                }catch (SQLiteException e)
+                {
+                   //Log.v("MYSQLHELPER","ERROR LIGNE 489 "+e.getMessage());
                 }
 
                 break;
             case 4:
-                sqlparam= "ALTER TABLE "+TABLE_PARAM+" ADD COLUMN "+PARAM_COLUMN_FAMENCOURS+" LONG DEFAULT 0;";
+               String sqlparam= "ALTER TABLE "+TABLE_PARAM+" ADD COLUMN "+PARAM_COLUMN_FAMENCOURS+" LONG DEFAULT 0;";
                 try {
-                    db.execSQL(sqlparam);
-                    Toast.makeText(context,sqlparam,Toast.LENGTH_LONG).show();
+                    //db.execSQL(sqlparam);
+                    //Toast.makeText(context,sqlparam,Toast.LENGTH_LONG).show();
 
 
                     //db.execSQL(sqlalterart);
@@ -476,8 +525,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             default:
                 break;
         }
-       //Log.d("majBaseDeDonnees", "585");
-
+       //Log.v("MYSQLHELPER MAJBD", "MYSQLHELPER,488");
     }
 
     public void MiseAJourParamVersionBase(Context context,SQLiteDatabase db,int version)
@@ -497,7 +545,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                 ,MySQLiteHelper.PARAM_COLUMN_LISTEENCOURS
                 ,MySQLiteHelper.PARAM_COLUMN_FAMENCOURS};
 
-       //Log.d("MiseAJourParamVersionBase", "599");
+       //Log.v("MYSQLHELPER", "MYSQLHELPER,509");
 
 
         //db.query(TABLE_ARTICLES,allColumns,"",allColumns,"","","");
@@ -535,7 +583,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         pds.close();
 
         cursor.close();
-       //Log.d("MiseAJourParamVersionBase", "637");
+
+        //Log.v("MYSQLHELPER", "MiseAJourParamVersionBase,573 VERSION="+version);
 
     }
 	@Override
@@ -551,6 +600,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ARTICLES);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAMILLES);
 		onCreate(db);
+        //Log.v("MYSQLHELPER","589 DROP TABLES");
 	}
 
 }

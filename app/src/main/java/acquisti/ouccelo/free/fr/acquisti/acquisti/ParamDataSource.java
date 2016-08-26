@@ -47,13 +47,6 @@ public class ParamDataSource {
 
         values.put(MySQLiteHelper.PARAM_COLUMN_MODEENCOURS, modeencours);
 
-        switch (versionbd)
-        {
-            case 2:
-
-                break;
-
-        }
         values.put(MySQLiteHelper.PARAM_COLUMN_MODECONTROLE, modectrl);
 
         long insertId=0;
@@ -75,18 +68,21 @@ public class ParamDataSource {
             //Log.d("TEST","insertion PARAM************** ERREUR= "+e.getMessage());
 
         }
-        //Log.d("NEWPARAM","insertion PARAM 4 "+versionbd+" ID="+insertId);
+
+        Log.v("NEWPARAM","72, insertion PARAM 4 "+versionbd+" ID="+insertId);
 
         if (insertId!=0)
         {
             Cursor cursor = database.query(MySQLiteHelper.TABLE_PARAM,
                     allColumns, MySQLiteHelper.COLUMN_ID + " = " + insertId, null,
                     null, null, null);
-            //Log.d("*** NEWPARAM OK","PARAM COUNT ="+cursor.getCount());
+            Log.d("*** NEWPARAM OK","PARAM COUNT ="+cursor.getCount());
             if(cursor.getCount()>0)
             {
                 cursor.moveToFirst();
+                Log.v("NEWPARAM","83");
                 newParam = cursorToParam(cursor);
+                Log.v("NEWPARAM","85");
 
             }
             cursor.close();
@@ -230,6 +226,9 @@ public class ParamDataSource {
         Param newParam = new Param();
 
         String snouveaumode=MySQLiteHelper.PARAM_MODEENCOURS_LISTE;
+
+        newParam.setModeencours(snouveaumode);
+
         //Log.v("PARAM DATA SOURCE, CHANGE MODE ","189");
 
        /* String[] allColumns = { MySQLiteHelper.COLUMN_ID,
@@ -251,13 +250,16 @@ public class ParamDataSource {
            //Log.d("PARAMDATASOURCE","249, GETCOUNT >"+cursor.getCount()+"<");
 
             cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
 
-           //Log.d("PARAMDATASOURCE","255, GETFAMILLEID >"+cursor.getLong(5)+"<");
+                newParam = cursorToParam(cursor);
+            }
+
+            //Log.d("PARAMDATASOURCE","255, GETFAMILLEID >"+cursor.getLong(5)+"<");
            //Log.d("PARAMDATASOURCE","256, GETMODEENCOURS >"+cursor.getString(2)+"<");
         }
 
 
-        newParam = cursorToParam(cursor);
         /*
         while (!cursor.isAfterLast()) {
         //if (!cursor.isAfterLast()) {

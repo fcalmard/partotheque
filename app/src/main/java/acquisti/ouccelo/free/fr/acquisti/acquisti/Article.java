@@ -119,7 +119,10 @@ public class Article {
 
 	@Override
 	public String toString() {
-		return this.libelle;
+		String sl=this.libelle;
+
+        sl=sl+" IDLISTE="+this.idliste;
+        return sl;
 	}
 
 }
