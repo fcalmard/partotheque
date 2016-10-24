@@ -16,11 +16,50 @@
 		                <th>Libelle</th>
 		                <td>{{ entity.libelle }}</td>
 		            </tr>
+
 		            
 		            <tr class="ligneshow" >
 		                <th class="libelleFomShow"  >Active</th>
 		                <td>{{ entity.active==1 ? "O" : "N"}}</td>
 		            </tr>
+		            
+		            <tr class="ligneshow" >
+		                <th>Couleur</th>
+		                <td>{{ entity.couleur }}</td>
+		                
+		                
+        	        	{% set couleurligne="#ffffff" %}
+        
+        	        	{% if entity.couleurdef!=1 %}
+        		            {% set couleurligne=entity.couleur %} 	        
+        	        	{% endif %}
+        	        	
+	        		            <td style="background-color:{{couleurligne}}" >	            
+        	        	        	        	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<td>
+	        		            
+		            </tr>
+		            
+		            
+		            <tr class="ligneshow" >
+		                <th>Couleur de caractéres</th>
+		                <td>{{ entity.couleurfg }}</td>
+		                
+		                
+        	        	{% set couleurlignecar="#000000" %}
+        
+        	        	{% if entity.couleurdef!=1 %}
+        		            {% set couleurlignecar=entity.couleurfg %} 	        
+        	        	{% endif %}
+        	        	
+	        		            <td style="background-color:{{couleurlignecar}}" >	            
+        	        	        	        	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<td>
+	        		            
+		            </tr>		            
+		            		            
+		            <tr class="ligneshow" >
+		                <th class="libelleFomShow"  >Couleur par défaut</th>
+		                <td>{{ entity.couleurdef==1 ? "O" : "N"}}</td>
+		            </tr>		            
 		            		            
 		            <tr class="ligneshow" >
 		                <th>Saisi le</th>

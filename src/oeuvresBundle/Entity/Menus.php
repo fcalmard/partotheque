@@ -2,8 +2,6 @@
 
 namespace oeuvresBundle\Entity;
 
-use Symfony\Component\Translation\Tests\String;
-
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -278,7 +276,7 @@ class Menus
 	/**
 	 * Add Profil
 	 *
-	 * @param \MyJobs\Bundle\MainBundle\Entity\Profils $profil
+	 * @param \mychorale\Bundle\MainBundle\Entity\Profils $profil
 	 * @return Menus
 	 */
 	public function addProfil(oeuvresBundle\Entity\Profils $profil)
@@ -295,9 +293,9 @@ class Menus
 
 	/**
 	 * Remove Profil
-	 * @param \MyJobs\Bundle\MainBundle\Entity\Profils $profil
+	 * @param \mychorale\Bundle\MainBundle\Entity\Profils $profil
 	 */
-	public function removeProfil(\MyJobs\Bundle\MainBundle\Entity\Profils $profil)
+	public function removeProfil(\mychorale\Bundle\MainBundle\Entity\Profils $profil)
 	{
 		$this->profils->removeElement($profil);
 	}
@@ -314,9 +312,9 @@ class Menus
 	}
 
 	/**
-	 * @param \MyJobs\Bundle\MainBundle\Entity\Profils $profil
+	 * @param \mychorale\Bundle\MainBundle\Entity\Profils $profil
 	 */
-	public function setProfils(\MyJobs\Bundle\MainBundle\Entity\Profils $profil)
+	public function setProfils(\mychorale\Bundle\MainBundle\Entity\Profils $profil)
 	{
 		return $this;
 	}
@@ -461,7 +459,7 @@ class Menus
 	public function getDefaultImageBo()
 	{
 		$sDefaultImage='';
-		$config='/var/www/sites/myjobs/src/MyJobs/Bundle/MainBundle/Resources/config/myconfig.yml';
+		$config='/var/www/sites/mychorale/src/mychorale/Bundle/MainBundle/Resources/config/myconfig.yml';
 		if(file_exists($config))
 		{
 			$config1 = Yaml::parse($config);
@@ -473,7 +471,7 @@ class Menus
 	public function getWeb_path_imagebo_menu()
 	{
 		$sWeb_path='';
-		$config='/var/www/sites/myjobs/src/MyJobs/Bundle/MainBundle/Resources/config/myconfig.yml';
+		$config='/var/www/sites/mychorale/src/mychorale/Bundle/MainBundle/Resources/config/myconfig.yml';
 		if(file_exists($config))
 		{
 			$config1 = Yaml::parse($config);
@@ -486,8 +484,8 @@ class Menus
 	 */
 	public function getPathCible()
 	{
-		$sPathCible='/var/www/sites/myjobs/web/UsersRessouces/Images';
-		$config='/var/www/sites/myjobs/src/MyJobs/Bundle/MainBundle/Resources/config/myconfig.yml';
+		$sPathCible='/var/www/sites/mychorale/web/UsersRessouces/Images';
+		$config='/var/www/sites/mychorale/src/mychorale/Bundle/MainBundle/Resources/config/myconfig.yml';
 		if(file_exists($config))
 		{
 			$config1 = Yaml::parse($config);

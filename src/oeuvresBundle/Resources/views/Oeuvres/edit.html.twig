@@ -401,38 +401,47 @@
 		        			
 			</td>
 			
+			
+			{% if entity.id!=0 %}
+				<td class="tdtblactionsbdp">
+                    <a href="{{ path('oeuvres_show', { 'id': entity.id }) }}">
+      			       	<img alt="Modification" src="/web/css/images/pinboard.png" />
+                    </a>
+                </td>
+            {% endif %}
+		            
 				{% if entity.id !="" %}
 					<td class="tdtblactionsbdp">
 			        	<a href="{{ path('oeuvres_confim_delete', { 'id': entity.id }) }}">
 				             <img alt="Désactiver" src="/web/css/images/desactiver.png" width="64px" height="64px" >
 			        	</a>			
 					</td>
-
-				<td style="background-color:beige; " >
-				    {% if idenreg>1 %}
-					<a href="{{ path('oeuvres_pagine', { 'idxenreg': idenreg , 'sens': 'prec' , 'action': 'edit' }) }}">
-			             <img alt="Précedente" src="/web/images/Actions-arrow-left-icon.png" width="90px" height="90px" >
-				    </a>
-				    {% endif %}
-					{% if idenreg<=1 %}
-			             <img alt="premier enregistrement" src="/web/images/Actions-arrow-left-icon.png" width="64px" height="64px" class="grise" >
-				    {% endif %}				    		    
-				    &nbsp;
-				    {{ idenreg }}&nbsp;&nbsp;/&nbsp;&nbsp;{{ nbenreg }}
-				    &nbsp;
-					
-					{% if idenreg>=nbenreg %}
-			             <img alt="dernier enregistrement" src="/web/images/Actions-arrow-right-icon.png" width="64px" height="64px" class="grise" >
-				    {% endif %}
-					{% if idenreg<nbenreg %}
-					
-					<a href="{{ path('oeuvres_pagine', { 'idxenreg': idenreg , 'sens': 'suiv', 'action': 'edit' }) }}">
-			             <img alt="Suivante" src="/web/images/Actions-arrow-right-icon.png" width="64px" height="64px" >
-				    </a>				    
-				    
-				    {% endif %}
 				
-				</td>
+    				<td style="background-color:beige; " >
+    				    {% if idenreg>1 %}
+    					<a href="{{ path('oeuvres_pagine', { 'idxenreg': idenreg , 'sens': 'prec' , 'action': 'edit' }) }}">
+    			             <img alt="Précedente" src="/web/images/Actions-arrow-left-icon.png" width="90px" height="90px" >
+    				    </a>
+    				    {% endif %}
+    					{% if idenreg<=1 %}
+    			             <img alt="premier enregistrement" src="/web/images/Actions-arrow-left-icon.png" width="64px" height="64px" class="grise" >
+    				    {% endif %}				    		    
+    				    &nbsp;
+    				    {{ idenreg }}&nbsp;&nbsp;/&nbsp;&nbsp;{{ nbenreg }}
+    				    &nbsp;
+    					
+    					{% if idenreg>=nbenreg %}
+    			             <img alt="dernier enregistrement" src="/web/images/Actions-arrow-right-icon.png" width="64px" height="64px" class="grise" >
+    				    {% endif %}
+    					{% if idenreg<nbenreg %}
+    					
+    					<a href="{{ path('oeuvres_pagine', { 'idxenreg': idenreg , 'sens': 'suiv', 'action': 'edit' }) }}">
+    			             <img alt="Suivante" src="/web/images/Actions-arrow-right-icon.png" width="64px" height="64px" >
+    				    </a>				    
+    				    
+    				    {% endif %}
+    				
+    				</td>
 				
 				{% endif %}
 			

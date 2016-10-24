@@ -12,8 +12,34 @@
     <div class="listeetform">
 		<div class="showform">
 	
-	    	{{ form(edit_form) }}
-	
+            {{ form_start(edit_form) }}
+            
+                {{ form_label(edit_form.libelle, 'Libellé') }}
+                {{ form_widget(edit_form.libelle) }}
+                {{ form_errors(edit_form.libelle) }}
+                <br/>
+                {{ form_label(edit_form.active, 'Activé') }}
+                {{ form_widget(edit_form.active) }}
+                {{ form_errors(edit_form.active) }}
+                <br/>
+                <div id="cp2" class="input-group colorpicker-component">
+                    {{ form_label(edit_form.couleur, 'Couleur') }}
+                    {{ form_widget(edit_form.couleur) }}
+                    {{ form_errors(edit_form.couleur) }}                                
+                 	
+                 	<span class="input-group-addon"><i></i></span>
+		        </div>
+		        
+                <div id="cp3" class="input-group colorpicker-component">
+                    {{ form_label(edit_form.couleurfg, 'Couleur caractéres') }}
+                    {{ form_widget(edit_form.couleurfg) }}
+                    {{ form_errors(edit_form.couleurfg) }}                                
+                 	
+                 	<span class="input-group-addon"><i></i></span>
+		        </div>		        
+		
+			{{ form_end(edit_form) }}
+		
 		</div>
 	</div>
 	

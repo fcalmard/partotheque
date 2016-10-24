@@ -80,5 +80,18 @@ $collection->add('oeuvres_confirm_action_delete', new Route('/{id}/confirm_delet
 		'_controller' => 'oeuvresBundle:Oeuvres:confirmdelete',
 )));
 
+$collection->add('oeuvres_import', new Route(
+		'/import',
+		array('_controller' => 'oeuvresBundle:Oeuvres:import'),
+		array(),
+		array(),
+		'',
+		array(),
+		array('POST', 'PUT', 'GET')
+		));
 
+
+$collection->add('oeuvres_exec_import', new Route('/exec_import', array(
+		'_controller' => 'oeuvresBundle:Oeuvres:exec_import',
+)));
 return $collection;

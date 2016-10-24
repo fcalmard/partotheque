@@ -15,7 +15,15 @@
 	        </thead>
 	        <tbody>
 	        {% for entity in entities %}
+
+		        {% set couleurligne=entity.couleur %} 	        
+	            {% set couleurlignecar=entity.couleurfg %} 	        
+
+	        	{% if entity.couleurdef==1 %}
 	            <tr>
+		        {% else %}
+	            <tr style="background-color:{{couleurligne}}; color:{{ couleurlignecar }}" >	            
+		        {% endif %}
 	                <td><a href="{{ path('tempsliturgiques_show', { 'id': entity.id }) }}">{{ entity.libelle }}</a></td>
 	                <td>{% if entity.datecreateAt %}{{ entity.datecreateAt|date('d/m/Y') }}{% endif %}</td>
 	                <td>

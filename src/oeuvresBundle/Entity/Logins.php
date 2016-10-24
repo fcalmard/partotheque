@@ -2,8 +2,6 @@
 
 namespace oeuvresBundle\Entity;
 
-use Symfony\Component\Translation\Tests\String;
-
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\ORM\Mapping as ORM;

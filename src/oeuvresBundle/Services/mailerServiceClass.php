@@ -2,11 +2,7 @@
 namespace oeuvresBundle\Services;
 
 use Symfony\Component\Config\Definition\Exception\Exception;
-/*
-use Symfony\Component\Translation\Tests\String;
 
-use Symfony\Component\DependencyInjection\ContainerInterface; // <- Add this
-*/
 class mailerServiceClass { 
 	
 	private $container; // <- Add this

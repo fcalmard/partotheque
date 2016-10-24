@@ -90,7 +90,7 @@ class TempsLiturgiquesController extends Controller
     	//if($aSessionTblEnreg)
     	//{
     	
-    	var_dump($aSessionTblEnreg);
+    	//var_dump($aSessionTblEnreg);
     	
     	$nbenreg=0;
     	 

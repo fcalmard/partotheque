@@ -5,7 +5,9 @@
 
     <h1>{{ entity.titreOeuvre }} 
     	                {% if entity.traductiontitreOeuvre!="" %}
-    						( {{ entity.traductiontitreOeuvre }} )
+    	                    {% if entity.traductiontitreOeuvre!= entity.titreOeuvre %}
+    							( {{ entity.traductiontitreOeuvre }} )
+		                    {% endif %}
 		                {% endif %}
 		                 </h1>
 	
@@ -64,7 +66,9 @@
 		                 {% endif %}
 		                 
 		                 {% if Sscategvoix is defined %}
-		                 &nbsp;/&nbsp;{{ Sscategvoix }}
+    		                 {% if Sscategvoix!='' %}
+    		                 &nbsp;/&nbsp;{{ Sscategvoix }}
+    		                 {% endif %}
 		                 {% endif %}
 		                 
 		                 </td>

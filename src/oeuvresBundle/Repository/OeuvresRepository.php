@@ -2,12 +2,43 @@
 
 namespace oeuvresBundle\Repository;
 
-
 use Doctrine\ORM\EntityRepository;
 use \Doctrine\ORM\NoResultException;
 use Symfony\Component\HttpFoundation\Session\Session;
 use oeuvresBundle\Repository\CompositeursRepository;
+use oeuvresBundle\Repository\TempsLiturgiquesRepository;
+use oeuvresBundle\Repository\VoixRepository;
 use oeuvresBundle\Repository\LanguesRepository;
+use Doctrine\ORM\Repository\RepositoryFactory;
+use oeuvresBundle\Entity\Compositeurs;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\NativeQuery;
+use Symfony\Component\Serializer\Exception\Exception;
+use Doctrine\Instantiator\Exception\ExceptionInterface;
+use oeuvresBundle\Entity\Oeuvres;
+use oeuvresBundle\Entity\Langues;
+use oeuvresBundle\Entity\langues_oeuvres;
+
+/*
+ (1, 1, 'Musique sacrée', '2016-04-27 00:00:00'),
+ (2, 1, 'Musique liturgique', '2016-04-27 00:00:00'),
+ (3, 1, 'Musique profane', '2016-04-27 00:00:00');
+ *
+ */
+CONST MUSIQUE_SACREE=1;
+CONST MUSIQUE_LITURGIQUE=2;
+CONST MUSIQUE_PROFANE=3;
+
+/*
+ 1 	1 	En cours 	NULL
+ 2 	1 	Supprimée 	NULL
+ 3 	1 	Validé 	NULL
+ 4 	1 	Clôturé 	NULL	 *
+ */
+CONST STATUT_EN_COURS	=1;
+CONST STATUT_SUPPRIMEE	=2;
+CONST STATUT_VALIDEE	=3;
+CONST STATUT_CLOTUREE	=4;
 
 
 
@@ -136,9 +167,9 @@ class OeuvresRepository extends EntityRepository
 							 */
 							if(trim($valf)!="")
 							{
-								if(!is_null($em))
+								if(!is_null($eml))
 								{
-									$sListeIds= $em->getRepository('oeuvresBundle:Langues')->ChargeListeIdOeuvres($valf);
+									$sListeIds= $eml->getRepository('oeuvresBundle:Langues')->ChargeListeIdOeuvres($valf);
 									/*
 									 * liste des id des oeuvres chanté en
 									 */
@@ -263,6 +294,9 @@ class OeuvresRepository extends EntityRepository
 					o.siecle,
 					t.id as idtpslliturgique,
 					t.libelle AS tpslliturgique,
+					t.couleur AS coultps,
+					t.couleurdef AS couldeftps,
+					t.couleurfg AS coulfgtps,				
 					g.id as idgenre,
 				    g.libelle AS genre,
 					v.id as idvoix,
@@ -301,7 +335,14 @@ class OeuvresRepository extends EntityRepository
 								
 							
 							,"genre"=>$oeuvre['genre']
+							,"coultps"=>$oeuvre['coultps']
+							,"couldeftps"=>$oeuvre['couldeftps']
+
 							,"tpslliturgique"=>$oeuvre['tpslliturgique']
+							,"coultps"=>$oeuvre['coultps']
+							,"couldeftps"=>$oeuvre['couldeftps']
+							,"coulfgtps"=>$oeuvre['coulfgtps']
+								
 							,"fonction"=>$oeuvre['fonction']
 							,"voix"=>$oeuvre['voix']
 							,"reference"=>$oeuvre['reference']
@@ -512,5 +553,1215 @@ LIMIT 0 , 30
 	
 		return $sPathCible;
 	}
+
+	public function getDossierImports()
+	{
+		/**
+		 * aller chercher dans config
+		 * @var string
+		 */
+	
+	
+		$sPathCible="/var/www/sites/mychorale/web/uploads/imports";
+	
+		$sPathCible="../web/uploads/imports"; //ErrorException
+	
+		$mode=0755;
+	
+		try {
+			if(!file_exists($sPathCible))
+			{
+				mkdir($sPathCible,$mode, true);
+	
+			}else
+			{
+				//chmod($sPathCible, $mode);
+	
+			}
+		}catch(ErrorException $e){
+	
+			var_dump($e->getMessage());
+			echo "<br/><h1>dossier inexistant</h1>";
+	
+			die("pb fichier");
+		}
+	
+		//die($sPathCible);
+	
+		return $sPathCible;
+	}
+	
+	/**
+	 * 
+	 * @param boolean $bReInitBase
+	 */
+	public function Import($sFichier,$bReInitBase,$bSimulation)
+	{
+
+		//echo ("IMPORT EN COURS...... >".$sFichier);
+		
+		$eml=$this->getEntityManager();
+		
+		$cpt=0;
+		
+		$aLignesImport=array();
+		
+		if(file_exists($sFichier))
+		{
+?>
+<script type="text/javascript">
+debutwaiting();
+//alert('idimageimport');
+</script>
+
+<?php 
+	
+			echo "<div id='iddivimport' >";
+			/*
+				
+			echo "<div id='idimageimport'>";
+				
+			echo "<img alt='Import ' src='/web/images/loading.gif' />";
+			echo "</div>";
+		*/	
+			//echo ("<br/>Lecture en cours ...... ".$sFichier." <br/>");
+			?>
+			<!-- 
+			<div id='idimageimport'>
+			<img alt='Import ' src='/web/images/loading.gif' />";
+			</div>
+			 -->
+			<script type="text/javascript">
+			/*
+			divcompteur = document.getElementById("divcompteur");
+			if(divcompteur)
+			{
+				divcompteur.innerHTML="<br/>Lecture en cours ...";
+			}
+			*/
+			</script>
+
+			
+			<?php 
+			//$sContenu=file_get_contents($sFichier);
+			
+			/*Ouverture du fichier en lecture seule*/
+			$handle = fopen($sFichier, 'r');
+			/*Si on a réussi à ouvrir le fichier*/
+			if ($handle)
+			{
+				/*Tant que l'on est pas à la fin du fichier*/
+				while (!feof($handle))
+				{
+					/*On lit la ligne courante*/
+					$buffer = fgets($handle);
+					$cpt++;
+					
+					//echo "<br/>".$cpt;//." >".$buffer;
+					
+					$aLigne=explode(chr(9), $buffer);
+					//$aLigne=explode(",", $buffer);
+						
+					$imp = new import();
+						
+					foreach ($aLigne as $cptcol=>$vcol)
+					{
+						$cptcol++;
+						
+						
+						
+						$vcol=trim($vcol);
+						//$vcol=htmlentities($vcol,ENT_NOQUOTES);
+						//$vcol=htmlentities($vcol,ENT_COMPAT);
+						
+						//CARROLL
+						
+						//$vcol=str_replace($vcol,"'"," ");
+						
+						//echo "<br/> vcol >".$cptcol." ".$vcol." <br/>";
+												
+						
+						switch ($cptcol)
+						{
+							case 1:
+								$imp->setColA($vcol);//titre
+								break;
+							case 2:
+								if($vcol!="")
+								{
+									//echo "<br/> vcol >".$cptcol." ".$vcol." <br/>";
+										
+									IF(stripos($vcol, "CARROL")>0)
+									{
+									
+										//die($vcol);
+									}
+									
+									$vcol=ucfirst($vcol);
+									
+									$imp->setColB($vcol);//compositeur
+									$imp->setColBP("");//compositeur prenom
+									
+									$aColCom=explode(" ", $vcol);
+									if(is_array($aColCom))
+									{
+											
+										//var_dump($aColCom);
+											
+										//echo "<br/> nb=".count($aColCom)."<br/>";
+											
+											
+										if(count($aColCom)>1)
+										{
+											$imp->setColB($aColCom[0]);
+											$imp->setColBP($aColCom[1]);
+										}
+											
+									
+										//var_dump($imp);
+											
+										//die("618");
+									
+									}
+								}
+
+								break;								
+							case 3:
+								
+								//echo "<br/> vcol >".$cptcol." >".$vcol."< <br/>";
+								
+								$imp->setColC($vcol);//ref numéro de dossier
+								
+								break;								
+							case 4:
+								$imp->setColD($vcol);//LANGUE GREGORIEN latin		Langues
+								break;
+							case 5:
+								$imp->setColE($vcol);//LANGUE latin
+								break;
+							case 6:
+								$imp->setColF($vcol);//TempsLiturgiques
+								break;								
+							case 7:
+								$imp->setColG($vcol);//FONCTIONS
+								break;
+							case 8:
+								$imp->setColH($vcol);//COTE
+								break;
+							case 9:
+								$imp->setColI($vcol);//VOIX
+								break;								
+							case 10:
+								$imp->setColJ($vcol);
+								break;
+							case 11:
+								$imp->setColK($vcol);//GENRE si valeur dans cette colonne type musique = SACREE
+								break;
+							case 12:
+								$imp->setColL($vcol);//GENRE si valeur dans cette colonne type musique = PROFANE
+								break;								
+							case 13:
+								$imp->setColM($vcol);//SIECLE
+								break;
+							case 14://DOSSIER BIS
+								break;
+							case 15:
+								$imp->setColO($vcol);//ACCOMPAGNEMENT
+								break;
+							case 16:
+								$imp->setColP($vcol);//COMMENTAIRES
+								break;
+							case 17:
+								$imp->setColQ($vcol);//COMMENTAIRES
+								break;
+							default:
+								break;
+								
+						}
+
+							
+
+												
+					}
+					
+					//var_dump($imp);
+					//die("671");
+
+					$aLignesImport[]=$imp;
+				
+					
+				}
+				
+				/*On ferme le fichier*/
+				fclose($handle);
+			
+			}
+			
+			//echo "simulation ".var_dump($bSimulation);
+			//echo "reinit base ".var_dump($bReInitBase);
+			
+			//echo "aLignesImport ".var_dump($aLignesImport);
+				
+			
+//die('672');
+			
+			/**
+			 * import dans la BD
+			 */			
+			if($bSimulation==false)
+			{
+							
+				if($bReInitBase)
+				{
+				
+					//echo ("	REINITIALISATION DONNEES EN COURS...... ");
+
+					$sSql="delete from oeuvresBundle:Compositeurs";
+					$query=$this->getEntityManager()->createQuery($sSql);
+					$bQok=$query->execute();
+					
+					
+					/*
+					 * ALTER TABLE tablename AUTO_INCREMENT = 1
+					 
+					try {
+						$sSql="ALTER TABLE Compositeurs AUTO_INCREMENT = 1";
+						$rsm= new ResultSetMapping();
+						$query=$this->getEntityManager()->createNativeQuery($sSql, $rsm);
+						$bQok=$query->execute();
+					}catch (\Exception $e)
+					{
+						die("pb sql ".$sSql." ".$e->getMessage());
+					}
+					*/
+				
+					//die(" resultat sql init".($bQok) ? "sql ok" : "sql pas ok".$sSql);
+								
+					
+					$sSql="delete from oeuvresBundle:Oeuvres";
+					$query=$this->getEntityManager()->createQuery($sSql);
+					$bQok=$query->execute();
+					
+					try {
+						$sSql="delete from oeuvresBundle:TempsLiturgiques";
+						$query=$this->getEntityManager()->createQuery($sSql);
+						$bQok=$query->execute();
+					}catch (\Exception $e)
+					{
+						die("pb TempsLiturgiques ".$sSql." ".$e->getMessage());
+						
+					}							
+
+					try {
+						$sSql="delete from oeuvresBundle:Voix";
+						$query=$this->getEntityManager()->createQuery($sSql);
+						$bQok=$query->execute();
+					}catch (\Exception $e)
+					{
+						die("pb Voix ".$sSql." ".$e->getMessage());
+							
+					}
+					
+
+					try {
+						$sSql="delete from oeuvresBundle:Fonctions";
+						$query=$this->getEntityManager()->createQuery($sSql);
+						$bQok=$query->execute();
+					}catch (\Exception $e)
+					{
+						die("pb Fonctions ".$sSql." ".$e->getMessage());
+							
+					}
+					
+
+					try {
+						$sSql="delete from oeuvresBundle:Genres";
+						$query=$this->getEntityManager()->createQuery($sSql);
+						$bQok=$query->execute();
+					}catch (\Exception $e)
+					{
+						die("pb Genres ".$sSql." ".$e->getMessage());
+							
+					}
+						
+					
+
+					try {
+						$sSql="delete from oeuvresBundle:Langues";
+						$query=$this->getEntityManager()->createQuery($sSql);
+						$bQok=$query->execute();
+					}catch (\Exception $e)
+					{
+						die("pb Langues ".$sSql." ".$e->getMessage());
+							
+					}
+					
+//$o=new langues_oeuvres();
+
+					
+
+					try {
+						$sSql="delete from langues_oeuvres";
+					
+						$params = array();
+					
+						$stmt = $eml->getConnection()->prepare($sSql);
+						//$stmt = $eml->getConnection()->prepare($sSql);
+						$stmt->execute($params);
+					
+						//$rsm= new ResultSetMapping();
+						//$query=$this->getEntityManager()->createNativeQuery($sSql, $rsm);
+						//$query=$this->getEntityManager()->createQuery($sSql);
+						//$bQok=$query->execute();
+					}catch (\Exception $e)
+					{
+						die("pb delete langues_oeuvres ".$sSql." ".$e->getMessage());
+							
+					}
+					
+					try {
+						$sSql="delete from oeuvres_langues";
+					
+						$params = array();
+					
+						$stmt = $eml->getConnection()->prepare($sSql);
+						//$stmt = $eml->getConnection()->prepare($sSql);
+						$stmt->execute($params);
+					
+						//$rsm= new ResultSetMapping();
+						//$query=$this->getEntityManager()->createNativeQuery($sSql, $rsm);
+						//$query=$this->getEntityManager()->createQuery($sSql);
+						//$bQok=$query->execute();
+					}catch (\Exception $e)
+					{
+						die("pb delete oeuvres_langues ".$sSql." ".$e->getMessage());
+							
+					}					
+					
+			
+					
+					
+				}
+			}
+			
+			/**
+			 * par cours des lignes
+			 */
+			//echo "<br/>";
+			$icpt=0;
+			foreach ($aLignesImport as $iligne=>$aLigne)
+			{
+				
+				$valf=trim($aLigne->getColA());
+				
+				//echo "<br/>".$valf.";"."0"."<br/>";
+				
+				if($valf!='')//TITRE
+				{
+					$nom=trim($aLigne->getColB());
+					$prenom=trim($aLigne->getColBP());
+						
+					//if($nom!='')
+					//{
+						/*
+						 * tester Anonyme et ""
+						 */
+						$banonyme=false;
+						if(strtoupper($nom)=="ANONYME")
+						{
+							$banonyme=true;
+								
+						}
+						if(trim($nom)=="")
+						{
+							$banonyme=true;
+						}else {
+							$banonyme=false;							
+						}
+						$nom=strtolower($nom);
+						$nom=ucfirst($nom);
+						$idcompo=0;
+						
+						if($banonyme==false)
+						{
+							$idcompo= $eml->getRepository('oeuvresBundle:Compositeurs')->rechercheCompositeur($nom,$prenom);							
+							if($idcompo==0)
+							{
+								$idcompo=$eml->getRepository('oeuvresBundle:Compositeurs')->insertionCompositeur($nom,$prenom);
+								if($idcompo==0)
+								{
+									die("Erreur");
+								}
+									
+							}else
+							{
+								//die("existe");
+							}
+						}
+						/*
+						 * 
+						 * SELECT * FROM `Genres` // Typesmusiques
+						 * 
+						Modifier Modifier 	Copier Copier 	Effacer Effacer 	1 	1 	Musique sacrée 	2016-04-27 00:00:00
+						Modifier Modifier 	Copier Copier 	Effacer Effacer 	2 	1 	Musique liturgique 	2016-04-27 00:00:00
+						Modifier Modifier 	Copier Copier 	Effacer Effacer 	3 	1 	Musique profane 	2016-04-27 00:00:00
+						 */
+						
+						$iTypedeMusique=0;//MUSIQUE_SACREE MUSIQUE_PROFANE						
+						
+						$valf=$this->epure($valf);
+						$idoeuvre=$this->rechercheOeuvre($valf);
+						if($idoeuvre==0)
+						{
+							/*
+							if(trim($aLigne->getColK()!=""))
+							{
+								$iTypedeMusique=MUSIQUE_SACREE;
+							}
+							if(trim($aLigne->getColL()!=""))
+							{
+								$iTypedeMusique=MUSIQUE_PROFANE;
+							}
+							*/
+														
+							$idoeuvre=$this->insertionOeuvre($valf,$idcompo,$aLigne->getColC(),$banonyme,STATUT_EN_COURS,$aLigne->getColH(),$aLigne->getColM());
+							
+						}
+						
+						/*
+						 * 
+						 */
+						$idtpslit=0;
+						$idfonc=0;
+						$idvoix=0;
+											
+						if($idoeuvre!=0)
+						{
+							$sLib=$aLigne->getColF();
+							$sLib=trim($sLib);
+							
+							
+							if($sLib!="")
+							{
+								
+								//$idtpslit= rechercheTempsLiturgique($aLigne->getColF());
+								$idtpslit= $eml->getRepository('oeuvresBundle:TempsLiturgiques')->rechercheTempsLiturgique($sLib);
+								
+								
+								if($idtpslit==0)
+								{
+									$idtpslit= $eml->getRepository('oeuvresBundle:TempsLiturgiques')->insertionTempsLiturgique($sLib);
+									
+									//echo "<br/> rechercheTempsLiturgique .ID CREE ..>".$idtpslit."<";
+										
+								}
+								
+
+							}				
+							
+							
+							/**
+							 * 
+							 * voix 
+							 * */
+							
+							$sLib=$aLigne->getColI();
+							$sLib=trim($sLib);
+							
+							
+							if($sLib!="")
+							{
+								$sLib=str_ireplace("/"," ", $sLib);
+								//$idtpslit= rechercheTempsLiturgique($aLigne->getColF());
+								
+								$idvoix= $eml->getRepository('oeuvresBundle:Voix')->rechercheVoix($sLib);
+								
+								//echo "<br/>950....... rechercheVoix ...".$sLib." ( ".$idvoix.")";
+								
+								if($idvoix==0)
+								{
+									$idvoix= $eml->getRepository('oeuvresBundle:Voix')->insertionVoix($sLib);
+										
+								}
+							
+								//echo "<br/> fin Voix ...".$sLib." ( ".$idvoix.")";
+								
+							}
+							
+							/**
+							 *
+							 * Fonctions tps liturgique
+							 * */
+								
+							$sLib=$aLigne->getColG();
+							$sLib=trim($sLib);
+							if($sLib!="")
+							{
+								//$idtpslit= rechercheTempsLiturgique($aLigne->getColF());
+							
+								$idfonc= $eml->getRepository('oeuvresBundle:Fonctions')->rechercheFonction($sLib);
+							
+								//echo "<br/>983....... rechercheFonction ...".$sLib." ( ".$idfonc.")";
+							
+								if($idfonc==0)
+								{
+									$idfonc= $eml->getRepository('oeuvresBundle:Fonctions')->insertionFonction($sLib);
+							
+								}
+									
+								//echo "<br/> fin oeuvresBundle:Fonctions ...".$sLib." ( ".$idfonc.")";
+							
+							}							
+							
+							/**
+							 * Genres et Types de Musique
+							 */
+							
+							$sLibGenre="";
+											
+							if(trim($aLigne->getColK()!=""))
+							{
+								$iTypedeMusique=MUSIQUE_SACREE;
+								$sLibGenre=$aLigne->getColK();
+							}
+							if(trim($aLigne->getColL()!=""))
+							{
+								$iTypedeMusique=MUSIQUE_PROFANE;
+								$sLibGenre=$aLigne->getColL();
+							}
+
+							//echo "<br/> getColK >".$aLigne->getColK()."<";
+							//echo "<br/> getColL >".$aLigne->getColL()."<";
+							//echo "<br/> TYPE DE MUSIQUE >".$iTypedeMusique."<";
+								
+							switch ($iTypedeMusique)
+							{
+								case MUSIQUE_SACREE;
+									break;
+								case MUSIQUE_LITURGIQUE:
+									break;
+								case MUSIQUE_PROFANE:
+									break;
+							}
+							
+							$$sLibGenre=trim($sLibGenre);
+							$idgenre=0;
+							if($sLibGenre!="")
+							{
+								
+								$idgenre= $eml->getRepository('oeuvresBundle:Genres')->rechercheGenre($sLibGenre);
+				
+								//echo "<br/>983....... rechercheFonction ...".$sLib." ( ".$idfonc.")";
+									
+								if($idgenre==0)
+								{
+									$idgenre= $eml->getRepository('oeuvresBundle:Genres')->insertionGenre($sLibGenre,$iTypedeMusique);
+										
+								}
+									
+								//echo "<br/> fin oeuvresBundle:Genres ...".$sLibGenre." ( ".$idgenre.")";
+								
+							}		
+							
+							/**
+							 * Langues
+							 * 
+							 */
+							
+							$aColLangues=array();
+							$aOeuvreLangues=array();
+								
+							$sLibLangue=$aLigne->getColD();
+							if($sLibLangue!='')
+							{
+								$aColLangues[]=$sLibLangue;
+							}
+							$sLibLangue=$aLigne->getColE();
+							if($sLibLangue!='')
+							{
+								$aColLangues[]=$sLibLangue;
+							}
+							if(count($aColLangues)>0)
+							{
+								foreach ($aColLangues as $sLibLangue)
+								{
+									$aLangues=explode("/", $sLibLangue);
+									
+									//var_dump($aLangues);
+										
+									if(is_array($aLangues))
+									{
+										foreach ($aLangues as $sLib)
+										{
+											$sLib=$this->epure($sLib);
+											$sLib=strtolower($sLib);
+											
+											//echo "<br/> tableau de langues >".$sLib."<";
+											if($sLib!='')
+											{
+												switch ($sLib)
+												{
+													case 'greg':
+													case 'gregorien':
+														$sLib='latin';
+														break;
+													default:
+															
+												}
+												//echo "<br/> tableau de langues apres conversion >".$sLib."<";
+												
+												$aOeuvreLangues[]=$sLib;
+											}							
+										}
+									}
+									else 
+									{
+										if($sLibLangue!='')
+										{
+											$sLibLangue=$this->epure($sLibLangue);
+											$sLibLangue=strtolower($sLibLangue);
+											switch ($sLibLangue)
+											{
+												case 'greg':
+												case 'gregorien':
+													$sLibLangue='latin';
+													break;
+												default:													
+														
+											}
+											$aOeuvreLangues[]=$sLibLangue;
+										}
+									}
+								}
+							}							
+	
+							$scommentaires="";
+								
+							//var_dump($aOeuvreLangues);
+							$aIdlangues=array();
+							foreach ($aOeuvreLangues as $sLibLangue)
+							{
+								
+								
+								$idlangue= $eml->getRepository('oeuvresBundle:Langues')->rechercheLangue($sLibLangue);
+									
+								if($idlangue==0)
+								{
+									$idlangue= $eml->getRepository('oeuvresBundle:Langues')->rechercheLibelleLangue($sLibLangue);
+								}
+								if($idlangue==0)
+								{
+									$idlangue= $eml->getRepository('oeuvresBundle:Langues')->insertionLangue($sLibLangue);
+									/*
+									 * 
+									 */
+							
+								}
+								if($idlangue!=0)
+								{
+									$aIdlangues[]=$idlangue;
+								}
+								
+						
+
+								//echo "<br/> fin oeuvresBundle:Langues ...".$sLibLangue." ( ".$idlangue.")";//delete
+							}
+							
+									
+							if($aLigne->getColP()!='')
+							{
+								$scommentaires.=$aLigne->getColP();
+							}
+							if($aLigne->getColQ()!='')
+							{
+								$scommentaires.='\n';
+								$scommentaires.=$aLigne->getColQ();
+							}
+							
+							
+							/**
+							 * maj OEUVRE
+							 * */							
+							
+
+						
+							$eml->getRepository('oeuvresBundle:Oeuvres')->majOeuvre($idoeuvre,$idtpslit,$idvoix,$idfonc,$idgenre,$aIdlangues,$scommentaires);
+							
+							//echo "<br/> fin maj oeuvre ...".$sLib." ( ".$idtpslit.")";							
+														
+						}
+						$icpt++;
+						
+						/*
+						
+						//echo "<br/>Oeuvre ".$valf." (".$idoeuvre." ...".$icpt."/".$cpt."...";
+						
+						//echo " Compositeur en cours ...".$nom." ".$prenom." ( ".$idcompo.")";
+						
+						
+						//var_dump($idcompo);
+						 * 
+						 */
+				
+					// compositeur }
+				}
+
+			}
+				
+			echo "</div>";
+		}
+
+		?>
+        <script type="text/javascript">
+
+
+        	//alert("finwaiting");
+        
+        </script>
+		<?php
+
+		//die("<br/>IMPORT TERMINE ".$sFichier."< >".$bReInitBase."< nombre de lignes traitées : ".$cpt);
+		
+		$bReInitBase=$cpt >0;
+		return $bReInitBase;
+	}
+	
+
+	/**
+	 * 
+	 * @param string $sTitre
+	 * @return number
+	 */
+	public function rechercheOeuvre($sTitre)
+	{
+		$id=0;
+		$s=sprintf("%s",$sTitre);
+	
+		$sql="SELECT
+				t.id from oeuvresBundle:Oeuvres t
+				WHERE t.titreOeuvre = '".$s."'";
+	
+		$query = $this->getEntityManager()
+		->createQuery(
+				$sql
+				);
+			
+		try {
+			$aIds=$query->getResult();
+				
+			//var_dump($aIds);
+				
+			if(is_array($aIds) && count($aIds)>0)
+			{
+				foreach ($aIds as $kid=>$id)
+				{
+					$id=$id['id'];
+				}
+			}
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			$id=0;
+		}
+	
+	
+		return $id;
+	}
+	
+	/**
+	 *
+	 */
+	public function insertionOeuvre($sTitre,$idcompo,$sRef,$banonyme=false,$avancement_id,$sCote,$siecle)
+	{
+
+		$idcree=0;
+		
+		$sRef=is_null($sRef) ? " " : $sRef;
+		
+		$conn=$this->getEntityManager()->getConnection();
+				
+		$nowUtc = new \DateTime( 'now',  new \DateTimeZone( 'UTC' ) );
+		
+		$s= $nowUtc->format('Y-m-d h:i:s');
+		
+		$iAnonyme=($idcompo==0) ? 1 : 0;
+		$iAnonyme=($banonyme) ? 1 : 0;
+		
+		$sr=str_repeat(" ", 20);
+		
+		$sCote=$this->epure($sCote);
+		$sCote=$sCote.$sr;
+		
+		$sCote=substr($sCote, 0,20);
+		
+		$sTitre=$this->epure($sTitre);
+		
+		$dataArray=array('titreOeuvre'=>$sTitre
+				,'traductiontitreOeuvre'=>$sTitre
+				,'actif'=>1
+				,'reference'=>$sRef
+				,'compositeur_id'=>$idcompo
+				,'anonyme'=>$iAnonyme
+				,'datecreateAt'=>$s
+				,'avancement_id'=>$avancement_id
+				,'tps_litur_id'=>0
+				,'cote'=>$sCote
+				,'siecle'=>$siecle
+		);
+		
+		try {
+			$bOk=$conn->insert('Oeuvres', $dataArray);
+		
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			die("Erreur ".$e->getMessage());
+		}
+		
+		$idcree=$conn->lastInsertId();
+		
+		return $idcree;
+	
+	}
+	
+	public function majOeuvre($id,$idtpslit,$idvoix,$idfonc,$idgenre,$aIdlangues,$sCommentaires)
+	{
+	
+		$conn=$this->getEntityManager()->getConnection();
+		
+		$BoK=false;
+		
+		$dataArray=array(
+				'tps_litur_id'=>$idtpslit
+		);
+		//echo "<br/>....................... majOeuvre ID= ".$id." $idtpslit=".$idtpslit."";
+		
+		
+		
+		$nowUtc = new \DateTime( 'now',  new \DateTimeZone( 'UTC' ) );
+		
+		$s= $nowUtc->format('d/m/Y');
+		
+		if($sCommentaires!='')
+		{
+			$sCommentaires='Importée le : '.$s.chr(13).chr(10);
+				
+		}else{
+			$sCommentaires='Importée le : '.$s.chr(13).chr(10);
+		}
+		
+		$qB = $this->getEntityManager()->createQueryBuilder();
+		$qB ->update('oeuvresBundle:Oeuvres', 'p')
+		->set('p.tps_litur_id', '?1')
+		->set('p.voix_id', '?2')
+		->set('p.fonction_id', '?3')	
+		->set('p.genre_id', '?4')
+		->set('p.commentaire', '?5')
+		->where('p.id = ?6')
+		->setParameter(1, $idtpslit)
+		->setParameter(2, $idvoix)
+		->setParameter(3, $idfonc)
+		->setParameter(4, $idgenre)
+		->setParameter(5, $sCommentaires)
+		->setParameter(6, $id);
+		
+		try {
+
+			$BoK= $qB->getQuery()->execute();
+					
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			die("Erreur ".$e->getMessage());
+		}
+		
+		//delete
+		
+		
+		try {
+				
+			$eml=$this->getEntityManager();
+		
+			foreach ($aIdlangues as $idl)
+			{
+				$sSql="INSERT INTO `oeuvres_langues` (`oeuvres_id`, `langues_id`) VALUES ('".$id."', '".$idl."');";
+				$params = array();
+				$stmt = $eml->getConnection()->prepare($sSql);
+				$stmt->execute($params);
+		
+			}
+		
+		}catch (\Exception $e)
+		{
+			//die("<br/>pb insert langues_oeuvres ".$e->getMessage()." idoeuvre=".$id);
+		
+		}
+		
+		try {
+				
+			$eml=$this->getEntityManager();
+		
+			foreach ($aIdlangues as $idl)
+			{
+		
+				$sSql="INSERT INTO `langues_oeuvres` (`oeuvres_id`, `langues_id`) VALUES ('".$id."', '".$idl."');";
+				$params = array();
+				$stmt = $eml->getConnection()->prepare($sSql);
+				$stmt->execute($params);
+		
+			}
+		
+		}catch (\Exception $e)
+		{
+			//die("<br/>pb insert langues_oeuvres ".$e->getMessage()." idoeuvre=".$id);
+		
+		}		
+		
+		return $BoK;
+		
+	}
+	
+	private function epure($texte)
+	{
+		$texte = trim(strtolower($texte));
+		$texte = htmlentities($texte, ENT_NOQUOTES, 'utf-8');
+		$texte = preg_replace('#&([A-za-z])(?:acute|cedil|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $texte);
+		$texte = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $texte); // pour les ligatures
+		$texte = preg_replace('#&[^;]+;#', '', $texte); // supprime les autres caractères
+		$texte = preg_replace('#&[^;]+;#', '', $texte); // supprime les autres caractères
+	
+		$texte = strtr(
+				$texte,
+				'@ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ',
+				'aAAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy'
+				);
+		$texte=str_ireplace(chr(34), "", $texte);
+		$texte=str_ireplace(chr(39), "", $texte);
+	
+		return $texte;
+	}
+	
+	
+}
+
+class import
+{
+	private $colA;//TITRE OEUVRE
+	private $colB;//compositeur
+	private $colBP;//compositeur prénom
+	private $colC;//reference NUMERO DE DOSSIER
+	private $colD;//LANGUE GREGORIEN latin		Langues
+	private $colE;//Langues
+	private $colF;//TempsLiturgiques
+	private $colG;//Fonctions
+	private $colH;//cote
+	private $colI;//voix
+	private $colJ;//???
+	private $colK;//11 COLONNE K >> GENRE MUSIQUE SACREE 			si valeur dans cette colonne type musique = SACREE Typesmusiques
+	private $colL;//12 COLONNE L >> GENRE MUSIQUE PROFANE			si valeur dans cette colonne type musique = PROFANE Typesmusiques
+	private $colM;//13 SIECLE
+	private $colN;//14 reference
+	private $colO;//15 Accompagnements
+	private $colP;//16 commentaires
+	private $colQ;//17 commentaires
+	
+	/*
+11 COLONNE K >> MUSIQUE SACREE 			si valeur dans cette colonne type musique = SACREE
+
+12 COLONNE L >> MUSIQUE PROFANE			si valeur dans cette colonne type musique = PROFANE	 * 
+
+	 */
+	private $idtypemusique;//
+		
+	public function getColA()
+	{
+		return $this->colA;
+	}
+	public function setColA($sVal)
+	{
+		$this->colA=$sVal;
+		return $this;
+	}
+	public function getColB()
+	{
+		return $this->colB;
+	
+	}
+	public function setColB($sVal)
+	{
+		$this->colB=$sVal;
+		return $this;
+	
+	}
+	public function getColBP()
+	{
+		return $this->colBP;
+	
+	}
+	public function setColBP($sVal)
+	{
+		$this->colBP=$sVal;
+		return $this;
+	
+	}	
+	public function getColC()
+	{
+		return $this->colC;
+		
+	}
+	public function setColC($sVal)
+	{
+		$this->colC=$sVal;
+		return $this;
+		
+	}
+	public function getColD()
+	{
+		return $this->colD;
+		
+	}
+	public function setColD($sVal)
+	{
+		$this->colD=$sVal;
+		return $this;
+		
+	}
+	public function getColE()
+	{
+		return $this->colE;
+		
+	}
+	public function setColE($sVal)
+	{
+		$this->colE=$sVal;
+		return $this;
+		
+	}
+	public function getColF()
+	{
+		return $this->colF;
+	}
+	public function setColF($sVal)
+	{
+		$this->colF=$sVal;
+		return $this;
+		
+	}
+	public function getColG()
+	{
+		return $this->colG;
+		
+	}
+	public function setColG($sVal)
+	{
+		$this->colG=$sVal;
+		return $this;
+		
+	}
+	public function getColH()
+	{
+		return $this->colH;
+		
+	}
+	public function setColH($sVal)
+	{
+		$this->colH=$sVal;
+		return $this;
+		
+	}
+	public function getColI()
+	{
+		return $this->colI;
+		
+	}
+	public function setColI($sVal)
+	{
+		$this->colI=$sVal;
+		return $this;
+		
+	}
+	public function getColJ()
+	{
+		return $this->colJ;
+		
+	}
+	public function setColJ($sVal)
+	{
+		$this->colJ=$sVal;
+		return $this;
+		
+	}
+	public function getColK()
+	{
+		return $this->colK;
+	
+	}
+	public function setColK($sVal)
+	{
+		$this->colK=$sVal;
+		return $this;
+	
+	}
+	public function getColL()
+	{
+		return $this->colL;
+	
+	}
+	public function setColL($sVal)
+	{
+		$this->colL=$sVal;
+		return $this;
+	
+	}	
+	public function getColM()
+	{
+		return $this->colM;
+		
+	}
+	public function setColM($sVal)
+	{
+		$this->colM=$sVal;
+		return $this;
+		
+	}
+	public function getColN()
+	{
+		return $this->colN;
+		
+	}
+	public function setColN($sVal)
+	{
+		$this->colN=$sVal;
+		return $this;
+		
+	}
+	public function getColO()
+	{
+		return $this->colO;
+		
+	}
+	public function setColO($sVal)
+	{
+		$this->colO=$sVal;
+		return $this;
+		
+	}
+	public function getColP()
+	{
+		return $this->colP;
+		
+	}
+	public function setColP($sVal)
+	{
+		$this->colP=$sVal;
+		return $this;
+		
+	}
+	public function getColQ()
+	{
+		return $this->colQ;
+	
+	}
+	public function setColQ($sVal)
+	{
+		$this->colQ=$sVal;
+		return $this;
+	
+	}	
+
 	
 }

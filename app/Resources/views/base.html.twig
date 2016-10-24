@@ -12,6 +12,9 @@
         	<link rel="stylesheet" href="{{ asset('css/app.css') }}" type="text/css" media="all" filter="cssrewrite" />
         	<!-- <link rel="stylesheet" href="{{ asset('css/bootstrap-responsive.css') }}" type="text/css" media="all" filter="cssrewrite" />  -->
         	
+    		<!-- <link href="dist/css/bootstrap-colorpicker.min.css" rel="stylesheet">  -->
+          	<link rel="stylesheet" href="{{ asset('css/colorpicker/bootstrap-colorpicker.css') }}" type="text/css" media="all" filter="cssrewrite" />
+            	  	
         	<link rel="stylesheet" href="{{ asset('css/tooltip/themes/1/tooltip.css') }}" type="text/css" media="all" filter="cssrewrite" />      	
         	
         {% endblock %}
@@ -22,6 +25,8 @@
 			<script type="text/javascript" src="{{ asset('../web/js/tadaaapickr.js') }} "></script>		
 			<script type="text/javascript" src="{{ asset('../web/js/jquery.ui.datepicker.js') }} "></script>
 			
+			<script type="text/javascript" src="{{ asset('../web/js/colorpicker/bootstrap-colorpicker.js') }} "></script>
+												
 			<script type="text/javascript" src="{{ asset('css/tooltip/themes/1/tooltip.js') }} "></script>		
 			
 		{% endblock %}        
@@ -33,6 +38,12 @@
     </head>
     <body>
     
+    <div class="modalwait"><!-- Place at bottom of page --></div>
+    
+    			<div id='idimageimport'>
+					<img alt='Import ' src='/web/images/loading.gif' />";
+			</div>
+			
     <div class="modal fade" id="myModal" role="dialog">
 	    <div class="modal-dialog">
 	    
@@ -183,6 +194,7 @@
 				             		            		<li class="lstoptssmenu" >
 				             		            			<a class="linkoptmenu" href="{{ path(ssMenu.LnkMenu) }}">{{ ssMenu.LibelleMenu }}</a>
 														</li>
+														
 				             		            	{% endfor %}
 		             		            		</ul>
 			             		            	{% set cptmenu=cptmenu+1 %}
@@ -270,9 +282,20 @@
 
         }
 
+        $body = $("body");
+
+
+
+        
         function dialoghide()
         {
         $( "#dialog" ).hide();
+        }
+
+
+        function trtencourshide()
+        {
+       		alert("trtencourshide");
         }
         
         
@@ -280,8 +303,14 @@
         
 	        $(document).ready( function () {
 
+	        	
+	        	/*$('[data-toggle="popover"]').popover();*/
+	        	
+	        	//$('#oeuvresbundle_tempsliturgiques_couleur').colorpicker();
 
-	        	$('[data-toggle="popover"]').popover();
+
+	        	$('#cp2').colorpicker({ format: 'hex' } );
+	        	$('#cp3').colorpicker({ format: 'hex' } );
 	        	
 	            $(".lienaffapppdf").click(function(){
 	            	var url=$(this).attr("pdf");
@@ -492,11 +521,13 @@
 		        			$("li#part2").removeClass("active");		        			
 					      	break;
 					}
+
 					
 				
 					/*
+									    alert("ok");
+					
 				    
-				    alert("ok");					
 					*/
 			       // $("ul.tabs li").removeClass("active");
 			        
@@ -611,6 +642,8 @@
 				});
 				
 				*/
+
+	
 				$("form input.date").datepicker();
 				$("form input.date").datepicker({
 				language: "fr",
@@ -638,7 +671,8 @@
 
 			    });			    
 				
-			    
+
+			    			    
 			    $("html").click(function(e){
 			        
 			    	var inside=false;	
@@ -700,8 +734,7 @@
 
 		    	});
 				
-	
-			    
+				    
 				/*alert('document ready FIN');*/
   	        	
 	        } ) ;
@@ -781,6 +814,24 @@
 	    	    });	 
 	    	    
 			}
+
+			function debutwaiting()
+			{
+		        //$body.addClass("loading");
+				
+				alert('debutwaiting');
+			}
+
+
+
+			function finwaiting()
+			{
+		        //$body.addClass("loading");
+				
+				alert('finwaiting');
+			}
+
+			
 			
 			function afficheMenu(opt)
 			{

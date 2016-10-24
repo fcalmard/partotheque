@@ -54,4 +54,107 @@ class FonctionsRepository extends EntityRepository
 	
 	
 	}	
+	
+	/**
+	 *
+	 * @param string $sCode
+	 * @return number
+	 */
+	public function rechercheFonction($sCode)
+	{
+		$id=0;
+			
+		$sCode=$this->epure($sCode);
+		
+		$sCode=strtoupper($sCode);
+		
+		$sCode=substr($sCode, 0,10);
+		
+		$sCode=sprintf("%s",$sCode);
+	
+		$sql="SELECT
+				t.id from oeuvresBundle:Fonctions t
+				WHERE t.code = '".$sCode."'";
+		
+		$query = $this->getEntityManager()
+		->createQuery(
+				$sql
+				);
+			
+		try {
+			$aIds=$query->getResult();
+			if(is_array($aIds) && count($aIds)>0)
+			{
+				foreach ($aIds as $kid=>$id)
+				{
+					$id=$id['id'];
+				}
+			}
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			$id=0;
+		}
+	
+	
+		return $id;
+	}
+	
+	/**
+	 *
+	 */
+	public function insertionFonction($sLib)
+	{
+	
+		$idcree=0;
+	
+		$sCode=$sLib;
+				
+		$sCode=$this->epure($sCode);
+
+		$sCode=strtoupper($sCode);
+		
+		$sCode=substr($sCode, 0,10);
+		
+		$nowUtc = new \DateTime( 'now',  new \DateTimeZone( 'UTC' ) );
+		
+		$sdate= $nowUtc->format('Y-m-d h:i:s');
+		
+		$conn=$this->getEntityManager()->getConnection();
+	
+		$dataArray=array('code'=>$sCode,'libelle'=>$sLib,'active'=>1
+				,'datecreateAt'=>$sdate
+				
+		);
+	
+		try {
+			$bOk=$conn->insert('Fonctions', $dataArray);
+	
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			die("Erreur ".$e->getMessage());
+		}
+	
+		$idcree=$conn->lastInsertId();
+	
+		return $idcree;
+	
+	}
+	
+	private function epure($texte)
+	{
+		$texte = trim(strtolower($texte));
+		$texte = htmlentities($texte, ENT_NOQUOTES, 'utf-8');
+		$texte = preg_replace('#&([A-za-z])(?:acute|cedil|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $texte);
+		$texte = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $texte); // pour les ligatures
+		$texte = preg_replace('#&[^;]+;#', '', $texte); // supprime les autres caractères
+		$texte = preg_replace('#&[^;]+;#', '', $texte); // supprime les autres caractères
+		
+		$texte = strtr(
+				$texte,
+				'@ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ',
+				'aAAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy'
+				);
+		
+		
+		return $texte;
+	}
+	
 }

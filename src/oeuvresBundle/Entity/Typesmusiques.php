@@ -2,8 +2,6 @@
 
 namespace oeuvresBundle\Entity;
 
-use Symfony\Component\Translation\Tests\String;
-
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntityValidator;
@@ -25,7 +23,7 @@ class Typesmusiques
 	 * @var integer
 	 *
 	 * @ORM\Column(name="id", type="integer", nullable=false)
-	 * @ORM\id
+	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */	
     private $id;

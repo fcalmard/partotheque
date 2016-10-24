@@ -2,8 +2,6 @@
 
 namespace oeuvresBundle\Entity;
 
-use Symfony\Component\Translation\Tests\String;
-
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntityValidator;
@@ -44,6 +42,27 @@ class TempsLiturgiques
      */
     private $libelle;    
      
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="couleur", type="string", length=7, unique=false)
+     */
+    private $couleur;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="couleurfg", type="string", length=7, unique=false)
+     */
+    private $couleurfg;
+        
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="couleurdef", type="integer")
+     */
+    private $couleurdef;
+    
     /**
      * @var \DateTime
      *
@@ -102,6 +121,41 @@ class TempsLiturgiques
     }
        
     /**
+     *
+     */
+    public function getCouleur()
+    {
+    	return $this->couleur;
+    }
+    /**
+     *
+     * @param string $p
+     * @return \oeuvresBundle\Entity\Tempsliturgiques
+     */
+    public function setCouleur($c)
+    {
+    	$this->couleur=$c;
+    	return $this;
+    }
+    /**
+     *
+     */
+    public function getCouleurfg()
+    {
+    	return $this->couleurfg;
+    }
+    /**
+     *
+     * @param string $p
+     * @return \oeuvresBundle\Entity\Tempsliturgiques
+     */
+    public function setCouleurfg($c)
+    {
+    	$this->couleurfg=$c;
+    	return $this;
+    }    
+    
+    /**
      * Set datecreateAt
      *
      * @param \DateTime $datecreateAt
@@ -112,7 +166,24 @@ class TempsLiturgiques
         $this->datecreateAt = $datecreateAt;
         return $this;
     }
-
+    /**
+     *
+     */
+    public function getCouleurdef()
+    {
+    	return $this->couleurdef==1;
+    }
+    
+    /**
+     *
+     * @param integer $a
+     * @return \oeuvresBundle\Entity\Tempsliturgiques
+     */
+    public function setCouleurdef($a)
+    {
+    	$this->couleurdef=($a==1) ? true:false;;
+    	return $this;
+    }
     /**
      * Get datecreateAt
      *
@@ -134,6 +205,7 @@ class TempsLiturgiques
     {
         $this->datecreateAt = new \DateTime('now');
         $this->active=1;
+        $this->couleurdef=1;
             
     }
     

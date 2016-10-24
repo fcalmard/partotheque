@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use oeuvresBundle\Entity\Oeuvres;
 use oeuvresBundle\Form\OeuvresType;
+use oeuvresBundle\Form\OeuvresImport;
 use oeuvresBundle\Form\OeuvresFiltreType;
 
 use \PDO;
@@ -24,6 +25,7 @@ use oeuvresBundle\Repository\TempsLiturgiquesRepository;
 use oeuvresBundle\Repository\CompositeursRepository;
 use oeuvresBundle\Repository\FonctionsRepository;
 use oeuvresBundle\Repository\LanguesRepository;
+use Doctrine\ORM\Repository\RepositoryFactory;
 
 /**
  * Oeuvres controller.
@@ -1216,7 +1218,207 @@ class OeuvresController extends Controller
     	));
     
     }
+    
+    
+    public function exec_importAction(Request $request)
+    {
 
+    	$impform=$this->createImportForm();
+    	 
+    	$impform->handleRequest($request);
+    	if ($impform->isValid()) {
+    		
+    		$em = $this->getDoctrine()->getManager();
+    		
+    		$oFiles=$_POST;
+    		$target_dir="";
+    		$binitbd=false;
+    		$bsimulation=false;
+    		//traductionfile
+    		if (isset($_FILES['oeuvresbundle_import']))
+    		{
+    			$oFiles=$_FILES['oeuvresbundle_import'];
+    			 
+    			if(isset($oFiles['name']['fichierimport']))
+    			{
+    				$target_dir=$oFiles['name']['fichierimport'];
+    			}
+    				
+    		}
+    		//..oeuvresbundle_import
+    		
+    		$post = $request->request->get('oeuvresbundle_import');
+    		
+    		if(isset($_POST['oeuvresbundle_import']))
+    		{
+    			 
+    			$sTypeFile=$oFiles['type']['fichierimport'];
+    			 
+    			$sFile=$oFiles['name']['fichierimport'];
+    		
+    			$stmpFile=$oFiles['tmp_name']['fichierimport'];
+    			 
+    		
+    			if(file_exists($stmpFile))
+    			{
+    					
+    				$sPathCible=$em->getRepository('oeuvresBundle:Oeuvres')->getDossierImports();
+    				 
+    				$target_dir = $sPathCible . '/'.basename( $oFiles["name"]['fichierimport']);
+    		
+    				//echo "<br/>$stmpFile<br/>";
+    				///echo "<br/>$target_dir<br/>";
+    		
+    				move_uploaded_file($stmpFile, $target_dir);
+    		
+    				if(isset($_POST['oeuvresbundle_import']['reinitbd']))
+    				{
+    		
+    		
+    					$binitbd=($_POST['oeuvresbundle_import']['reinitbd']==1) ? true : false;
+    		
+    		
+    				}
+    				if(isset($_POST['oeuvresbundle_import']['simulation']))
+    				{
+    		
+    		
+    					$bsimulation=($_POST['oeuvresbundle_import']['simulation']==1) ? true : false;
+    		
+    		
+    				}
+    				/*
+    				 * Importations
+    				 */
+    				$bok = $em->getRepository('oeuvresBundle:Oeuvres')->Import($target_dir,$binitbd,$bsimulation);
+    			}
+    		}
+    		die("exec_importAction 1");
+    	}
+    	//die("exec_importAction 2");
+    	
+
+    	return $this->render('oeuvresBundle:Oeuvres:importOeuvres.html.twig', array(
+    			'import_form'=>$impform->createView()
+    	));
+    	 
+    	
+    }
+    public function importAction(Request $request)
+    {
+    	
+    	$impform=$this->createImportForm();
+    	
+    	$impform->handleRequest($request);
+    	
+    	if ($impform->isValid()) {
+
+    		$em = $this->getDoctrine()->getManager();
+    		
+    		$oFiles=$_POST;
+    		$target_dir="";
+    		$binitbd=false;
+    		$bsimulation=false;
+    		//traductionfile
+    		if (isset($_FILES['oeuvresbundle_import']))
+    		{
+    			$oFiles=$_FILES['oeuvresbundle_import'];
+    			
+    			if(isset($oFiles['name']['fichierimport']))
+    			{
+    				$target_dir=$oFiles['name']['fichierimport'];
+    			}
+    				 
+    		}
+    		//..oeuvresbundle_import
+    		
+    		$post = $request->request->get('oeuvresbundle_import');
+
+    		if(isset($_POST['oeuvresbundle_import']))
+    		{
+    			
+    			$sTypeFile=$oFiles['type']['fichierimport'];
+    			
+    			$sFile=$oFiles['name']['fichierimport'];
+    				
+    			$stmpFile=$oFiles['tmp_name']['fichierimport'];
+    			
+    				
+    			if(file_exists($stmpFile))
+    			{
+    					
+    				$sPathCible=$em->getRepository('oeuvresBundle:Oeuvres')->getDossierImports();
+    			
+    				$target_dir = $sPathCible . '/'.basename( $oFiles["name"]['fichierimport']);
+    				
+    				//echo "<br/>$stmpFile<br/>";
+    				///echo "<br/>$target_dir<br/>";
+    				
+    				move_uploaded_file($stmpFile, $target_dir);
+    				
+    				if(isset($_POST['oeuvresbundle_import']['reinitbd']))
+    				{
+    				
+    				
+    					$binitbd=($_POST['oeuvresbundle_import']['reinitbd']==1) ? true : false;
+    				
+    				
+    				}
+    				if(isset($_POST['oeuvresbundle_import']['simulation']))
+    				{
+    				
+    				
+    					$bsimulation=($_POST['oeuvresbundle_import']['simulation']==1) ? true : false;
+    				
+    				
+    				}    				
+    				/*
+    				 * Importations
+    				 */
+    				$bok = $em->getRepository('oeuvresBundle:Oeuvres')->Import($target_dir,$binitbd,$bsimulation);
+    				if($bok)
+    				{
+    					return $this->render('oeuvresBundle:Oeuvres:importOeuvres.html.twig', array(
+    							'import_form'=>$impform->createView(),'message'=>'Import terminé'));
+    				}
+
+    				    				
+    			}    			
+    			 
+    		}    		    		
+    	}
+
+    	return $this->render('oeuvresBundle:Oeuvres:importOeuvres.html.twig', array(
+    			'import_form'=>$impform->createView()
+    	));
+    	
+    }
+
+    /**
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createImportForm()
+    {
+
+    	$form = $this->createForm(new OeuvresImport(), null, array(
+    			'action' => $this->generateUrl('oeuvres_import'),
+    			'method' => 'POST',
+    	));
+  
+    	/*
+    	$form = $this->createForm(new OeuvresImport(), null, array(
+    			'action' => $this->generateUrl('oeuvres_exec_import'),
+    			'method' => 'POST',
+    	))
+    	;*/
+    	
+    	$form->add('submit', 'submit', array('label' => 'Create'));
+    	
+    	return $form;
+    	
+    }
+    
     /**
      * Creates a form to delete a Partitions entity by id.
      *
@@ -1239,6 +1441,9 @@ class OeuvresController extends Controller
     	->add('submit', 'submit', array('label' => 'Oui'))
     	->getForm()
     	;
+
+
+    	
     }
     
     /**

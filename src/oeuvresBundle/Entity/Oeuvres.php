@@ -6,14 +6,9 @@ use Doctrine\DBAL\Types\FloatType;
 
 use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\OneToOne;
-/*
-use oeuvresBundle\Repository\OeuvresRepository;
-use oeuvresBundle\Repository\TempsLiturgiquesRepository;
-*/
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\PersistentCollection;
-
-use Symfony\Component\Translation\Tests\String;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -720,8 +715,6 @@ class Oeuvres
         
         $this->Langues = new \Doctrine\Common\Collections\ArrayCollection();
         
-        
-        //$this->duree=0;//somme des durees des partitions
     }
     
     

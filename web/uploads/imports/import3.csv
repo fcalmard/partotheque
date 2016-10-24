@@ -1,0 +1,550 @@
+Compo;0
+Robert;0
+Howe;0
+Dvorak;0
+Lève-toi;0
+Lecot;0
+Lecot;0
+Lecot;0
+Robert;0
+Nystedt;0
+Lebrun;0
+Lecot;0
+Herr;0
+Bach;0
+SchÜtz;0
+Berthier;0
+Byrd;0
+Bruckner;0
+Reveyron;0
+Reveyron;0
+Alleluia;0
+Reveyron;0
+Reveyron;0
+Reveyron;0
+Sanctus;0
+Casali;0
+Reveyron;0
+Reveyron;0
+Anonyme;0
+Casali;0
+Reveyron;0
+Reboud;0
+Reboud;0
+Isoir;0
+Langlais;0
+Mont;0
+Berthier;0
+Godard;0
+Gelineau;0
+Godard;0
+Godard;0
+Godard;0
+Godard;0
+Bogensberger;0
+Lafargue;0
+Schutz;0
+Schutz;0
+Berthier;0
+Wackenheim;0
+Schutz;0
+Campra;0
+Casals;0
+Durufle;0
+Biton;0
+Mawby;0
+Praetorius;0
+Gocam;0
+Gocam;0
+Mawby;0
+Vercruysse;0
+Darasse;0
+Emmanuel;0
+Air;0
+Daniel;0
+Godard;0
+Daniel;0
+Dieu;0
+Dieu;0
+Lecot;0
+Anonyme;0
+Kunc;0
+Lecot;0
+Doury;0
+Berthier;0
+Damon;0
+Ornes;0
+Blitsch;0
+Louppe;0
+Lamon;0
+Roucairol;0
+Anonyme;0
+Bucher;0
+Dopf;0
+Louppe;0
+Reinthaler;0
+Roncin;0
+Anonyme;0
+Roux;0
+Anonyme;0
+Akepsimas;0
+Gelineau;0
+Richard;0
+Gouzes;0
+Anonyme;0
+Berthier;0
+Anonyme;0
+Dvorak;0
+Agneau;0
+Haydn;0
+Jésus;0
+Poulenc;0
+Poulenc;0
+Anonyme;0
+Damon;0
+Sala;0
+Neyrat;0
+Ciel;0
+Schiller;0
+Anonyme;0
+Goldman;0
+Anonyme;0
+Poulenc;0
+Poulenc;0
+Mahler;0
+Anonyme;0
+De;0
+O;0
+ô;0
+Notre;0
+Trinité;0
+Delsinne;0
+Dupre;0
+Anonyme;0
+Mozart;0
+Mozart;0
+Anonyme;0
+Anonyme;0
+Bach;0
+Josquin;0
+Samson;0
+Mendelssohn;0
+J.b.;0
+Tamie;0
+Tamie;0
+Bortniansky;0
+Lirine;0
+Anonyme;0
+Franck;0
+Franck;0
+Franck;0
+Bruckner;0
+Van;0
+Franck;0
+Bartollucci;0
+Anonyme;0
+Bertolucci;0
+Tchaikowsky;0
+Rimsky;0
+Godard;0
+Sperling;0
+Peeters;0
+Mendelssohn;0
+Bach;0
+Rameau;0
+Moussorgsky;0
+Vrai;0
+Rimsky;0
+Van;0
+Kyrie;0
+Villeneuve;0
+Lecot/mozart;0
+Conduis;0
+Pauvre;0
+Anonyme;0
+Lefebvre;0
+Freue;0
+Mendelssohn;0
+Gott;0
+Mendelssohn;0
+Il;0
+Dieu;0
+Lebrun;0
+Anonyme;0
+Godard;0
+Seigneur;0
+Colombier;0
+Cruger;0
+Akepsimas;0
+Emmanuel;0
+Berthier;0
+Gelineau;0
+Tallis;0
+Loes;0
+Ireland;0
+Bach;0
+Bach;0
+Haendel;0
+Haendel;0
+Haendel;0
+Bach;0
+Mon;0
+Bach;0
+Cantate;0
+Ruft;0
+Bach;0
+Bach;0
+Bach;0
+Bach;0
+Bach;0
+Bach;0
+Ruft;0
+Bach;0
+Anonyme;0
+Anonyme;0
+Anonyme;0
+Anonyme;0
+Anonyme;0
+Anonyme;0
+Gelineau;0
+Faure;0
+Sperling;0
+Franck;0
+Hugues;0
+Vierne;0
+Davidica;0
+Anonyme;0
+Haydn;0
+Emmanuel;0
+Criez;0
+Baptiste;0
+Emmanuel;0
+Gauffriau;0
+Casals;0
+Anonyme;0
+Casals;0
+Valentin;0
+Anonyme;0
+Monteverdi;0
+Anonyme;0
+Strauss;0
+Liszt;0
+Palestrina;0
+Berthier;0
+Godard;0
+Vincent;0
+Berlioz;0
+Gouzes;0
+Wackenheim;0
+Victoria;0
+Messerer;0
+Faure;0
+Chihara;0
+Stuart;0
+Anonyme;0
+Symfony
+Search on Symfony website
+Exception detected!
+[Syntax Error] line 0, col 71: Error: Expected end of string, got 'eternel'
+500 Internal Server Error - QueryException
+1 linked Exception:
+
+    QueryException » 
+
+[2/2] QueryException: [Syntax Error] line 0, col 71: Error: Expected end of string, got 'eternel'  +
+[1/2] QueryException: SELECT
+t.id from oeuvresBundle:Compositeurs t
+WHERE t.nom = 'L'eternel'  +
+Logs  -
+1 error
+
+    INFO - Matched route "oeuvres_import" (parameters: "_controller": "oeuvresBundle\Controller\OeuvresController::importAction", "_route": "oeuvres_import")
+    INFO - Populated SecurityContext with an anonymous Token
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ErrorsLoggerListener::injectLogger".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ErrorsLoggerListener::injectLogger".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ErrorsLoggerListener::injectLogger".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ProfilerListener::onKernelRequest".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\SessionListener::onKernelRequest".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\FragmentListener::onKernelRequest".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\Security\Http\Firewall::onKernelRequest".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Bundle\AsseticBundle\EventListener\RequestListener::onKernelRequest".
+    DEBUG - Notified event "kernel.controller" to listener "Symfony\Bundle\FrameworkBundle\DataCollector\RouterDataCollector::onKernelController".
+    DEBUG - Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\DataCollector\RequestDataCollector::onKernelController".
+    DEBUG - Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+    DEBUG - Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+    DEBUG - Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+    DEBUG - Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\SecurityListener::onKernelController".
+    DEBUG - Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+    DEBUG - SELECT t0.id AS id_1, t0.actif AS actif_2, t0.anonyme AS anonyme_3, t0.titreOeuvre AS titreOeuvre_4, t0.traductiontitreOeuvre AS traductiontitreOeuvre_5, t0.traductionfile AS traductionfile_6, t0.fichiertraduction AS fichiertraduction_7, t0.tps_litur_id AS tps_litur_id_8, t0.compositeur_id AS compositeur_id_9, t0.fonction_id AS fonction_id_10, t0.accompagnement_id AS accompagnement_id_11, t0.cote AS cote_12, t0.voix_id AS voix_id_13, t0.sscategvoix_id AS sscategvoix_id_14, t0.duree AS duree_15, t0.genre_id AS genre_id_16, t0.avancement_id AS avancement_id_17, t0.siecle AS siecle_18, t0.commentaire AS commentaire_19, t0.reference AS reference_20, t0.datecreateAt AS datecreateAt_21 FROM Oeuvres t0 WHERE t0.id = ?
+    DEBUG - DELETE FROM Compositeurs
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Compo'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Robert'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Howe'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Dvorak'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Lève-toi'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Lecot'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Lecot'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Lecot'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Robert'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Nystedt'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Lebrun'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Lecot'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Herr'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bach'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'SchÜtz'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Berthier'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Byrd'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bruckner'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Reveyron'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Reveyron'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Alleluia'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Reveyron'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Reveyron'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Reveyron'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Sanctus'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Casali'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Reveyron'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Reveyron'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Casali'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Reveyron'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Reboud'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Reboud'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Isoir'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Langlais'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Mont'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Berthier'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Godard'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Gelineau'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Godard'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Godard'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Godard'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Godard'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bogensberger'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Lafargue'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Schutz'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Schutz'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Berthier'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Wackenheim'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Schutz'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Campra'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Casals'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Durufle'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Biton'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Mawby'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Praetorius'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Gocam'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Gocam'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Mawby'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Vercruysse'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Darasse'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Emmanuel'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Air'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Daniel'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Godard'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Daniel'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Dieu'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Dieu'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Lecot'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Kunc'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Lecot'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Doury'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Berthier'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Damon'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Ornes'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Blitsch'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Louppe'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Lamon'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Roucairol'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bucher'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Dopf'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Louppe'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Reinthaler'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Roncin'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Roux'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Akepsimas'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Gelineau'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Richard'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Gouzes'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Berthier'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Dvorak'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Agneau'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Haydn'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Jésus'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Poulenc'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Poulenc'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Damon'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Sala'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Neyrat'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Ciel'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Schiller'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Goldman'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Poulenc'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Poulenc'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Mahler'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'De'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'O'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'ô'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Notre'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Trinité'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Delsinne'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Dupre'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Mozart'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Mozart'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bach'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Josquin'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Samson'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Mendelssohn'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'J.b.'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Tamie'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Tamie'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bortniansky'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Lirine'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Franck'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Franck'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Franck'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bruckner'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Van'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Franck'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bartollucci'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bertolucci'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Tchaikowsky'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Rimsky'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Godard'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Sperling'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Peeters'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Mendelssohn'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bach'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Rameau'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Moussorgsky'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Vrai'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Rimsky'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Van'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Kyrie'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Villeneuve'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Lecot/mozart'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Conduis'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Pauvre'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Lefebvre'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Freue'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Mendelssohn'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Gott'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Mendelssohn'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Il'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Dieu'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Lebrun'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Godard'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Seigneur'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Colombier'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Cruger'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Akepsimas'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Emmanuel'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Berthier'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Gelineau'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Tallis'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Loes'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Ireland'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bach'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bach'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Haendel'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Haendel'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Haendel'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bach'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Mon'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bach'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Cantate'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Ruft'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bach'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bach'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bach'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bach'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bach'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bach'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Ruft'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Bach'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Gelineau'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Faure'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Sperling'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Franck'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Hugues'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Vierne'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Davidica'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Haydn'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Emmanuel'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Criez'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Baptiste'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Emmanuel'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Gauffriau'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Casals'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Casals'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Valentin'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Monteverdi'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Strauss'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Liszt'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Palestrina'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Berthier'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Godard'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Vincent'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Berlioz'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Gouzes'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Wackenheim'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Victoria'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Messerer'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Faure'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Chihara'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Stuart'
+    DEBUG - SELECT c0_.id AS id_0 FROM Compositeurs c0_ WHERE c0_.nom = 'Anonyme'
+    CRITICAL - Uncaught PHP Exception Doctrine\ORM\Query\QueryException: "[Syntax Error] line 0, col 71: Error: Expected end of string, got 'eternel'" at /var/www/sites/mychorale/vendor/doctrine/orm/lib/Doctrine/ORM/Query/QueryException.php line 52
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ErrorsLoggerListener::injectLogger".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ErrorsLoggerListener::injectLogger".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ErrorsLoggerListener::injectLogger".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ProfilerListener::onKernelRequest".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\SessionListener::onKernelRequest".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\FragmentListener::onKernelRequest".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Component\Security\Http\Firewall::onKernelRequest".
+    DEBUG - Notified event "kernel.request" to listener "Symfony\Bundle\AsseticBundle\EventListener\RequestListener::onKernelRequest".
+    DEBUG - Notified event "kernel.controller" to listener "Symfony\Bundle\FrameworkBundle\DataCollector\RouterDataCollector::onKernelController".
+    DEBUG - Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\DataCollector\RequestDataCollector::onKernelController".
+    DEBUG - Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+    DEBUG - Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+    DEBUG - Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+    DEBUG - Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\SecurityListener::onKernelController".
+    DEBUG - Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+    WARNING - Defining the initRuntime() method in the "form" extension is deprecated since version 1.23. Use the `needs_environment` option to get the Twig_Environment instance in filters, functions, or tests; or explicitly implement Twig_Extension_InitRuntimeInterface if needed (not recommended).
+
+Stack Trace (Plain Text)  +
+Symfony
+

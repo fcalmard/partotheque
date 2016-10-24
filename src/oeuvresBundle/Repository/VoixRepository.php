@@ -110,9 +110,6 @@ class VoixRepository extends EntityRepository
 				
 								
 			}			
-
-						
-			
 			
 		} catch (\Doctrine\ORM\NoResultException $e) {
 		}
@@ -121,4 +118,77 @@ class VoixRepository extends EntityRepository
 		
 				
 	}
+	
+
+	public function rechercheVoix($sLibelle)
+	{
+		$id=0;
+		
+		$sLibelle=trim($sLibelle);
+		$sLibelle=strtoupper($sLibelle);
+		
+		$sLibelle=sprintf("%s",$sLibelle);
+	
+		$sql="SELECT
+				t.id from oeuvresBundle:Voix t
+				WHERE t.libelle = '".$sLibelle."'";
+	
+		$query = $this->getEntityManager()
+		->createQuery(
+				$sql
+				);
+			
+		try {
+			$aIds=$query->getResult();
+			if(is_array($aIds) && count($aIds)>0)
+			{
+				foreach ($aIds as $kid=>$id)
+				{
+					$id=$id['id'];
+				}
+			}
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			$id=0;
+		}
+	
+	
+		return $id;
+	}
+	
+	
+	/**
+	 *
+	 */
+	public function insertionVoix($sLibelle)
+	{
+	
+		$idcree=0;
+	
+		$sLibelle=trim($sLibelle);
+		$sLibelle=strtoupper($sLibelle);
+	
+		$conn=$this->getEntityManager()->getConnection();
+	
+		$nowUtc = new \DateTime( 'now',  new \DateTimeZone( 'UTC' ) );
+	
+		$s= $nowUtc->format('Y-m-d h:i:s');
+	
+		$dataArray=array('libelle'=>$sLibelle
+				,'active'=>1
+				,'datecreateAt'=>$s
+		);
+	
+		try {
+			$bOk=$conn->insert('Voix', $dataArray);
+	
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			die("Erreur ".$e->getMessage());
+		}
+	
+		$idcree=$conn->lastInsertId();
+	
+		return $idcree;
+	
+	}
+	
 }

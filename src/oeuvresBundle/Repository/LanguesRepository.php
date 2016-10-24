@@ -83,5 +83,160 @@ class LanguesRepository extends EntityRepository
 		return $sListeIds;
 	}
 	
+
+	/**
+	 *
+	 * @param string $sCode
+	 * @return number
+	 */
+	public function rechercheLangue($sCode)
+	{
+		$id=0;
+			
+		$sCode=$this->epure($sCode);
 	
+		$sCode=ucfirst($sCode);
+		$sCode=substr($sCode, 0,2);
+	
+		$sql="SELECT
+				t.id from oeuvresBundle:Langues t
+				WHERE t.code = '".$sCode."'";
+		
+		$query = $this->getEntityManager()
+		->createQuery(
+				$sql
+				);
+			
+		try {
+			$aIds=$query->getResult();
+			if(is_array($aIds) && count($aIds)>0)
+			{
+				foreach ($aIds as $kid=>$id)
+				{
+					$id=$id['id'];
+				}
+			}
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			$id=0;
+		}
+	
+	
+		return $id;
+	}
+	
+	public function rechercheLibelleLangue($slibelle)
+	{
+		$id=0;
+			
+		$slibelle=$this->epure($slibelle);
+		$slibelle=ucfirst($slibelle);
+		$slibelle=sprintf("%s",$slibelle);
+	
+		$sql="SELECT
+				t.id from oeuvresBundle:Langues t
+				WHERE t.libelle = '".$slibelle."'";
+	
+		$query = $this->getEntityManager()
+		->createQuery(
+				$sql
+				);
+			
+		try {
+			$aIds=$query->getResult();
+			if(is_array($aIds) && count($aIds)>0)
+			{
+				foreach ($aIds as $kid=>$id)
+				{
+					$id=$id['id'];
+				}
+			}
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			$id=0;
+		}
+	
+	
+		return $id;
+	}
+	
+	/**
+	 *
+	 */
+	public function insertionLangue($sLib)
+	{
+	
+		/*
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="active", type="integer")
+     * @ORM\Column(name="code", type="string", length=10, unique=true)
+     * @ORM\Column(name="libelle", type="string", length=255, unique=true)
+     *
+     * @ORM\ManyToMany(targetEntity="Oeuvres")
+     * ,joinColumns={@JoinColumn(name="langues_id", referencedColumnName="id")}
+     * ,inverseJoinColumns={@JoinColumn(name="oeuvres_id", referencedColumnName="id")}
+     * )
+        
+     *
+     * @ORM\Column(name="datecreateAt", type="datetime")
+     * @ORM\Column(type="datetime")
+     * @Assert\DateTime()     *
+    private $datecreateAt;		 * 
+		 */
+		$idcree=0;
+	
+		$sLib=$this->epure($sLib);
+	
+		$sCode=$sLib;
+	
+		$sCode=ucfirst($sCode);
+		$sCode=substr($sCode, 0,2);
+		
+		$sLib=ucfirst($sLib);
+	
+		//echo "<br/>insertionLangue >".$sCode." ".$sLib;
+		
+		$nowUtc = new \DateTime( 'now',  new \DateTimeZone( 'UTC' ) );
+	
+		$sdate= $nowUtc->format('Y-m-d h:i:s');
+	
+		$conn=$this->getEntityManager()->getConnection();
+	
+		$dataArray=array('code'=>$sCode,'libelle'=>$sLib,'active'=>1
+				,'datecreateAt'=>$sdate
+		);
+	
+		try {
+			$bOk=$conn->insert('Langues', $dataArray);
+	
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			die("Erreur ".$e->getMessage());
+		}
+	
+		$idcree=$conn->lastInsertId();
+	
+		return $idcree;
+	
+	}
+	
+	private function epure($texte)
+	{
+	
+		;
+		$texte = trim(strtolower($texte));
+		$texte = htmlentities($texte, ENT_NOQUOTES, 'utf-8');
+		$texte = preg_replace('#&([A-za-z])(?:acute|cedil|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $texte);
+		$texte = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $texte); // pour les ligatures
+		$texte = preg_replace('#&[^;]+;#', '', $texte); // supprime les autres caractères
+		$texte = preg_replace('#&[^;]+;#', '', $texte); // supprime les autres caractères
+	
+		$texte = strtr(
+				$texte,
+				'@ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ'.CHR(34),
+				'aAAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy'.chr(32)
+				);
+	
+		$texte=str_ireplace(chr(34), "", $texte);
+		$texte=str_ireplace(chr(39), "", $texte);
+	
+		return $texte;
+	}	
 }

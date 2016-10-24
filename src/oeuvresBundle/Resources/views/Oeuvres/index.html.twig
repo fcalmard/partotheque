@@ -3,11 +3,11 @@
 {% block body -%}
 
 
-
+<!-- 
 <div class="container">
   <a href="#" data-toggle="popover" title="Popover Header" data-content="Some content inside the popover">Toggle popover</a>
 </div>
-
+ -->
 <div id="dialog" style="display:none" class="modal-dialog" >
 </div> 
 
@@ -143,9 +143,9 @@
     <div class="listeetform avecscroll">
 	    <table class="records_list table table-striped">
 	        <thead class="degrade">
-	        <!-- 
-	        tripar  ordretri asc desc ''
-	        -->
+        	        <!-- 
+        	        tripar  ordretri asc desc ''
+        	        -->
 	        
 	        	{% set colonnedetri='' %}
 	        	{% set ordretri='' %}
@@ -299,12 +299,23 @@
 	        </thead>
 	        <tbody>
 	        {% for entity in entities %}
-	            <tr>
+	        
+	            {% set couleurligne=entity.coultps %} 	        
+	            {% set couleurlignecar=entity.coulfgtps %} 	        
+
+	        	{% if entity.couldeftps==1 %}
+	                <tr>
+		        {% else %}
+	                <tr style="background-color:{{couleurligne}}; color:{{ couleurlignecar }}" >	            
+		        {% endif %}
+	            
 	                <td>
 					{% if entity.id!=0 %}
 		                <a href="{{ path('oeuvres_show', { 'id': entity.id }) }}">{{ entity.titreOeuvre }}
 		                {% if entity.traductiontitreOeuvre!="" %}
-		                ( {{ entity.traductiontitreOeuvre }} )
+    		                {% if entity.traductiontitreOeuvre!=entity.titreOeuvre %}
+    		                ( {{ entity.traductiontitreOeuvre }} )
+    		                {% endif %}
 		                {% endif %}
 		                </a>
 		            {% else %}
@@ -325,7 +336,9 @@
 
 	                <td>{{ entity.compositeur }}</td>	     
 	                <td>{{ entity.genre }}</td>
-	                <td>{{ entity.tpslliturgique }}</td>
+	                <td>
+	                {{ entity.tpslliturgique }}
+	                </td>
 	                <td>{{ entity.fonction }}</td>
 	                <td>{{ entity.voix }}</td>   
 	                <td>{{ entity.reference }}</td>

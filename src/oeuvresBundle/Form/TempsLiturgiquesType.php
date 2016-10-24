@@ -16,8 +16,11 @@ class TempsLiturgiquesType extends AbstractType
     {
         $builder
             ->add('libelle')
-            ->add('active','checkbox',array('required'=>false))            
-        ;
+        	->add('active','checkbox',array('required'=>false))            
+            ->add('couleur','text',array('attr'=>array('class'=>'form-control')))
+            ->add('couleurfg','text',array('attr'=>array('class'=>'form-control')))
+            ->add('couleurdef','checkbox',array('label'=>'Couleur par défaut','required'=>false))            
+            ;
     }
     
     /**

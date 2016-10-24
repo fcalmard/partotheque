@@ -8,8 +8,6 @@ use Doctrine\ORM\Mapping\JoinColumns;
 use Doctrine\ORM\Mapping\inverseJoinColumn;
 use Doctrine\ORM\Mapping\inverseJoinColumns;
 
-use Symfony\Component\Translation\Tests\String;
-
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\ORM\Mapping as ORM;

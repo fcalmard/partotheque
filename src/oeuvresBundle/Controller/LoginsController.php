@@ -10,8 +10,6 @@ use oeuvresBundle\Services\emailServiceClass;
 use oeuvresBundle\Services\mailerServiceClass;
 use oeuvresBundle\Services\messageServiceClass;
 /*
-use Symfony\Component\Translation\Tests\String;
-use oeuvresBundle\Controller\Symfony\Component\Translation\Tests;
 use Twig_Loader_String;
 
 use \Twig_LoaderInterface;

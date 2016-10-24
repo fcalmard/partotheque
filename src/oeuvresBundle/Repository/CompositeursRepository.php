@@ -3,6 +3,8 @@
 namespace oeuvresBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use oeuvresBundle\Entity\Compositeurs;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
  * CompositeursRepository
@@ -73,6 +75,78 @@ class CompositeursRepository extends EntityRepository
 			$sListeIds="";
 		}
 		return $sListeIds;
+		
+	}
+	
+	/**
+	 * 
+	 * @param string $sNom
+	 * @param string $sPrenom
+	 * @return number
+	 */
+	public function rechercheCompositeur($sNom,$sPrenom)
+	{
+		$idcompo=0;
+		$sListeIds="";
+		$s=sprintf("%s",$sNom);
+		$sPrenom=sprintf("%s",$sPrenom);
+		
+		$sql="SELECT
+				t.id from oeuvresBundle:Compositeurs t
+				WHERE t.nom = '".$s."'";
+		
+		$sql="SELECT
+				t.id from oeuvresBundle:Compositeurs t
+				WHERE t.nom = '".$s."' and t.prenom= '".$sPrenom."'";
+		
+		$query = $this->getEntityManager()
+		->createQuery(
+				$sql
+				);
+			
+		try {
+			$aIds=$query->getResult();
+			
+				//var_dump($aIds);
+			
+			if(is_array($aIds) && count($aIds)>0)
+			{
+				foreach ($aIds as $kid=>$id)
+				{
+					$idcompo=$id['id'];
+					$sListeIds.=$idcompo;
+				}
+			}
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			$idcompo=0;
+		}
+		
+		
+		return $idcompo;
+	}
+	
+	/**
+	 * 
+	 */
+	public function insertionCompositeur($sNom,$sPrenom)
+	{
+
+		$idcree=0;
+		
+		$conn=$this->getEntityManager()->getConnection();
+		
+		$dataArray=array('nom'=>$sNom,'prenom'=>$sPrenom,'active'=>1);
+		
+		try {
+			$bOk=$conn->insert('Compositeurs', $dataArray);
+				
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			die("Erreur ".$e->getMessage());
+		}
+				
+		$idcree=$conn->lastInsertId();
+				
+		return $idcree;
 		
 	}
 }

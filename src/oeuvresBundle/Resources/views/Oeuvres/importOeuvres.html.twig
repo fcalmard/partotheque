@@ -1,0 +1,58 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+	<div class="titrelisteetform">
+
+    <h1>Importer les Oeuvres</h1>
+	
+	</div>
+    <div class="listeetform">
+
+		<div class="showform">
+    		<p>
+    		<h1>Confirmez vous l'import ?</h1>
+    		</p>
+    		{%  if message is defined %}
+    		    <p>
+    			<h1>{{ message }}</h1>
+    			</p>
+    		{% endif %}
+    		<div id="divcompteur" >
+    		</div>
+    		{{ form(import_form) }}
+    			
+		</div>
+	</div>
+
+	<div class="finlisteetform">
+
+		<table>
+			<tr>
+				<td class="tdtblactionsbdp">
+			        <a href="{{ path('oeuvres') }}">
+			            <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
+			        </a>
+				</td>
+			</tr>
+		</table>
+	</div>	
+	
+{% endblock %}
+
+{% block javascripts %}
+		
+		{{ parent() }}
+        
+	        <script type="text/javascript">
+	        $body = $("body");
+
+	        
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+			</script>
+{% endblock %}
+
+
+
