@@ -39,6 +39,10 @@ class OeuvresImport extends AbstractType
 
     	->add('reinitbd','checkbox',array('label'=>'Réinitialiser base de données','required'=>false,'mapped'=>false))
     	
+    	->add('premierdossier','text',array('label'=>'Premier dossier à importer','required'=>false,'mapped'=>false))
+    	 
+    	->add('dernierdossier','text',array('label'=>'Dernier dossier à importer','required'=>false,'mapped'=>false))
+    	 
     	->add('simulation','checkbox',array('label'=>'Simulation Import','required'=>false,'mapped'=>false))
     	;
     	 

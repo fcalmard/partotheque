@@ -99,6 +99,8 @@ class CompositeursRepository extends EntityRepository
 				t.id from oeuvresBundle:Compositeurs t
 				WHERE t.nom = '".$s."' and t.prenom= '".$sPrenom."'";
 		
+		//echo "<br/> RECHERCHE COMPOSITEUR >".$sql."<";
+		
 		$query = $this->getEntityManager()
 		->createQuery(
 				$sql
@@ -135,8 +137,9 @@ class CompositeursRepository extends EntityRepository
 		
 		$conn=$this->getEntityManager()->getConnection();
 		
-		$dataArray=array('nom'=>$sNom,'prenom'=>$sPrenom,'active'=>1);
 		
+		$dataArray=array('nom'=>$sNom,'prenom'=>$sPrenom,'active'=>1);
+				
 		try {
 			$bOk=$conn->insert('Compositeurs', $dataArray);
 				

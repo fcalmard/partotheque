@@ -44,6 +44,32 @@ class TempsLiturgiquesRepository extends EntityRepository
 		
 	}
 	
+	public function getCouleurs($id)
+	{
+		//$aCoul=array();
+		
+		$oTps=null;
+		$query = $this->getEntityManager()
+		->createQuery(
+				'SELECT
+				t.id,
+				t.active,
+				t.libelle,
+				t.couleurdef,
+				t.couleur,
+				t.couleurfg,
+				t.datecreateAt
+				FROM oeuvresBundle:TempsLiturgiques t
+				WHERE t.active=1 and t.id='.$id.' order by t.libelle'
+				);
+		try {
+			$oTps=$query->getResult();
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			return $aCoul;
+		}
+		return array('couleurfg'=>$oTps[0]['couleurfg'],'couleur'=>$oTps[0]['couleur'],'couleurdef'=>$oTps[0]['couleurdef']);		
+		
+	}
 	public function rechercheTempsLiturgique($sLibelle)
 	{
 		$id=0;
@@ -142,6 +168,44 @@ class TempsLiturgiquesRepository extends EntityRepository
 	
 		return $texte;
 	}
+	
+	public function listeTempsLiturgique($sListeIds)
+	{
+		$aTpsLit=array();
+		if($sListeIds!='')
+		{
+			$sql="SELECT
+				t.id,t.libelle from oeuvresBundle:TempsLiturgiques t
+				WHERE t.id in ".$sListeIds;
+			
+			
+			//die($sql);
+			
+			$query = $this->getEntityManager()
+			->createQuery(
+					$sql
+					);
+				
+			try {
+				$aTpsLit=$query->getResult();
+				if(is_array($aTpsLit) && count($aTpsLit)>0)
+				{
+					foreach ($aTpsLit as $kid=>$tpslit)
+					{
+						//echo "<br/>tpslit <br/>";
+						//var_dump($aTpsLit);
+					}
+				}
+			} catch (\Doctrine\ORM\NoResultException $e) {
+				$aTpsLit=null;
+			}
+		}
+
+	
+	
+		return $aTpsLit;
+	}
+	
 	
 	
 }

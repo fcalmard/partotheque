@@ -170,6 +170,26 @@ class OeuvresType extends AbstractType
     	)
     	)
     	
+    	->add('harmon_id','entity',array(
+    			'property'=>'nom prenom',
+    			'label'=>'Harmonisateur',
+    			'multiple'    => false,
+    			'empty_value' => 'Selectionnez un Compositeur',
+    			'empty_data'  => null,
+    			'query_builder' => function (CompositeursRepository $er) {
+    			 
+    			return $er->createQueryBuilder('t')
+    			->where('t.active=1')
+    			->orderBy('t.nom,t.prenom', 'ASC')
+    			;
+    			},
+    			 
+    			'required'=>false,
+    			 
+    			'class'=>'oeuvresBundle:Compositeurs'
+    					)
+    	)
+    	
     	->add('genre_id','entity',array(
     			'property'=>'libelle',
     			'label'=>'Genre',

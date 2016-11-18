@@ -69,6 +69,7 @@ class OeuvresController extends Controller
     	$tps_litur_id="";
     	$fonction_id="";
     	$voix_id="";
+    	$atps_litur_id="0";
     	 
     	
     	$skFiltre="filtre_oeuvres_".$gUserLoginLogged;
@@ -122,6 +123,10 @@ class OeuvresController extends Controller
     	 * 
     	 */
     	$entity = new Oeuvres();
+    	$list = array();
+    	 
+    	//var_dump($aFiltre);
+    	
     	if (!is_null($aFiltre))
     	{
    	    	if(count($aFiltre!=0))
@@ -130,6 +135,8 @@ class OeuvresController extends Controller
 	    		{
 	    			foreach ($avFiltre as $skFiltre2=>$avFiltre2)
 	    			{
+	    				//echo "<br/> skFiltre2".$skFiltre2."<";
+	    					    
 	    				switch ($skFiltre2)
 	    				{
 	    					case "titreOeuvre":
@@ -143,6 +150,66 @@ class OeuvresController extends Controller
 	    						break;
 	    					case "tps_litur_id":
 	    						$tps_litur_id=$avFiltre['tps_litur_id'];
+	    						
+	    						$list = array();
+	    							
+	    						$sListeIds="";
+	    						$atps_litur_id="";
+	    								    							
+	    						if(is_array($tps_litur_id))
+	    						{
+	    							
+	    							foreach ($tps_litur_id as $idt)
+	    							{
+	    								$sListeIds.=($sListeIds!="") ? ",".$idt:"(".$idt;
+
+	    								$atps_litur_id.=($atps_litur_id!="") ? ",".$idt:"".$idt;   								
+	    									
+	    							}
+	    							
+	    							$atps_litur_id.=($atps_litur_id!="") ? "":"";
+	    							
+	    							$sListeIds.=($sListeIds!="") ? ")":"";
+	    							
+	    							
+	    						}
+	    						//die("169");
+	    							
+	    						/*
+	    						 * Repository
+	    						 * TempsLiturgiquesRepository
+	    						 * 
+	    						 * listeTempsLiturgique
+	    						foreach ($channel_rates as $channel_rate) {
+	    							$list[$channel_rate->getId()] = $channel_rate->getNomeCameraTariffa();
+	    						}
+	    						    	$entities = $em->getRepository('oeuvresBundle:Oeuvres')->ChargeListe($aFiltre,$aTriOeuvresSession,$bAffAppPdf);
+
+	    						*/
+
+	    						$atpslit = $em->getRepository('oeuvresBundle:TempsLiturgiques')->listeTempsLiturgique($sListeIds);
+	    							
+	    						
+	    						if(is_array($atpslit))
+	    						{
+	    							foreach ($atpslit as $kt=>$atps)
+	    							{
+	    								//echo "<br/>".$kt."<br/>";
+	    								//var_dump($atps['id'] );
+	    								//var_dump($atps['libelle'] );
+	    								
+	    								$list[$atps['id']]=$atps['libelle'] ;
+	    										    								
+	    								//var_dump($atps['libelle'])
+	    									
+	    							}
+	    						}
+	    						//echo "<br/>";
+	    						
+	    						//var_dump($list);
+	    						
+	    						//die("<br/>".$sListeIds);
+	    							    	
 	    						break;
 	    					case "fonction_id":
 	    						$fonction_id=$avFiltre['fonction_id'];
@@ -164,17 +231,54 @@ class OeuvresController extends Controller
 	    				}
 	    				 
 	    			}
+	    			
 	    		
 	    		}
 	    	}
 
     	}
+    	 
     	$filtre_form = $this->filtreCreateForm($entity);
     	   
     	$affiche=$session->get($gUserLoginLogged.'_oeuvres_affiche_filtre',0);
     	 
     	$sDossierPartitions=$em->getRepository('oeuvresBundle:Oeuvres')->getDossierPartitions();
+    	 /*
+    	echo "<br/> atps_litur_id".$atps_litur_id."<";
+    	'tps_litur_id'=>$tps_litur_id,
+    	*/
+    	
+    	$atps_litur_id=explode(",", $atps_litur_id);
+    	
+    	$monocouleur=0;
+    	$cpt=0;
     	 
+    	$idxcoul="";
+    	 
+    	foreach ($entities as $ke=>$oeuvre)
+    	{
+    		foreach ($oeuvre as $kz=>$valo)
+    		{
+    			if($kz=='coultps') 
+    			{
+    				$zc=trim(strtoupper($valo));
+    				if($idxcoul=='')
+    				{
+    					$idxcoul=$zc;
+    					$cpt++;
+    				}else{
+    					if($idxcoul!=$zc)
+    					{
+    						$cpt++;
+    						$idxcoul=$zc;
+    					}
+    				}
+    			}  			 
+    		}
+    	}
+    	
+    	$monocouleur=($cpt<2) ? 1 : 0;
+    	//echo "<br/>281 CPT=".$cpt."< >".$monocouleur;
         return $this->render('oeuvresBundle:Oeuvres:index.html.twig', array(
             'entities' => $entities,
         		'filtre_form'   => $filtre_form->createView(),
@@ -187,7 +291,8 @@ class OeuvresController extends Controller
         		'afficheapppdf'=>$afficheapppdf,
         		'aTriOeuvresSession'=>$aTriOeuvresSession,
         		'genre_id'=>$genre_id,
-        		'tps_litur_id'=>$tps_litur_id,
+        		'atps_litur_id'=>$atps_litur_id,
+        		'monocouleur'=>$monocouleur,
         		'fonction_id'=>$fonction_id,
         		'voix_id'=>$voix_id,
         		'sDossierPartitions'=>$sDossierPartitions,
@@ -686,8 +791,14 @@ class OeuvresController extends Controller
     	//die("646");
     	$genre_id=$post['genre_id'];
     	
-    	$tps_litur_id=$post['tps_litur_id'];
-    	    	
+    	$tps_litur_id=null;
+    	 
+    	if(isset($post['tps_litur_id']))
+    	{
+    		$tps_litur_id=$post['tps_litur_id'];
+    		
+    	}
+    	 
     	$fonction_id=$post['fonction_id'];
     	 
     	$voix_id=$post['voix_id'];
@@ -753,6 +864,36 @@ class OeuvresController extends Controller
     	    	 
     	$filtre_form = $this->filtreCreateForm($entity);
     	
+    	$monocouleur=0;
+    	$cpt=0;
+    	
+    	$idxcoul="";
+    	
+    	foreach ($entities as $ke=>$oeuvre)
+    	{
+    		foreach ($oeuvre as $kz=>$valo)
+    		{
+    			if($kz=='coultps')
+    			{
+    				$zc=trim(strtoupper($valo));
+    				if($idxcoul=='')
+    				{
+    					$idxcoul=$zc;
+    					$cpt++;
+    				}else{
+    					if($idxcoul!=$zc)
+    					{
+    						$cpt++;
+    						$idxcoul=$zc;
+    					}
+    				}
+    			}
+    		}
+    	}
+    	 
+    	$monocouleur=($cpt<2) ? 1 : 0;
+    	//echo "<br/>901 CPT=".$cpt."< >".$monocouleur;
+    	
     	/**
     	 * retour à la liste filtrée
     	 */
@@ -771,6 +912,7 @@ class OeuvresController extends Controller
     			'tps_litur_id'=>$tps_litur_id,
     			'fonction_id'=>$fonction_id,
     			'voix_id'=>$voix_id,
+    			'monocouleur'=>$monocouleur
     			 
     	));
     	 
@@ -845,9 +987,12 @@ class OeuvresController extends Controller
 
         $idoeuvre=$entity->getId();
         
+        $identiTemps=$entity->getTpsLiturId();
+        
         return $this->render('oeuvresBundle:Oeuvres:edit.html.twig', array(
         		'mode' => 'create',
         		'entity' => $entity,        		
+        		'idTempsLiturgique'=>$identiTemps,
         		'edit_form'   => $form->createView()
         ));
         /*
@@ -925,17 +1070,30 @@ class OeuvresController extends Controller
         if (!$entity) {
         	throw $this->createNotFoundException('pb de recherche de l\'Oeuvres.');
         }
-
+        
+        $couleur="";
+        $couleurfg="";
+        $couleurdef="";
+        
         $idt=$entity->getTpsLiturId();
         $entiTemps='';
+        $identiTemps=0;
         if(!is_null($idt) && $idt!=0)
         {
+        	$identiTemps=$idt;
         	$entiTemps = $em->getRepository('oeuvresBundle:TempsLiturgiques')->find($idt);
         	 
         	if (!$entiTemps) {
         		throw $this->createNotFoundException('pb de recherche du Temps Liturgique.');
         	}
         	$entiTemps=$entiTemps->getLibelle();
+        	
+        	$aCouleurs = $em->getRepository('oeuvresBundle:TempsLiturgiques')->getCouleurs($idt);
+        	 
+        	$couleur=$aCouleurs['couleur'];
+        	$couleurfg=$aCouleurs['couleurfg'];
+        	$couleurdef=$aCouleurs['couleurdef'];
+        	 
         }
         
         $idt=$entity->getCompositeurId();
@@ -950,6 +1108,19 @@ class OeuvresController extends Controller
         	$Compositeur=$Compositeur->getNom();
         }
         
+        $idt=$entity->getHarmonId();
+        
+        $Harm='';
+        if(!is_null($idt) && $idt!=0)
+        {
+        	$Harm = $em->getRepository('oeuvresBundle:Compositeurs')->find($idt);
+        
+        	if (!$Harm) {
+        		throw $this->createNotFoundException('pb de recherche Harmonisateur.');
+        	}
+        	$Harm=$Harm->getNom()." ".$Harm->getPrenom();
+        }
+               
         $Fonction='';
         $idt=$entity->getFonctionId();
         if(!is_null($idt) && $idt!=0)
@@ -1024,25 +1195,26 @@ class OeuvresController extends Controller
         	 
         	$Langues.=($Langues!='') ? ', ' : '';
         	$Langues.=$l->getLibelle();
-        }
-        
-        
-        //var_dump($aL);
-        //echo "<br/>".$Langues;
+        }     
         
         $sDossierTraductions=$em->getRepository('oeuvresBundle:Oeuvres')->getDossierTraductions();
         
         return $this->render('oeuvresBundle:Oeuvres:show.html.twig', array(
             'entity'      => $entity,
         		'TempsLiturgique'=>$entiTemps,
-                'Compositeur'=>$Compositeur,
+        		'idTempsLiturgique'=>$identiTemps,
+        		'Compositeur'=>$Compositeur,
+        		'Harmonisateur'=>$Harm,
                  'Fonction'=>$Fonction,
         		'Voix'=>$voix,
         		'Sscategvoix'=>$sscategvoix,
         		'Accompagnement'=>$accompagnement,
         		'sDossierTraductions'=>$sDossierTraductions,
         		'Genre'=>$genre,
-        		'Langues'=>$Langues
+        		'Langues'=>$Langues,
+        		'couleur'=>$couleur,
+        		'couleurfg'=>$couleurfg,
+        		'couleurdef'=>$couleurdef        		
         ));
     }
 
@@ -1052,7 +1224,7 @@ class OeuvresController extends Controller
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
+    	$em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('oeuvresBundle:Oeuvres')->find($id);
         
@@ -1060,11 +1232,17 @@ class OeuvresController extends Controller
             throw $this->createNotFoundException('Unable to find Oeuvres entity.');
         }
 
+        $couleur="#ff0000";
+        $couleurfg="";
+        $couleurdef="1";
+        
         $aCrit=array("Oeuvres_id"=>$id);
                 
         $iDtps_litur_id=$entity->getTpsLiturId();
         
         $idcomp=$entity->getCompositeurId();
+        
+        $idhar=$entity->getHarmonId();
         
         $idfon=$entity->getFonctionId();
         
@@ -1089,7 +1267,21 @@ class OeuvresController extends Controller
         
         $editForm = $this->createEditForm($entity);
         
+        $identiTemps=$entity->getTpsLiturId();
+        
         $fichiertraduction=$entity->getTraductionfile();
+        
+        //echo "<br/> IDHAR >".$idhar;
+        //die("editAction");
+        
+        $aCouleurs = $em->getRepository('oeuvresBundle:TempsLiturgiques')->getCouleurs($identiTemps);
+        $couleur=$aCouleurs['couleur'];
+        $couleurfg=$aCouleurs['couleurfg'];
+        $couleurdef=$aCouleurs['couleurdef'];
+        /*
+         
+
+        */
         
         return $this->render('oeuvresBundle:Oeuvres:edit.html.twig', array(
         		'mode' => 'edit',
@@ -1099,7 +1291,12 @@ class OeuvresController extends Controller
         		'Partitions'      => $aPartitions,
         		
         		'tps_litur_id'=>$iDtps_litur_id,
+        		'idTempsLiturgique'=>$iDtps_litur_id,
+        		
         		'compositeur_id'=>$idcomp,
+        		'harmon_id'=>$idhar,
+
+        		
         		'fonction_id'=>$idfon,
         		 'voix_id'=>$idvoix,
         		 'sscatvoix_id'=>$sscatvoix_id,
@@ -1108,7 +1305,11 @@ class OeuvresController extends Controller
         		'avancement_id'=>$idAvancement,
         		'fichiertraduction'=>$fichiertraduction,
         		'sDossierPartitions'=>$sDossierPartitions,
-        		'sDossierTraductions'=>$sDossierTraductions
+        		'sDossierTraductions'=>$sDossierTraductions,
+        		
+        		'couleur'=>$couleur,
+        		'couleurfg'=>$couleurfg,
+        		'couleurdef'=>$couleurdef
         		
         ));
     }
@@ -1319,6 +1520,10 @@ class OeuvresController extends Controller
     		$target_dir="";
     		$binitbd=false;
     		$bsimulation=false;
+    		
+    		$sDossierDebut="";
+    		$sDossierFin="";
+    		
     		//traductionfile
     		if (isset($_FILES['oeuvresbundle_import']))
     		{
@@ -1371,11 +1576,29 @@ class OeuvresController extends Controller
     					$bsimulation=($_POST['oeuvresbundle_import']['simulation']==1) ? true : false;
     				
     				
-    				}    				
+    				}   
+    				if(isset($_POST['oeuvresbundle_import']['premierdossier']))
+    				{
+    				
+    				
+    					$sDossierDebut=$_POST['oeuvresbundle_import']['premierdossier'];
+    				
+    				
+    				}
+    				
+    				if(isset($_POST['oeuvresbundle_import']['dernierdossier']))
+    				{
+    				
+    				
+    					$sDossierFin=$_POST['oeuvresbundle_import']['dernierdossier'];
+    				
+    				
+    				}
+    				
     				/*
     				 * Importations
     				 */
-    				$bok = $em->getRepository('oeuvresBundle:Oeuvres')->Import($target_dir,$binitbd,$bsimulation);
+    				$bok = $em->getRepository('oeuvresBundle:Oeuvres')->Import($target_dir,$binitbd,$bsimulation,$sDossierDebut,$sDossierFin);
     				if($bok)
     				{
     					return $this->render('oeuvresBundle:Oeuvres:importOeuvres.html.twig', array(

@@ -107,7 +107,7 @@
 				{{ form_label(filtre_form.tps_litur_id, 'Temps liturgique') }}
 				{{ form_widget(filtre_form.tps_litur_id) }}
 				{{ form_errors(filtre_form.tps_litur_id) }}										
-		
+
 		   		{{ form_label(filtre_form.fonction_id, 'Fonction du rite liturgique') }}
 				{{ form_widget(filtre_form.fonction_id) }}
 				{{ form_errors(filtre_form.fonction_id) }}
@@ -298,18 +298,92 @@
 	            </tr>
 	        </thead>
 	        <tbody>
-	        {% for entity in entities %}
-	        
-	            {% set couleurligne=entity.coultps %} 	        
-	            {% set couleurlignecar=entity.coulfgtps %} 	        
 
-	        	{% if entity.couldeftps==1 %}
+	        {% if not monocouleur is defined %}
+		            {% set monocouleur=0 %}	        
+	        {% endif %}
+	        
+	        
+	        {% for entity in entities %}
+	               
+				{% if entity.coultps is defined %}
+		            {% set couleurligne=entity.coultps %} 	        
+		        {% endif %}
+	
+	        	{% if idxcouleurligne is defined %}
+	        	{% else %}	        
+        	        {% set idxcouleurligne=couleurligne %} 	        
+	        	{% endif %}
+
+				{% if coulentity is defined %}
+				
+				    {% if opacityentity !=  "" %}
+				    					    {% set opacityentity='' %} 	        
+				    
+		        	{% else %}
+		        		                     {% set opacityentity='' %}                               		
+		        	
+				    {% endif %}
+				    
+				    {% if coulentity !=  idxcouleurligne %}
+					
+					
+		        	{% else %}
+	
+				    {% endif %}
+					
+	        	{% else %}
+        	        
+	        	    {% set coulentity=idxcouleurligne %}
+	                     {% set opacityentity="" %}                               		
+        	             		
+	        	{% endif %}
+
+	        	
+	            {% set couleurlignecar=1 %} 	        
+				{% if entity.coulfgtps is defined %}
+	            {% set couleurlignecar=entity.coulfgtps %}
+	            {% endif %}
+		        
+		        {% set couleurdeftps=1 %} 	        
+		        
+		        {% if entity.couldeftps is defined %}
+		       
+		            {% set couleurdeftps=entity.couldeftps %}
+		        
+		        {% endif %}
+
+	        	{% if couleurdeftps==1 %}
 	                <tr>
 		        {% else %}
-	                <tr style="background-color:{{couleurligne}}; color:{{ couleurlignecar }}" >	            
+    	        	{% if couleurligne is defined %}
+    	        	        {% if monocouleur ==1  %}
+                                {% if loop.index is odd %}
+                                   <tr style="background-color:{{idxcouleurligne}}; color:{{ couleurlignecar }}; " >	            
+        				        {% else %}
+        				           <tr style="background-color:{{idxcouleurligne}}; color:{{ couleurlignecar }}; opacity:0.8;" >	
+            		        	{% endif %}
+   				            {% else %}
+                              
+                              {% if opacityentity is defined %}
+                                  {% if opacityentity !="" %}
+                               		<tr style="background-color:{{couleurligne}}; color:{{ couleurlignecar }};{{ opacityentity }}; " >
+                              	  {% else %}                              
+                               		<tr style="background-color:{{couleurligne}}; color:{{ couleurlignecar }};{{ opacityentity }}; " >
+                              	  {% endif %}                              
+                               	            
+	        		          {% else %}
+                               	<tr style="background-color:{{coulentity}}; color:{{ couleurlignecar }}; " >
+	        		          {% endif %}
+	        		          
+	        		        {% endif %}
+   		        	{% endif %}
 		        {% endif %}
 	            
-	                <td>
+
+	            
+                <td>
+	                
 					{% if entity.id!=0 %}
 		                <a href="{{ path('oeuvres_show', { 'id': entity.id }) }}">{{ entity.titreOeuvre }}
 		                {% if entity.traductiontitreOeuvre!="" %}
@@ -330,7 +404,8 @@
 		            	
 		            	
 		            {% endif %}
-	                </td>
+
+                </td>
 	                
 	                	
 
@@ -394,12 +469,33 @@
 			$("#menu1").hide();
 			$("#menu2").hide();
 			$("#menu3").hide();
-			
+
+	
+			{% if atps_litur_id is defined %}
+
+                var valeurs = [0];
+
+                {% for result in atps_litur_id %}
+
+                	valeurs.push({{result}});
+                
+                {% endfor %}                
+
+                $( "#oeuvresbundle_filtre_oeuvres_tps_litur_id" ).val(valeurs);
+
+			{% endif %}
+
 			/*
+			alert('index');
     	//lire filtre de session
     	$aFiltre=$session->get($skFiltre);			
 			*/
-		
+			{% if tps_litur_id is defined %}
+			{% endif %}
+			
+			{% if atps_litur_id is defined %}
+			{% endif %}
+			
 		{% if titreOeuvre is defined %}
 	        var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_titreOeuvre");
 		    if(obj)
@@ -414,7 +510,15 @@
 		    {
 		    	obj.value="{{compositeur_id}}";
 		    }
-		{% endif %}
+			{% endif %}
+
+		{% if tps_litur_id is defined %}
+    	    var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_tps_litur_id");
+    		{% if obj is defined %}
+    	    <h1>OBJEMPTY</h1>
+           	{% endif %}	
+        {% endif %}	
+	
 		{% if genre_id is defined %}
 		    var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_genre_id");
 		    if(obj)
@@ -422,14 +526,6 @@
 		   		obj.value="{{genre_id}}";
 		    }
 		{% endif %}
-		
-		{% if tps_litur_id is defined %}
-		    var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_tps_litur_id");
-		    if(obj)
-		    {
-		   		obj.value="{{tps_litur_id}}";
-		    }
-		{% endif %}		
 
 		{% if fonction_id is defined %}
 		    var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_fonction_id");

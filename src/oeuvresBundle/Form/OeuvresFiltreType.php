@@ -84,11 +84,19 @@ class OeuvresFiltreType extends AbstractType
     	'class'=>'oeuvresBundle:Genres'
     	)
     	)
+
+    	/*
+    	->add('tps_litur_id', 'entity',
+    			array('class'=>'oeuvresBundle:TempsLiturgiques'
+    					,'empty_value' => 'Selectionnez un Temps liturgique'
+    					, 'multiple'=>true, 'expanded'=>false,'empty_data'=>null,'property'=>'CouleurLibelle')
+    			)*/
+    			
     	
     	->add('tps_litur_id','entity',array(
-    			'property'=>'libelle',
+    			'property'=>'CouleurLibelle',
     			'label'=>'Temps liturgique',
-    			'multiple'    => false,
+    			'multiple'    => true,
     			'empty_value' => 'Selectionnez un Temps liturgique',
     			'empty_data'  => null,
     			'query_builder' => function (TempsLiturgiquesRepository $er) {

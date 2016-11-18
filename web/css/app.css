@@ -765,6 +765,46 @@ th.libelleFomShow
 	width:250px;
 }
 
+div.titrelisteetformoeuvre
+{
+	/*
+	
+	background-image: -webkit-linear-gradient(top, #EDD78D 0, beige 100%);
+    background-image: linear-gradient(to bottom, #FBE793 0, #ec7510 108%);
+    background-repeat: repeat-x;
+    
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff575757', endColorstr='#ff3d3d3d', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+    
+    -moz-box-shadow: 0px -2px 10px 0px #656565;
+    -webkit-box-shadow: 0px -2px 10px 0px #656565;
+    -o-box-shadow: 0px -2px 10px 0px #656565;
+    box-shadow: 0px -2px 10px 0px #656565;
+    filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=90, Strength=10);
+*/
+	background-color: beige;
+
+	text-decoration: -moz-none;
+
+	top: 66px;
+	
+	position: absolute;
+	width:90%;
+	
+	
+	height:auto;
+	
+	vertical-align: middle;
+	
+	padding-left: 2%;
+		
+	margin-top: 0px;
+	margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom:	18px;
+    
+    
+}
 div.titrelisteetform
 
     /*height: 80px;
@@ -806,6 +846,7 @@ div.titrelisteetform
 	box-shadow: 5px 5px 5px #2c3e50;
 	*/
 }
+
 .degrade
 {
 /*	color:black;*/
@@ -1252,11 +1293,11 @@ div.main_tabs_container {
    /* box-shadow: 5px 5px 5px #2c3e50; */
     
 }
-	div.formtab
+div.formtab
 {
     width: 90%;
     height: 300px;
-    top: 1px;
+    top: 15px;
     left:40px;
     position: relative;
     background-color: transparent;

@@ -77,9 +77,7 @@ class CompositeursController extends Controller
     	}
     
     	$aSessionTblEnreg=$session->get($gUserLoginLogged.'_compositeurs_tblenreg');
-    
-    	  	var_dump($aSessionTblEnreg);
-    
+        
     	$nbenreg=0;
     
     	$nbenreg=$aSessionTblEnreg['nbenreg'];
@@ -341,13 +339,14 @@ class CompositeursController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Compositeurs')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Compositeurs entity.');
+            throw $this->createNotFoundException('Compositeur non trouvé');
         }
 
         $editForm = $this->createEditForm($entity);
 
         return $this->render('oeuvresBundle:Compositeurs:edit.html.twig', array(
         	'entity'      => $entity,
+        	'id'		=>$id,
         	'mode'=>'modif',
         	'edit_form'   => $editForm->createView(),
         ));

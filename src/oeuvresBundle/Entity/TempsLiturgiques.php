@@ -137,6 +137,24 @@ class TempsLiturgiques
     	$this->couleur=$c;
     	return $this;
     }
+    
+    /**
+     *
+     */
+    public function getCouleurLibelle()
+    {
+
+    	/*$is=imagestring($image, $font, $x, $y, $string, $color);
+    	
+    	$s="<div style=background-color:'#225533';>....."."</div>";
+    	*/
+    	$s=$this->getLibelle();
+    	
+    	return $s;
+    }
+    
+    
+    
     /**
      *
      */

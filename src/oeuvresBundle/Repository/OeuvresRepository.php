@@ -200,13 +200,46 @@ class OeuvresRepository extends EntityRepository
 							}
 							break;						
 						case 'tps_litur_id':
-							if(trim($valf)!="")
+							
+							/*
+							 * tester si tableau
+							 */
+							
+							if(!is_null($valf) && is_array($valf))
 							{
+								//echo "<br/>PLUSIEURS VALEURS<br/>";								
+								//var_dump($valf);
+								
 								$sWhere=($sWhere!="") ? $sWhere." and " : $sWhere;
-								$sWhere.="t.id";
-								$sWhere.="=".$valf;
-								//echo "<br/> $kvalf <br/>".$sWhere."<br/>";								
+								
+								$sWhere.="t.id in ";
+								$slstval="";
+								
+								foreach ($valf as $zvalf)
+								{
+									if(trim($zvalf)!="")
+									{
+										$slstval.=($slstval=="") ? "(".$zvalf : ",".$zvalf;
+										//$sWhere=($sWhere!="") ? $sWhere." or " : $sWhere;
+										//$sWhere.="t.id";
+										//$sWhere.=" in (".$slstval.")";
+										//$sWhere.=" in (".$slstval.")";
+									}
+									//echo "<br/>232 > \$zvalf>". $zvalf."<";
+								}
+								
+								$slstval.=($slstval!="") ? ")" : "";
+								
+								$sWhere.=($slstval!='') ? $slstval : "";
+								
+								//echo "<br/> slstval >".$slstval."<br/>";
+								//echo "<br/> sWhere >".$sWhere."<br/>";								
+								//die("234");
+								
 							}
+
+							//die("FILTRE SUR tps_litur_id");
+								
 							break;
 						case 'fonction_id':
 							if(trim($valf)!="")
@@ -247,10 +280,9 @@ class OeuvresRepository extends EntityRepository
 				
 			$sWhere=($sWhere!="") ? " and ".$sWhere ."" : $sWhere;
 					
-			//echo "<br/> fin <br/>".$sWhere."<br/>"; 
+			//echo "<br/>283 fin <br/>".$sWhere."<br/>"; 
 				
-			
-			//die("212");
+			//die("285");
 		
 		}
 		
@@ -320,12 +352,47 @@ class OeuvresRepository extends EntityRepository
 		// $query->andWhere('o.actif = ?', array(1));
 		//die('filtre');
 		try {
+			
+			$a=$query->getArrayResult();
+			
+			$alcoul=array();
+			
+			foreach ($a as $oeuvre)
+			{
+				$coultps=$oeuvre['coultps'];
+				
+				if(count($alcoul)==0)
+				{
+					$alcoul[]=$coultps;
+						
+				}
+
+				$b=array_search($coultps,$alcoul);
+				//echo "<br/> trouvé coultps >".."<";
+				
+				//echo "<br/> trouvé >".$b."< ".$coultps;
+				if ($b) 
+				{
+					$alcoul[]=$coultps;
+				}
+			}
+			
+			
+			//echo "<br/>liste des couleurs<br/>".count($alcoul);
+				
+			if(count($alcoul)<2)
+			{
+				//var_dump($alcoul);
+				
+			}
+			//die("388");
 			if($bAffAppPdf)
 			{
 				$aArbre=array();
 				
 				$a=$query->getArrayResult();
-					
+				
+
 				foreach ($a as $oeuvre)
 				{
 					$aoeuvre=array("id"=>$oeuvre['id']
@@ -595,7 +662,7 @@ LIMIT 0 , 30
 	 * 
 	 * @param boolean $bReInitBase
 	 */
-	public function Import($sFichier,$bReInitBase,$bSimulation)
+	public function Import($sFichier,$bReInitBase,$bSimulation,$sDossierDebut,$sDossierFin)
 	{
 
 		//echo ("IMPORT EN COURS...... >".$sFichier);
@@ -608,13 +675,6 @@ LIMIT 0 , 30
 		
 		if(file_exists($sFichier))
 		{
-?>
-<script type="text/javascript">
-debutwaiting();
-//alert('idimageimport');
-</script>
-
-<?php 
 	
 			echo "<div id='iddivimport' >";
 			/*
@@ -625,24 +685,7 @@ debutwaiting();
 			echo "</div>";
 		*/	
 			//echo ("<br/>Lecture en cours ...... ".$sFichier." <br/>");
-			?>
-			<!-- 
-			<div id='idimageimport'>
-			<img alt='Import ' src='/web/images/loading.gif' />";
-			</div>
-			 -->
-			<script type="text/javascript">
-			/*
-			divcompteur = document.getElementById("divcompteur");
-			if(divcompteur)
-			{
-				divcompteur.innerHTML="<br/>Lecture en cours ...";
-			}
-			*/
-			</script>
 
-			
-			<?php 
 			//$sContenu=file_get_contents($sFichier);
 			
 			/*Ouverture du fichier en lecture seule*/
@@ -660,136 +703,287 @@ debutwaiting();
 					//echo "<br/>".$cpt;//." >".$buffer;
 					
 					$aLigne=explode(chr(9), $buffer);
-					//$aLigne=explode(",", $buffer);
+					
+					
+					//var_dump($sDossierFin);
+
+						$imp = new import();
 						
-					$imp = new import();
-						
-					foreach ($aLigne as $cptcol=>$vcol)
-					{
-						$cptcol++;
-						
-						
-						
-						$vcol=trim($vcol);
-						//$vcol=htmlentities($vcol,ENT_NOQUOTES);
-						//$vcol=htmlentities($vcol,ENT_COMPAT);
-						
-						//CARROLL
-						
-						//$vcol=str_replace($vcol,"'"," ");
-						
-						//echo "<br/> vcol >".$cptcol." ".$vcol." <br/>";
-												
-						
-						switch ($cptcol)
+						foreach ($aLigne as $cptcol=>$vcol)
 						{
-							case 1:
-								$imp->setColA($vcol);//titre
-								break;
-							case 2:
-								if($vcol!="")
-								{
-									//echo "<br/> vcol >".$cptcol." ".$vcol." <br/>";
-										
-									IF(stripos($vcol, "CARROL")>0)
-									{
-									
-										//die($vcol);
-									}
-									
-									$vcol=ucfirst($vcol);
-									
-									$imp->setColB($vcol);//compositeur
-									$imp->setColBP("");//compositeur prenom
-									
-									$aColCom=explode(" ", $vcol);
-									if(is_array($aColCom))
-									{
-											
-										//var_dump($aColCom);
-											
-										//echo "<br/> nb=".count($aColCom)."<br/>";
-											
-											
-										if(count($aColCom)>1)
-										{
-											$imp->setColB($aColCom[0]);
-											$imp->setColBP($aColCom[1]);
-										}
-											
-									
-										//var_dump($imp);
-											
-										//die("618");
-									
-									}
-								}
-
-								break;								
-							case 3:
+							$cptcol++;
+													
+							$vcol=trim($vcol);
+							$vcol=$this->epure($vcol);
 								
-								//echo "<br/> vcol >".$cptcol." >".$vcol."< <br/>";
-								
-								$imp->setColC($vcol);//ref numéro de dossier
-								
-								break;								
-							case 4:
-								$imp->setColD($vcol);//LANGUE GREGORIEN latin		Langues
-								break;
-							case 5:
-								$imp->setColE($vcol);//LANGUE latin
-								break;
-							case 6:
-								$imp->setColF($vcol);//TempsLiturgiques
-								break;								
-							case 7:
-								$imp->setColG($vcol);//FONCTIONS
-								break;
-							case 8:
-								$imp->setColH($vcol);//COTE
-								break;
-							case 9:
-								$imp->setColI($vcol);//VOIX
-								break;								
-							case 10:
-								$imp->setColJ($vcol);
-								break;
-							case 11:
-								$imp->setColK($vcol);//GENRE si valeur dans cette colonne type musique = SACREE
-								break;
-							case 12:
-								$imp->setColL($vcol);//GENRE si valeur dans cette colonne type musique = PROFANE
-								break;								
-							case 13:
-								$imp->setColM($vcol);//SIECLE
-								break;
-							case 14://DOSSIER BIS
-								break;
-							case 15:
-								$imp->setColO($vcol);//ACCOMPAGNEMENT
-								break;
-							case 16:
-								$imp->setColP($vcol);//COMMENTAIRES
-								break;
-							case 17:
-								$imp->setColQ($vcol);//COMMENTAIRES
-								break;
-							default:
-								break;
-								
-						}
-
+							//$vcol=htmlentities($vcol,ENT_NOQUOTES);
+							//$vcol=htmlentities($vcol,ENT_COMPAT);
 							
+							//CARROLL
+							
+							//$vcol=str_replace($vcol,"'"," ");
+							
+							//echo "<br/>659 vcol >".$cptcol." ".$vcol." <br/>";
+								
+							
+							switch ($cptcol)
+							{
+								case 1:
+									$imp->setColA($vcol);//titre
+									break;
+								case 2:
+									/*
+											compositeur/Parmonisé par									 * 
+									 */
+									
+									$scompositeur=$vcol;
+															
+									$vcol=$this->epure($vcol);
+									$vcol=strtoupper($vcol);
+								
+									//$vcol=($vcol=="ANONYME") ? "" : $vcol;
+										
+									$aColComHarmon=array();
+									$harmonisateur="";
+										
+									$snomh="";
+									$spreh="";
+									
+									if($vcol!="")
+									{
+										//echo "<br/><br/> vcol >".$cptcol." >".$vcol." <br/>";
+																					
+										IF(stripos($vcol, "CARROL")>0)
+										{
+										
+											//die($vcol);
+										}
+										
+										$vcol=ucfirst($vcol);
+										
+										$imp->setColB($vcol);//compositeur
+										$imp->setColBP("");//compositeur prenom
+										
+										//echo "<br/>700 vcol >".$cptcol." ".$vcol." <br/>";
+										
+										$imp->setColHar("");
+										$imp->setColHarp("");
+										
+										/**/
+																				
+										$aColComHarmon=explode("/", $vcol);
+										
+										//echo "<br/> 789 TAILLE =".count($aColComHarmon);
+										
 
+										$baa=false;
+										if(is_array($aColComHarmon))
+										{
+											$vcol=$aColComHarmon[0];
+											$nomcompo=$this->epure($vcol);
+											$nomhar=$vcol;
+											$snomh=$vcol;
+											
+											if(trim(strtoupper($nomcompo))=="ANONYME")
+											{
+											
+												//echo "<br/>756 vcol >".$vcol." <br/>";
+											
+												//var_dump($aColComHarmon);
+											
+												//echo "<br/>720 vcol >".$snomh." <br/>";
+											}
 												
-					}
-					
-					//var_dump($imp);
-					//die("671");
+												
+												
+											if(count($aColComHarmon)>1)
+											{
+												$harmonisateur=$aColComHarmon[1];
+												
+												if(trim(strtoupper($nomcompo))=="ANONYME")
+												{
+												
+													//echo "<br/><br/>772 TITRE >".$imp->getColA()." <br/>";
+													//echo "<br/><br/>773 \$nomcompo >".$nomcompo." <br/>";
+													//echo "<br/>774 \$harmonisateur >".$harmonisateur." <br/>";
+														
+													//var_dump($aColComHarmon);
+												
+													//echo "<br/>720 vcol >".$snomh." <br/>";
+												}
+												
+												
+												//if(trim(strtoupper($aColComHarmon[0]))==trim(strtoupper("Anonyme")))
+												//{
+													//$vcol=$aColComHarmon[0];
+													
+													//echo "<br/>  vcol >".$vcol."<";
+													//echo "<br/> 750 ANONYME TROUVE";
+													
+													
+													$aNomPrenom=explode(" ", $harmonisateur);
+													
+													$snomh=$harmonisateur;
+													$spreh="";
+													
+													if(is_array($aNomPrenom)){
+														$snomh=$aNomPrenom[0];
+														if(count($aNomPrenom)>1){
+															$spreh=$aNomPrenom[1];	
+															if(count($aNomPrenom)>2){
+																$spreh.=" ".$aNomPrenom[2];
+																if(count($aNomPrenom)>3){
+																	$spreh.=" ".$aNomPrenom[3];																		
+																}
+															}
+														}
+													}
+													/*
+													if($snomh=="BOLLER")
+													{
+											
+													}*/
+													//
 
-					$aLignesImport[]=$imp;
-				
+													
+													$baa=true;
+												//}
+												
+												if(trim(strtoupper($nomcompo))=="ANONYME")
+												{
+													//echo "<br/>820 harmonisateur >".$harmonisateur."<";													
+													//echo "<br/>821 nom >".$snomh;
+													//echo "<br/>822 prenom >".$spreh;
+												}
+												
+											}
+										}
+										
+										/**/
+										
+										$aColCom=explode(" ", $vcol);
+										if(is_array($aColCom))
+										{
+											/*if($baa)
+											{
+												echo "<br/>  778, auteur >".$vcol."< <br/>";
+												
+												var_dump($aColCom);
+												
+											}*/
+												
+											//echo "<br/> nb=".count($aColCom)."<br/>";
+												
+												
+											if(count($aColCom)>1)
+											{
+												$imp->setColB($aColCom[0]);	
+												
+												$sprenom=$aColCom[1];
+												
+												if(count($aColCom)>2){
+													$sprenom.=" ".$aColCom[2];
+													if(count($aColCom)>3){
+														$sprenom.=" ".$aColCom[3];
+													}
+												}
+												
+												$imp->setColBP($sprenom);
+											}
+												
+										
+											//var_dump($imp);
+												
+											//die("618");
+										
+										}
+
+										//echo "<br/><br/>805 nom >".$snomh;
+										//echo "<br/>806 prenom >".$spreh;
+										
+										$imp->setColHar($snomh);//harmonisateur
+										
+										$imp->setColHarp($spreh);
+										
+										if(trim(strtoupper($nomcompo))=="ANONYME" && $snomh=="PETERS")
+										{
+											echo "<br/>  876, harmonisateur >".$harmonisateur."<";
+												
+											echo "<br/>878 nom >".$snomh;
+											echo "<br/>879 prenom >".$spreh;
+										}
+										
+									}
+	
+									break;								
+								case 3://$sDossierFin
+									
+									//echo "<br/> vcol >".$cptcol." >".$vcol."< <br/>";
+														
+									/*if(trim($vcol)=="ec")
+									{
+										
+										echo "<br/> 786 scompositeur >".$scompositeur."<";
+														
+									}*/
+									
+									$imp->setColC($vcol);//ref numéro de dossier
+									
+									break;								
+								case 4:
+									$imp->setColD($vcol);//LANGUE GREGORIEN latin		Langues
+									break;
+								case 5:
+									$imp->setColE($vcol);//LANGUE latin
+									break;
+								case 6:
+									$imp->setColF($vcol);//TempsLiturgiques
+									break;								
+								case 7:
+									$imp->setColG($vcol);//FONCTIONS
+									break;
+								case 8:
+									$imp->setColH($vcol);//COTE
+									break;
+								case 9:
+									$imp->setColI($vcol);//VOIX
+									break;								
+								case 10:
+									$imp->setColJ($vcol);
+									break;
+								case 11:
+									$imp->setColK($vcol);//GENRE si valeur dans cette colonne type musique = SACREE
+									break;
+								case 12:
+									$imp->setColL($vcol);//GENRE si valeur dans cette colonne type musique = PROFANE
+									break;								
+								case 13:
+									$imp->setColM($vcol);//SIECLE
+									break;
+								case 14://DOSSIER BIS
+									break;
+								case 15:
+									$imp->setColO($vcol);//ACCOMPAGNEMENT
+									break;
+								case 16:
+									$imp->setColP($vcol);//COMMENTAIRES
+									break;
+								case 17:
+									$imp->setColQ($vcol);//COMMENTAIRES
+									break;
+								default:
+									break;
+									
+							}
+													
+						}
 					
+						//var_dump($imp);
+						//die("671");
+
+						$aLignesImport[]=$imp;
+					
+										
 				}
 				
 				/*On ferme le fichier*/
@@ -944,6 +1138,8 @@ debutwaiting();
 				}
 			}
 			
+			echo "<br/> PARCOURS DES LIGNES LUES <br/><br/>";
+			
 			/**
 			 * par cours des lignes
 			 */
@@ -960,6 +1156,46 @@ debutwaiting();
 				{
 					$nom=trim($aLigne->getColB());
 					$prenom=trim($aLigne->getColBP());
+					
+					$harmonisateur="";//trim($aLigne->getColHar());
+						
+					$baTraiter=1;						
+					
+					if($sDossierDebut!='' && is_numeric($sDossierDebut))
+					{
+						if($aLigne->getColC()!='' && is_numeric($aLigne->getColC()))
+						{
+							$sdos=$aLigne->getColC();
+			
+							$baTraiter=0;
+								
+							if($sdos>=$sDossierDebut)
+							{
+								$baTraiter=1;
+							}
+						}						
+					}
+										
+					if($sDossierFin!="" && $baTraiter==1)
+					{
+						$baTraiter=0;
+						
+						if($aLigne->getColC()!='' && is_numeric($aLigne->getColC()))
+						{
+							$sdos=$aLigne->getColC();
+							if($sdos<=$sDossierFin)
+							{
+								$baTraiter=1;
+							}
+						}
+					}
+					
+					
+					
+					if($baTraiter==1)
+					{
+					
+						//echo "<br/>  DOSSIER >".$aLigne->getColC()."< DEBUT >".$sDossierDebut." FIN >".$sDossierFin."<";
 						
 					//if($nom!='')
 					//{
@@ -967,37 +1203,232 @@ debutwaiting();
 						 * tester Anonyme et ""
 						 */
 						$banonyme=false;
-						if(strtoupper($nom)=="ANONYME")
+						$banonymebd=false;
+						$nom=strtoupper($nom);
+						
+						$nomcompo=$nom;
+						
+						$an=explode("/", $nom);
+						
+						if(is_array($an))
 						{
-							$banonyme=true;
+							
+							//echo "<br/> 1182 <br/>";
+							//var_dump($an);
+							/*if($baa)
+							 {
+							 echo "<br/>  778, auteur >".$vcol."< <br/>";
+						
+							 var_dump($aColCom);
+						
+							 }*/
+						
+							//echo "<br/>1116 nb=".count($aColCom)."<br/>";
+						
+							$nom=$an[0];
+							$nomcompo=$nom;
+							
+							if(count($an)>1)
+							{
+								$nom=$an[0];				
+								//echo "<br/> 1201 \$nom >".$nom."< <br/>";
+								
+								$harmonisateur=$an[1];
+								//echo "<br/> 1201 \$harmonisateur >".$harmonisateur."<";
+								
+								//$anh=explode(" ", $harmonisateur);								
+								//var_dump($anh);
+								
+								$prenom=$an[1];
+								//echo "<br/>*********** 1202 \$prenom >".$prenom."<";
+								
+								if(count($an)>2){
+									$prenom.=" ".$an[2];
+									if(count($an)>3){
+										$prenom.=" ".$an[3];
+									}
+								}						
+								//echo "<br/> 1209 \$prenom >".$prenom."<";
+								
+								if(trim(strtoupper($nom))!=="ANONYME")
+								{
+									$harmonisateur=$nom;
+										
+								}
+								
+								
+							}						
+							//var_dump($imp);						
+							//die("618");						
+						}
+						$nom=strtoupper($nom);
+						
+						//echo "<br/> 1224 COMPOSITEUR >".$nomcompo."<";
+						
+						if($nom=="ANONYME")
+						{
+							//$banonyme=true;
+							$banonymebd=true;
+							
+							
+						}else{
+							$an=explode(" ", $nom);
+							$nom=strtoupper($nom);
+							//$harmonisateur=$nom;
+											
+//echo "<br/>1138 NOM >".$nom."<";							
+							if(is_array($an))
+							{						
+								$nom=$an[0];					
+																
+								if(count($an)>1)
+								{
+									$nom=$an[0];
+									$prenom=$an[1];
+									if(count($an)>2){
+										$prenom.=" ".$an[2];
+										if(count($an)>3){
+											$prenom.=" ".$an[3];
+										}
+									}
+										
+								}
+							}
+						}
+						
+						$shar=$imp->getColHar();
+						
+						if($nom=="ANONYME")
+						{
+							//echo "<br/> 1261 HARMONISATEUR >".$aLigne->getColHar()."< PRENOM >".$aLigne->getColHarp()." TITRE >".$aLigne->getColA();
+							
+							$banonyme=($aLigne->getColHar()!="");
 								
 						}
-						if(trim($nom)=="")
+						/*if(trim($nom)=="")
 						{
 							$banonyme=true;
 						}else {
 							$banonyme=false;							
 						}
-						$nom=strtolower($nom);
-						$nom=ucfirst($nom);
+						*/
+						
+						$nom=ucfirst(trim($nom));
 						$idcompo=0;
 						
-						if($banonyme==false)
+						if($banonyme==false && $nom!='')
 						{
-							$idcompo= $eml->getRepository('oeuvresBundle:Compositeurs')->rechercheCompositeur($nom,$prenom);							
-							if($idcompo==0)
+
+							
+							if(strtoupper(trim($nom))=="ANONYME" && trim($prenom)=="")
 							{
-								$idcompo=$eml->getRepository('oeuvresBundle:Compositeurs')->insertionCompositeur($nom,$prenom);
+								/*
+								if($nom=="ANONYME")
+								{
+									echo "<br/>1286 COMPO ANONYME nom >".$nom;
+														
+								}*/
+								//echo "<br/>1176 prenom >".$prenom;
+								
+								$idcompo= $eml->getRepository('oeuvresBundle:Compositeurs')->rechercheCompositeur($nom,$prenom);
 								if($idcompo==0)
 								{
-									die("Erreur");
+									$idcompo=$eml->getRepository('oeuvresBundle:Compositeurs')->insertionCompositeur($nom,$prenom);
+									if($idcompo==0)
+									{
+										die("Erreur");
+									}
+										
+								}else
+								{
+									//die("existe");
+								}
+							
+							}else{
+
+								
+								if(strtoupper(trim($nom))=="ANONYME")
+								{
+									$an=explode(" ", $prenom);
+									
+									//echo "<br/>1312 prenom >".$prenom;
+									
+									if(is_array($an))
+									{
+										$nom=$an[0];
+										if(count($an)>1)
+										{
+											$prenom=$an[1];
+											//echo "<br/>1210 ANONYME nom >".$nom;
+											//echo "<br/>1211 prenom >".$prenom;
+											
+											if(count($an)>2){
+												$prenom.=" ".$an[2];
+												if(count($an)>3){
+													$prenom.=" ".$an[3];
+												}
+											}											
+										}
+									}
+								}
+								$idcompo= $eml->getRepository('oeuvresBundle:Compositeurs')->rechercheCompositeur($nom,$prenom);
+								if($idcompo==0)
+								{
+									$idcompo=$eml->getRepository('oeuvresBundle:Compositeurs')->insertionCompositeur($nom,$prenom);
+									if($idcompo==0)
+									{
+										die("Erreur");
+									}
+										
+								}else
+								{
+									//die("existe");
+								}
+							}						
+
+						}
+						
+						$idharmo=0;
+						if($harmonisateur!='')
+						{
+							//echo "<br/><br/>1340 harmonisateur >".$harmonisateur."<";							
+							$nomcompo=	$aLigne->getColB();	
+							$prenomcomp=$aLigne->getColBP();
+							$snomh=	$aLigne->getColHar();						
+							$spreh=	$aLigne->getColHarp();							
+							
+							//echo "<br/>1358 \$nomcompo >".$nomcompo;					
+							//echo "<br/>1359 \$prenomcomp >".$prenomcomp;					
+							//echo "<br/>1360 \$snomh >".$snomh;					
+							//echo "<br/>1361 \$spreh >".$spreh;
+
+							$idharmo= $eml->getRepository('oeuvresBundle:Compositeurs')->rechercheCompositeur($snomh,$spreh);
+								
+							if($idharmo==0)
+							{
+							
+								$idharmo=$eml->getRepository('oeuvresBundle:Compositeurs')->insertionCompositeur($snomh,$spreh);
+							
+								//echo "<br/>1134 INSERTTION HARMONISATEUR idharmo=".$idharmo." NOM >".$snomh."< PRE >".$spreh."<";
+							
+								if($idharmo==0)
+								{
+									die("Erreur INSERTION HARMONISATEUR");
 								}
 									
-							}else
-							{
-								//die("existe");
+								/*if($banonyme)
+								{
+									die("PAIRE ANONYME HARMONISATEUR ".$idharmo." >".$nomhar."< >".$prenomhar."<");
+								}*/
+									
 							}
+							
+
+							$harmonisateur='';
 						}
+							
+						
+							
 						/*
 						 * 
 						 * SELECT * FROM `Genres` // Typesmusiques
@@ -1023,9 +1454,14 @@ debutwaiting();
 								$iTypedeMusique=MUSIQUE_PROFANE;
 							}
 							*/
-														
-							$idoeuvre=$this->insertionOeuvre($valf,$idcompo,$aLigne->getColC(),$banonyme,STATUT_EN_COURS,$aLigne->getColH(),$aLigne->getColM());
 							
+							$idharmo=(isset($idharmo)) ? $idharmo : 0;
+							
+							//echo "<br/> 1292 ".$valf."<";
+							//echo "<br/> 1293 idcompositeur=".$idcompo." idharmo=".$idharmo;
+								
+							$idoeuvre=$this->insertionOeuvre($valf,$idcompo,$idharmo,$aLigne->getColC(),$banonyme,STATUT_EN_COURS,$aLigne->getColH(),$aLigne->getColM());
+							unset($idharmo);
 						}
 						
 						/*
@@ -1144,7 +1580,7 @@ debutwaiting();
 									break;
 							}
 							
-							$$sLibGenre=trim($sLibGenre);
+							$sLibGenre=trim($sLibGenre);
 							$idgenre=0;
 							if($sLibGenre!="")
 							{
@@ -1299,11 +1735,10 @@ debutwaiting();
 						//echo " Compositeur en cours ...".$nom." ".$prenom." ( ".$idcompo.")";
 						
 						
-						//var_dump($idcompo);
-						 * 
 						 */
-				
-					// compositeur }
+						
+					}// test $sDossierFin
+					
 				}
 
 			}
@@ -1311,16 +1746,9 @@ debutwaiting();
 			echo "</div>";
 		}
 
-		?>
-        <script type="text/javascript">
-
-
-        	//alert("finwaiting");
-        
-        </script>
-		<?php
-
-		//die("<br/>IMPORT TERMINE ".$sFichier."< >".$bReInitBase."< nombre de lignes traitées : ".$cpt);
+		//echo "<br/> nombre de lignes traitées : ".$cpt;
+		
+		//die("<br/>IMPORT TERMINE ".$sFichier);
 		
 		$bReInitBase=$cpt >0;
 		return $bReInitBase;
@@ -1369,7 +1797,7 @@ debutwaiting();
 	/**
 	 *
 	 */
-	public function insertionOeuvre($sTitre,$idcompo,$sRef,$banonyme=false,$avancement_id,$sCote,$siecle)
+	public function insertionOeuvre($sTitre,$idcompo,$idhar,$sRef,$banonyme=false,$avancement_id,$sCote,$siecle)
 	{
 
 		$idcree=0;
@@ -1399,6 +1827,7 @@ debutwaiting();
 				,'actif'=>1
 				,'reference'=>$sRef
 				,'compositeur_id'=>$idcompo
+				,'harmon_id'=>$idhar
 				,'anonyme'=>$iAnonyme
 				,'datecreateAt'=>$s
 				,'avancement_id'=>$avancement_id
@@ -1406,6 +1835,8 @@ debutwaiting();
 				,'cote'=>$sCote
 				,'siecle'=>$siecle
 		);
+		
+		//echo "<br/> insertionOeuvre >".$sTitre." COMPO=".$idcompo." IDHAR=".$idhar;
 		
 		try {
 			$bOk=$conn->insert('Oeuvres', $dataArray);
@@ -1517,7 +1948,8 @@ debutwaiting();
 	
 	private function epure($texte)
 	{
-		$texte = trim(strtolower($texte));
+		//$texte = trim(strtolower($texte));
+		$texte=trim($texte);
 		$texte = htmlentities($texte, ENT_NOQUOTES, 'utf-8');
 		$texte = preg_replace('#&([A-za-z])(?:acute|cedil|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $texte);
 		$texte = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $texte); // pour les ligatures
@@ -1529,9 +1961,15 @@ debutwaiting();
 				'@ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ',
 				'aAAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy'
 				);
-		$texte=str_ireplace(chr(34), "", $texte);
+		$texte=str_ireplace(chr(34), " ", $texte);
 		$texte=str_ireplace(chr(39), "", $texte);
-	
+		
+		/*
+044      054    2C   00101100        ,    (comma)		 * 
+		 */
+		$texte=str_ireplace(chr(54), " ", $texte);
+		
+		//$texte=strtr($texte, chr(54)," ");		
 		return $texte;
 	}
 	
@@ -1543,6 +1981,8 @@ class import
 	private $colA;//TITRE OEUVRE
 	private $colB;//compositeur
 	private $colBP;//compositeur prénom
+	private $colHAR;//compositeur harmonisateur
+	private $colHARP;//compositeur harmonisateur prenom
 	private $colC;//reference NUMERO DE DOSSIER
 	private $colD;//LANGUE GREGORIEN latin		Langues
 	private $colE;//Langues
@@ -1597,7 +2037,33 @@ class import
 		$this->colBP=$sVal;
 		return $this;
 	
-	}	
+	}
+	
+	public function setColHar($sVal)
+	{
+		$this->colHAR=$sVal;
+		return $this;
+	
+	}
+	public function getColHar()
+	{
+		return $this->colHAR;
+	
+	}
+	
+	public function setColHarp($sVal)
+	{
+		$this->colHARP=$sVal;
+		return $this;
+	
+	}
+	public function getColHarp()
+	{
+		return $this->colHARP;
+	
+	}
+		
+
 	public function getColC()
 	{
 		return $this->colC;

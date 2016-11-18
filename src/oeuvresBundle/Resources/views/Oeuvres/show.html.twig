@@ -1,7 +1,17 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <div class="titrelisteetform">
+
+     {% if couleurdef is defined %}
+        {% if couleurdef== 0 %}
+     	    <div class="titrelisteetformoeuvre" >
+	     {% else %}
+	    	<div class="titrelisteetform" >
+	     {% endif %}
+     {% else %}
+    	<div class="titrelisteetform" >
+     {% endif %}
+
 
     <h1>{{ entity.titreOeuvre }} 
     	                {% if entity.traductiontitreOeuvre!="" %}
@@ -30,7 +40,16 @@
 		                 <td>{{ Compositeur }}
 		                 {% endif %}
 		                 </td>		                
-		            </tr>				            
+		            </tr>		
+		            
+		            <tr class="ligneshow" >
+		                <th>Harmonisateur</th>
+		                 {% if Harmonisateur is defined %}
+		                 <td>{{ Harmonisateur }}
+		                 {% endif %}
+		                 </td>		                
+		            </tr>
+		            		            		            
 		            <tr class="ligneshow" >
 		                <th>Anonyme</th>
 		                <td>{{ entity.anonyme==1 ? "O" : "N"}}</td>
@@ -46,9 +65,16 @@
 		            <tr class="ligneshow" >
 		                <th>Temps liturgique</th>
 		                 {% if TempsLiturgique is defined %}
-		                 <td>{{ TempsLiturgique }}
+		                 <td>{{ TempsLiturgique }}</td>
+		                     {% if idTempsLiturgique!=0 %}
+			                 <td>&nbsp;
+    	                        <a href="{{ path('tempsliturgiques_edit', { 'id': idTempsLiturgique }) }}">
+    	                        	<img alt="Modification" src="/web/css/images/edit.png">
+    	                        </a>
+		                     </td>		                 
+		                     {% endif %}
 		                 {% endif %}
-		                 </td>		                
+		                                 
 		            </tr>
 		            
 		            <tr class="ligneshow" >
@@ -291,7 +317,17 @@
 			$("#menu1").hide();
 			$("#menu2").hide();
 			$("#menu3").hide();
-						
+
+		     {% if couleurdef is defined %}
+	         {% if couleurdef== 0 %}
+				$('.titrelisteetformoeuvre').css('background-color', 'red'); // ma méthode modifiera la propriété "color" et la définira à "red"
+				$('.titrelisteetformoeuvre').css('background-color', '{{couleur}}'); // ma méthode modifiera la propriété "color" et la définira à "red"
+				$('.titrelisteetformoeuvre').css('color', '{{couleurfg}}');
+	
+				 {% endif %}
+		    {% endif %}
+		     
+			
        </script>
 {% endblock %}
 

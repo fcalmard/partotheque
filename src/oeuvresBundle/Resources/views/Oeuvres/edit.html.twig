@@ -5,19 +5,26 @@
 <div id="dialog" style="display:none" class="modal-dialog" >
 </div> 
 
-    <div class="titrelisteetform">
-
-		{% if mode is defined %}
-			{% if mode=="create" %}
-			    <h1>Création œuvre</h1> 
-			{% endif %}
-			{% if mode=="edit" %}
-			    <h1>Modification œuvre</h1> 
-			{% endif %}
-		{% endif %}
-
-	</div>
-
+     {% if couleurdef is defined %}
+        {% if couleurdef== 0 %}
+     	    <div class="titrelisteetformoeuvre" >
+	     {% else %}
+	    	<div class="titrelisteetform" >
+	     {% endif %}
+     {% else %}
+    	<div class="titrelisteetform" >
+     {% endif %}
+         
+    		{% if mode is defined %}
+    			{% if mode=="create" %}
+    			    <h1>Création œuvre</h1> 
+    			{% endif %}
+    			{% if mode=="edit" %}
+    			    <h1>Modification œuvre</h1> 
+    			{% endif %}
+    		{% endif %}
+    
+    	</div>
 	    
     <div class="listeetform">
 		<div class="editform">
@@ -38,6 +45,11 @@
 				{{ form_label(edit_form.compositeur_id, 'Compositeur') }}
 				{{ form_widget(edit_form.compositeur_id) }}
 				{{ form_errors(edit_form.compositeur_id) }}	
+				
+			<br/>
+				{{ form_label(edit_form.harmon_id, 'Harmonisateur') }}
+				{{ form_widget(edit_form.harmon_id) }}
+				{{ form_errors(edit_form.harmon_id) }}					
 													
 			<br/>
 				{{ form_label(edit_form.genre_id, 'Genre') }}
@@ -63,7 +75,19 @@
 			{{ form_label(edit_form.tps_litur_id, 'Temps liturgique') }}
 			{{ form_widget(edit_form.tps_litur_id) }}
 			{{ form_errors(edit_form.tps_litur_id) }}
-<br/>
+			
+    		{% if idTempsLiturgique is defined %}
+    
+                 {% if idTempsLiturgique!=0 %}
+	                 &nbsp;
+                    <a href="{{ path('tempsliturgiques_edit', { 'id': idTempsLiturgique }) }}">
+                    	<img alt="Modification" src="/web/css/images/edit.png">
+                    </a>
+                 		                 
+                 {% endif %}			
+           {% endif %}			
+
+			<br/>
 			{{ form_label(edit_form.fonction_id, 'Fonction du rite liturgique') }}
 			{{ form_widget(edit_form.fonction_id) }}
 			{{ form_errors(edit_form.fonction_id) }}
@@ -75,11 +99,9 @@
 			{{ form_errors(edit_form.voix_id) }}
 			
 <br/>
-
 			{{ form_label(edit_form.sscategvoix_id, 'Sous catégorie') }}
 			{{ form_widget(edit_form.sscategvoix_id) }}
 			{{ form_errors(edit_form.sscategvoix_id) }}			
-			
 <br/>						
 			
 			<div class="main_tabs_container">
@@ -216,15 +238,11 @@
 									{% endif %}
 								
 								</div>
-								
-								<!-- inutilisé
-								<div id= "tab2" class="formtab" >
-								</div>
-								-->
-										
+																		
 								<div id= "tab3" class="formtab" >
 												
 									<br/>																
+
 									{{ form_label(edit_form.traductiontitreOeuvre, 'Traduction Titre') }}
 									{{ form_widget(edit_form.traductiontitreOeuvre) }}
 									{{ form_errors(edit_form.traductiontitreOeuvre) }}
@@ -477,7 +495,7 @@
 				    {
 				    obj.value="{{tps_litur_id}}";
 				    }
-					{% endif %}
+				{% endif %}
 		
 				{% if compositeur_id is defined %}
 				    var obj = document.getElementById("oeuvresbundle_oeuvres_compositeur_id")
@@ -486,6 +504,14 @@
 						obj.value="{{compositeur_id}}";
 					    }
 				{% endif %}	
+
+				{% if harmon_id is defined %}
+			    	var obj = document.getElementById("oeuvresbundle_oeuvres_harmon_id")
+			    	if(obj)
+				    {
+					obj.value="{{harmon_id}}";
+				    }
+			    {% endif %}	
 				
 				{% if fonction_id is defined %}
 				    var obj = document.getElementById("oeuvresbundle_oeuvres_fonction_id");
@@ -555,7 +581,16 @@
 				$("#menu1").hide();
 				$("#menu2").hide();
 				$("#menu3").hide();
-							
+
+			     {% if couleurdef is defined %}
+		         {% if couleurdef== 0 %}
+					$('.titrelisteetformoeuvre').css('background-color', 'red'); // ma méthode modifiera la propriété "color" et la définira à "red"
+					$('.titrelisteetformoeuvre').css('background-color', '{{couleur}}'); // ma méthode modifiera la propriété "color" et la définira à "red"
+					$('.titrelisteetformoeuvre').css('color', '{{couleurfg}}');
+					
+					 {% endif %}
+			    {% endif %}
+			     				
 			</script>
 			
 {% endblock %}

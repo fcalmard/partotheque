@@ -118,6 +118,14 @@ class Oeuvres
        
     /**
      *
+     * @var harmon_id
+     *
+     * @ORM\Column(name="harmon_id", type="integer",nullable=true)
+     *
+     */    
+    private $harmon_id;
+    /**
+     *
      * @var integer
      *
      * @ORM\Column(name="fonction_id", type="integer",nullable=true)
@@ -286,27 +294,45 @@ class Oeuvres
     }    
 
     /**
-     * 
+     *
      * @param integer $id
      */
     public function setCompositeurId($id)
     {
     	$this->compositeur_id=$id;
-        return $this;
+    	return $this;
     }
     /**
-     * 
+     *
      */
     public function getCompositeurId()
     {
     	return $this->compositeur_id;
-    }    
+    }
     
     public function getCompositeurOeuvre()
     {
     	return $this->compositeur_id;
-    	 
+    
     }
+    
+    /**
+     *
+     * @param integer $id
+     */
+    public function setHarmonId($id)
+    {
+    	$this->harmon_id=$id;
+    	return $this;
+    }
+    /**
+     *
+     */
+    public function getHarmonId()
+    {
+    	return $this->harmon_id;
+    }
+       
     /**
      * 
      * @param integer $id
