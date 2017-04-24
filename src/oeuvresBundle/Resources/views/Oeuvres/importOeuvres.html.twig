@@ -9,13 +9,18 @@
     <div class="listeetform">
 
 		<div class="showform">
-    		<p>
-    		<h1>Confirmez vous l'import ?</h1>
-    		</p>
+
     		{%  if message is defined %}
     		    <p>
     			<h1>{{ message }}</h1>
     			</p>
+    		{% else %}
+        		<p>
+        		<h1>Confirmez vous l'import ?</h1>
+        		</p>
+        		
+        		<p id="importencours"><h1>Import en cours...</h1></p>
+        		
     		{% endif %}
     		<div id="divcompteur" >
     		</div>
@@ -50,6 +55,11 @@
 			$("#menu1").hide();
 			$("#menu2").hide();
 			$("#menu3").hide();
+
+
+			$("#oeuvresbundle_import_submit").click(function(){
+		        $("#importencours").hide();
+			});
 						
 			</script>
 {% endblock %}

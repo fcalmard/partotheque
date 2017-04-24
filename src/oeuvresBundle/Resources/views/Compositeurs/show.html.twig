@@ -16,9 +16,13 @@
 		
 
 				    <tr class="ligneshow" >
-		                <th>Nom</th>
+		                <th class='ckslabel'>Nom</th>
 		                <td>{{ entity.nom }}</td>
 		            </tr>
+				    <tr class="ligneshow" >
+		                <th>Nom compl</th>
+		                <td>{{ entity.nomsec }}</td>
+		            </tr>		            
 				    <tr class="ligneshow" >
 		                <th>Prenom</th>
 		                <td>{{ entity.prenom }}</td>
@@ -124,10 +128,18 @@
 				</td>				
 				
 				<td class="tdtblactionsbdp">
+		
+				    
+    	                        <a href="{{ path('oeuvres_compo', { 'compoid': entity.id }) }}">
+    	                        	<img alt="Oeuvres" src="/web/images/music2.png">
+    	                        </a>				    
+				</td>
+				
+				<td class="tdtblactionsbdp">
 				    <a href="{{ path('compositeurs_confim_delete', { 'id': entity.id }) }}">
 			             <img alt="Désactiver" src="/web/css/images/desactiver.png" width="64px" height="64px" >
 				    </a>			
-				</td>
+				</td>				
 				
 												
 				<td style="background-color:beige; " >

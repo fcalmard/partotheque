@@ -73,3 +73,7 @@ homepage:
 oeuvres_liste:
     path:     /oeuvres/liste
     defaults: { _controller: oeuvresBundle:Oeuvres:index }
+oeuvres_tessitures:
+    resource: "@oeuvresBundle/Resources/config/routing/tessitures.php"
+
+    

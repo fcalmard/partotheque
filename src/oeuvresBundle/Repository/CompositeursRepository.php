@@ -25,12 +25,13 @@ class CompositeursRepository extends EntityRepository
 					t.active,
 					t.prenom,
 					t.nom,
+					t.nomsec,
 					t.nationalite,
 					t.datenaiss,
 					t.datedeces,
 					t.datecreateAt
 					FROM oeuvresBundle:Compositeurs t
-					WHERE t.active=1 order by t.nom,t.prenom'
+					WHERE t.active=1 order by t.nom asc,t.nomsec asc,t.prenom asc'
 			);
 			
 			try {
@@ -129,8 +130,51 @@ class CompositeursRepository extends EntityRepository
 	
 	/**
 	 * 
+	 * @param integer $id
+	 * @return string
 	 */
-	public function insertionCompositeur($sNom,$sPrenom)
+	public function rechercheNomCompositeur($id)
+	{
+		$sNomCompositeur='';
+		
+		
+		$sql="SELECT
+				t.id,t.nom,t.nomsec,t.prenom from oeuvresBundle:Compositeurs t
+				WHERE t.id = ".$id;
+		
+	
+		$query = $this->getEntityManager()
+		->createQuery(
+				$sql
+				);
+		
+		try {
+			$aIds=$query->getResult();
+						
+			if(is_array($aIds) && count($aIds)>0)
+			{
+				foreach ($aIds as $kid=>$ocompo)
+				{
+					$sNomCompositeur=$ocompo['nom'];
+				}
+			}
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			$sNomCompositeur='';
+		}
+		
+		//die('resultat recherche '.$sNomCompositeur);
+		
+		return  $sNomCompositeur;
+	}
+	
+	/**
+	 * 
+	 * @param string $sNom
+	 * @param string $sPrenom
+	 * @param string $sNomSec
+	 * @return integer
+	 */
+	public function insertionCompositeur($sNom,$sPrenom,$sNomSec)
 	{
 
 		$idcree=0;
@@ -138,7 +182,7 @@ class CompositeursRepository extends EntityRepository
 		$conn=$this->getEntityManager()->getConnection();
 		
 		
-		$dataArray=array('nom'=>$sNom,'prenom'=>$sPrenom,'active'=>1);
+		$dataArray=array('nom'=>$sNom,'prenom'=>$sPrenom,'nomsec'=>$sNomSec,'active'=>1);
 				
 		try {
 			$bOk=$conn->insert('Compositeurs', $dataArray);
@@ -152,4 +196,44 @@ class CompositeursRepository extends EntityRepository
 		return $idcree;
 		
 	}
+	
+	/**
+	 * ChargeListeSelectFiltre
+	 * @return array|NULL
+	 */
+	public function ChargeListeSelectFiltre()
+	{
+		
+		$query = $this->getEntityManager()
+		->createQuery(
+				'SELECT
+					t.id,
+					t.nom,
+					t.nomsec,
+					t.prenom					
+					FROM oeuvresBundle:Compositeurs t
+					WHERE t.active=1 order by t.nom,t.prenom'
+				);
+		
+		try {
+			$aCompositeurs= $query->getArrayResult();
+			
+			//$aCompositeurs[]=array('id'=>0,'nom'=>'ANONYME','prenom'=>'');
+			
+			//$aCompositeurs=sort($aCompositeurs,SORT_ASC);
+			
+			
+			
+			return $aCompositeurs;
+			
+			//return $query->getResult();
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			return null;
+		}
+		
+	}
+	
+
+	
+	
 }

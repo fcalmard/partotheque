@@ -18,7 +18,8 @@ class PartitionsType extends AbstractType
             ->add('libelle')
         	->add('active', 'checkbox',
         			array('label'=>'Activée','required'=>false))        	
-            ->add('duree')
+        	->add('reference','text',array('label'=>'Dossier','required'=>true))
+        	->add('duree')
             ->add('historique','textarea',array('label'=>'Historique','required'=>false))
             
             ->add('oeuvre_id','hidden')

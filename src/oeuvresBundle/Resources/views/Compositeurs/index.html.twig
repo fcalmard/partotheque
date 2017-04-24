@@ -18,13 +18,22 @@
 	                <th>Né le </th>
 	                <th>Décédé le</th>
 	                <th>Saisie le</th>
-	                <th>Actions</th>
+	                <th>Modification</th>
+	                <th>Oeuvres</th>
 	            </tr>
 	        </thead>
 	        <tbody>
 	        {% for entity in entities %}
 	            <tr>
-	                <td><a href="{{ path('compositeurs_show', { 'id': entity.id }) }}">{{ entity.nom }}</a></td>
+	                
+	                <td><a href="{{ path('compositeurs_show', { 'id': entity.id }) }}">{{ entity.nom }}
+    	                {% if  entity.nomsec!='' %}
+    	                 (&nbsp;&nbsp;{{ entity.nomsec }}&nbsp;&nbsp;)
+    	                {% endif %}
+    	                </a>
+    	                
+	                </td>
+	                
 	                <td>{{ entity.prenom }}</td>
 	                <td>{{ entity.nationalite }}</td>
 	                <td>{{ entity.datenaiss }}</td>
@@ -39,6 +48,19 @@
 	                    </li>
 	                </ul>
 	                </td>
+	                <!-- lien vers liste des oeuvres oeuvres_compo -->
+	                
+	                <td>
+    	                <ul>
+    	                    <li>
+    	                        <a href="{{ path('oeuvres_compo', { 'compoid': entity.id }) }}">
+    	                        	<img alt="Oeuvres" src="/web/images/music2.png">
+    	                        </a>
+    	                    </li>
+    	                </ul>
+	                </td>
+	                
+	                
 	            </tr>
 	        {% endfor %}
 	        </tbody>

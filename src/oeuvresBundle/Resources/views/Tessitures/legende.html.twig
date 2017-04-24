@@ -1,0 +1,24 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+
+    <h1>Tessitures de voix</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Codetessiture</th>
+                <th>Libelletessiture</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td>{{ entity.CodeTessiture }}</td>
+                <td>{{ entity.libelleTessiture }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% endblock %}

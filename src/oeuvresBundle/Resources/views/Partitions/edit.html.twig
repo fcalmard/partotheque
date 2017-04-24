@@ -5,8 +5,17 @@
 	    <div class="titrelisteetform">
     		<h1>Saisie Partition 
 				{% if oeuvre is defined %}
-		    		( {{ oeuvre }} ) 
+		    		( {{ oeuvre }} ,
+		    		
+		    		{% if dossieroeuvre is defined %}
+		    			Dossier : {{ dossieroeuvre }} 
+        			{% else %}
+        				dossieroeuvre ?
+        			{% endif %}
+        				
+		    		) 
 				{% endif %}
+				
 		    </h1>		    		
     	</h1>
     
@@ -17,11 +26,7 @@
 
 			{{ form_start(edit_form) }}
 
-			{{ form_widget(edit_form) }}
-			
-			{{ form_label(edit_form.historique, 'Commentaires') }}
-			{{ form_widget(edit_form.historique) }}
-			{{ form_errors(edit_form.historique) }}									
+			{{ form_widget(edit_form) }}							
 
 			{{ form_end(edit_form) }}
 
@@ -84,14 +89,43 @@
 				obj.value={{ oeuvre_id }}
 		       }
 	       
+	       var obj = document.getElementById("oeuvresbundle_partitions_reference")
+	       
+	       if(obj)
+	       {
+
+
+				{% if entity.id!='' %}
+                	
+				
+		    	   {% else %}
+		    	   {% if dossieroeuvre is defined %}
+					obj.value={{ dossieroeuvre }}
+		    	   
+		        {% endif %}
+		    	   {% endif %}
+		    	   
+	       }
+	   
 	       
 	       
-	   {% endif %}
+	    {% else %}
+	    <!-- creation -->
+	       var obj = document.getElementById("oeuvresbundle_partitions_reference")
+	       
+	       if(obj)
+	       {
+	    	   {% if dossieroeuvre is defined %}
+				obj.value={{ dossieroeuvre }}
+		    	   
+	    	   {% endif %}
+	       }
+	   
+	    {% endif %}
 
 
 	   
-
-						
+	   
        </script>
 {% endblock %}
 

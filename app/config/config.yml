@@ -28,8 +28,10 @@ framework:
     fragments:       ~
     http_method_override: true
 
-# Twig Configuration
+# Twig Configuration legendetessituresServiceClass mailer
 twig:
+    globals:
+        legendetessitures: ""
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     form:
@@ -82,6 +84,8 @@ services:
                class: oeuvresBundle\Services\mailerService
         message_Service:
                class: oeuvresBundle\Services\messageService
+        legendetessituresService:
+               class: oeuvresBundle\Services\legendetessituresService   
 
 # Swiftmailer Configuration
 swiftmailer:

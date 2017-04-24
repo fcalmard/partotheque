@@ -18,6 +18,7 @@ use Doctrine\Instantiator\Exception\ExceptionInterface;
 use oeuvresBundle\Entity\Oeuvres;
 use oeuvresBundle\Entity\Langues;
 use oeuvresBundle\Entity\langues_oeuvres;
+//use Symfony\Component\Translation\Tests\String;
 
 /*
  (1, 1, 'Musique sacrée', '2016-04-27 00:00:00'),
@@ -87,12 +88,6 @@ class OeuvresRepository extends EntityRepository
 			
 			foreach ($aFiltre as $vf)
 			{
-				//echo "<br/> VF <br/> >";
-				//var_dump($vf);
-				
-
-				
-				//compositeurId
 				
 				foreach ($vf as $kvalf=>$valf)
 				{
@@ -104,25 +99,28 @@ class OeuvresRepository extends EntityRepository
 						case 'titreOeuvre':
 							if(trim($valf)!="")
 							{
-								//$sWhere=($sWhere!="") ? " and ".$sWhere : $sWhere;
 								$sWhere=($sWhere!="") ? $sWhere." and " : $sWhere;
 								
 								$sWhere.="o.".$kvalf;
 								$sWhere.=" like '%".$valf."%'";
 							}
-							//echo "libelle* >  valf >";
-							//echo $valf;
-							//echo "<br/>1 $kvalf <br/>".$sWhere."<br/>";
-											
+
 							break;
 						case 'compositeur_id':
-							if(trim($valf)!="")
+							
+							/**
+							 * 
+							 * @var boolean $btest
+							 */
+							$btest=abs($valf)>0;
+							if($btest==true)
 							{
 								$sWhere=($sWhere!="") ? $sWhere." and " : $sWhere;
 								$sWhere.="c.id";
 								$sWhere.="=".$valf;
-								//echo "<br/> $kvalf <br/>".$sWhere."<br/>";								
+																
 							}
+							
 							break;
 							
 						case 'nomcompositeur':
@@ -130,9 +128,6 @@ class OeuvresRepository extends EntityRepository
 							{
 								if(!is_null($eml))
 								{
-									//echo "<br/>nomcompositeur >$valf<";
-														
-									//die("101");
 									/*
 									 * recherche des id des compositeur ayant le nom recherché
 									 */
@@ -146,7 +141,7 @@ class OeuvresRepository extends EntityRepository
 									}
 								}else
 								{
-									die("115 EM NULL");
+									//die("115 EM NULL");
 								}
 
 							}
@@ -183,20 +178,21 @@ class OeuvresRepository extends EntityRepository
 										//echo "<br/>".$sWhere;
 																				
 									}
-									
 								}
-
-								
 							}
 							break;
 						
 						case 'genre_id':
 							if(trim($valf)!="")
 							{
-								$sWhere=($sWhere!="") ? $sWhere." and " : $sWhere;
-								$sWhere.="g.id";
-								$sWhere.="=".$valf;
-								//echo "<br/> $kvalf <br/>".$sWhere."<br/>";								
+								$btest=abs($valf)>0;
+								if($btest==true)
+								{
+									$sWhere=($sWhere!="") ? $sWhere." and " : $sWhere;
+									$sWhere.="g.id";
+									$sWhere.="=".$valf;
+								}
+								
 							}
 							break;						
 						case 'tps_litur_id':
@@ -231,11 +227,7 @@ class OeuvresRepository extends EntityRepository
 								$slstval.=($slstval!="") ? ")" : "";
 								
 								$sWhere.=($slstval!='') ? $slstval : "";
-								
-								//echo "<br/> slstval >".$slstval."<br/>";
-								//echo "<br/> sWhere >".$sWhere."<br/>";								
-								//die("234");
-								
+																
 							}
 
 							//die("FILTRE SUR tps_litur_id");
@@ -244,19 +236,26 @@ class OeuvresRepository extends EntityRepository
 						case 'fonction_id':
 							if(trim($valf)!="")
 							{
-								$sWhere=($sWhere!="") ? $sWhere." and " : $sWhere;
-								$sWhere.="f.id";
-								$sWhere.="=".$valf;
-								//echo "<br/> $kvalf <br/>".$sWhere."<br/>";
+								$btest=abs($valf)>0;
+								if($btest==true)
+								{
+									$sWhere=($sWhere!="") ? $sWhere." and " : $sWhere;
+									$sWhere.="f.id";
+									$sWhere.="=".$valf;
+									
+								}
 							}
 							break;
 						case 'voix_id':
 							if(trim($valf)!="")
 							{
-								$sWhere=($sWhere!="") ? $sWhere." and " : $sWhere;
-								$sWhere.="v.id";
-								$sWhere.="=".$valf;
-								//echo "<br/> $kvalf <br/>".$sWhere."<br/>";
+								$btest=abs($valf)>0;
+								if($btest==true)
+								{
+									$sWhere=($sWhere!="") ? $sWhere." and " : $sWhere;
+									$sWhere.="v.id";
+									$sWhere.="=".$valf;
+								}
 							}
 							break;
 						default:
@@ -264,25 +263,16 @@ class OeuvresRepository extends EntityRepository
 					}
 						
 				}
-				/*
-				if($kf!="")
-				{
-						
-					$sWhere.=$kf;
-					
-					$sWhere.="'".$vf."'";
-					
-						
-				}
-				*/
-			}
+
+				
+			}// fin parcours des filtres
 			
 				
 			$sWhere=($sWhere!="") ? " and ".$sWhere ."" : $sWhere;
 					
 			//echo "<br/>283 fin <br/>".$sWhere."<br/>"; 
 				
-			//die("285");
+			//die("288");
 		
 		}
 		
@@ -396,6 +386,7 @@ class OeuvresRepository extends EntityRepository
 				foreach ($a as $oeuvre)
 				{
 					$aoeuvre=array("id"=>$oeuvre['id']
+							,"idcompositeur"=>$oeuvre['idcompositeur']
 							,"compositeur"=>$oeuvre['compositeur']
 							,"titreOeuvre"=>$oeuvre['titreOeuvre']
 							,"traductiontitreOeuvre"=>$oeuvre['traductiontitreOeuvre']
@@ -414,9 +405,6 @@ class OeuvresRepository extends EntityRepository
 							,"voix"=>$oeuvre['voix']
 							,"reference"=>$oeuvre['reference']
 							,"cote"=>$oeuvre['cote']
-								
-							,"cote"=>$oeuvre['cote']
-								
 							
 							);
 					
@@ -446,6 +434,7 @@ class OeuvresRepository extends EntityRepository
 									->createQuery(
 											'SELECT DISTINCT
 											sm.id,
+											sm.reference,
 											sm.libelle,
 											sm.active,
 											sm.duree,
@@ -475,6 +464,7 @@ class OeuvresRepository extends EntityRepository
 													,"voix"=>''
 													,"reference"=>''
 													,"cote"=>''
+													,"dossierpartition"=>$oPartition['reference']
 													,"partitionid"=>$oPartition['id']
 											
 											);
@@ -658,13 +648,22 @@ LIMIT 0 , 30
 		return $sPathCible;
 	}
 	
+
 	/**
 	 * 
-	 * @param boolean $bReInitBase
+	 * @param unknown $sFichier
+	 * @param unknown $bReInitBase
+	 * @param unknown $bSimulation
+	 * @param unknown $sDossierDebut
+	 * @param unknown $sDossierFin
+	 * @return boolean
+	 * 
 	 */
 	public function Import($sFichier,$bReInitBase,$bSimulation,$sDossierDebut,$sDossierFin)
 	{
 
+		$itrace=fopen('trace', 'wr');
+		
 		//echo ("IMPORT EN COURS...... >".$sFichier);
 		
 		$eml=$this->getEntityManager();
@@ -677,6 +676,8 @@ LIMIT 0 , 30
 		{
 	
 			echo "<div id='iddivimport' >";
+
+			//die($sFichier);
 			/*
 				
 			echo "<div id='idimageimport'>";
@@ -693,15 +694,24 @@ LIMIT 0 , 30
 			/*Si on a réussi à ouvrir le fichier*/
 			if ($handle)
 			{
-				/*Tant que l'on est pas à la fin du fichier*/
 				while (!feof($handle))
 				{
-					/*On lit la ligne courante*/
+					/**
+					 * On lit la ligne courante
+					 * @var String $buffer
+					 */
+					
 					$buffer = fgets($handle);
 					$cpt++;
 					
 					//echo "<br/>".$cpt;//." >".$buffer;
-					
+					/**
+					 * on transforme la ligne en tableau
+					 * 
+					 * sepateur tabulation
+					 * 
+					 * @var array $aLigne
+					 */
 					$aLigne=explode(chr(9), $buffer);
 					
 					
@@ -714,7 +724,42 @@ LIMIT 0 , 30
 							$cptcol++;
 													
 							$vcol=trim($vcol);
-							$vcol=$this->epure($vcol);
+							
+							//$vcol=$this->epure($vcol);
+							
+							switch ($cptcol)
+							{
+								case 3://numero de dossier COLLONE 3
+									//echo "<br/>726 DOSSIER >".$vcol." <br/>";
+									break;
+								case 9://tessiture voix COLONNE I
+									$vcol=$this->epure($vcol);
+									
+									break;
+								
+								default:
+									$vcol=$this->epure($vcol);
+									
+									$vcol=strtoupper($vcol);//MAJUSCULES
+									
+							}
+							if ($cptcol!=9)//<>
+							{
+								
+								
+							}else
+							{
+								
+								//$vcol=str_ireplace(chr(47), " ", $texte);
+								/*
+								 * remplacer ESPACE PAR /
+								 */
+
+								
+								//echo "<br/> tessiture voix >".$vcol." <br/>";
+								
+							}
+							
 								
 							//$vcol=htmlentities($vcol,ENT_NOQUOTES);
 							//$vcol=htmlentities($vcol,ENT_COMPAT);
@@ -723,9 +768,10 @@ LIMIT 0 , 30
 							
 							//$vcol=str_replace($vcol,"'"," ");
 							
-							//echo "<br/>659 vcol >".$cptcol." ".$vcol." <br/>";
+							//echo "<br/>754 vcol >".$cptcol." ".$vcol." <br/>";
 								
-							
+							$sRecherche1="DE COURREGES";
+							$iRech=-1;
 							switch ($cptcol)
 							{
 								case 1:
@@ -737,18 +783,24 @@ LIMIT 0 , 30
 									 */
 									
 									$scompositeur=$vcol;
-															
+																								
 									$vcol=$this->epure($vcol);
 									$vcol=strtoupper($vcol);
-								
-									//$vcol=($vcol=="ANONYME") ? "" : $vcol;
-										
+																
 									$aColComHarmon=array();
 									$harmonisateur="";
 										
 									$snomh="";
 									$spreh="";
 									
+									if($vcol=="DE COURREGES")
+									{
+										//die("787 DE COURREGES TROUVE");
+										
+										$imp->setColB($vcol);//compositeur
+										$imp->setColBP("");//compositeur prenom
+										
+									}
 									if($vcol!="")
 									{
 										//echo "<br/><br/> vcol >".$cptcol." >".$vcol." <br/>";
@@ -764,6 +816,13 @@ LIMIT 0 , 30
 										$imp->setColB($vcol);//compositeur
 										$imp->setColBP("");//compositeur prenom
 										
+										$iRech=strpos(trim(strtoupper($vcol)), trim(strtoupper($sRecherche1)));
+										if($iRech>-1)
+										{
+											//
+											//echo "<br/>".$vcol.'<';
+											//die("813 .........TROUVE");
+										}
 										//echo "<br/>700 vcol >".$cptcol." ".$vcol." <br/>";
 										
 										$imp->setColHar("");
@@ -838,12 +897,6 @@ LIMIT 0 , 30
 															}
 														}
 													}
-													/*
-													if($snomh=="BOLLER")
-													{
-											
-													}*/
-													//
 
 													
 													$baa=true;
@@ -860,42 +913,44 @@ LIMIT 0 , 30
 										}
 										
 										/**/
-										
-										$aColCom=explode(" ", $vcol);
-										if(is_array($aColCom))
+										if($iRech<0)
 										{
-											/*if($baa)
+											$aColCom=explode(" ", $vcol);
+											if(is_array($aColCom))
 											{
-												echo "<br/>  778, auteur >".$vcol."< <br/>";
-												
-												var_dump($aColCom);
-												
-											}*/
-												
-											//echo "<br/> nb=".count($aColCom)."<br/>";
-												
-												
-											if(count($aColCom)>1)
-											{
-												$imp->setColB($aColCom[0]);	
-												
-												$sprenom=$aColCom[1];
-												
-												if(count($aColCom)>2){
-													$sprenom.=" ".$aColCom[2];
-													if(count($aColCom)>3){
-														$sprenom.=" ".$aColCom[3];
+												/*if($baa)
+												{
+													echo "<br/>  778, auteur >".$vcol."< <br/>";
+													
+													var_dump($aColCom);
+													
+												}*/
+													
+												//echo "<br/> nb=".count($aColCom)."<br/>";
+													
+													
+												if(count($aColCom)>1)
+												{
+													$imp->setColB($aColCom[0]);	
+													
+													$sprenom=$aColCom[1];
+													
+													if(count($aColCom)>2){
+														$sprenom.=" ".$aColCom[2];
+														if(count($aColCom)>3){
+															$sprenom.=" ".$aColCom[3];
+														}
 													}
+													
+													$imp->setColBP($sprenom);
 												}
-												
-												$imp->setColBP($sprenom);
+													
+											
+												//var_dump($imp);
+													
+												//die("618");
+											
 											}
-												
-										
-											//var_dump($imp);
-												
-											//die("618");
-										
 										}
 
 										//echo "<br/><br/>805 nom >".$snomh;
@@ -907,10 +962,10 @@ LIMIT 0 , 30
 										
 										if(trim(strtoupper($nomcompo))=="ANONYME" && $snomh=="PETERS")
 										{
-											echo "<br/>  876, harmonisateur >".$harmonisateur."<";
+											//echo "<br/>  876, harmonisateur >".$harmonisateur."<";
 												
-											echo "<br/>878 nom >".$snomh;
-											echo "<br/>879 prenom >".$spreh;
+											//echo "<br/>878 nom >".$snomh;
+											//echo "<br/>879 prenom >".$spreh;
 										}
 										
 									}
@@ -918,7 +973,11 @@ LIMIT 0 , 30
 									break;								
 								case 3://$sDossierFin
 									
-									//echo "<br/> vcol >".$cptcol." >".$vcol."< <br/>";
+									$iRech=strpos($vcol, trim(strtoupper($sRecherche1)));
+									
+									$sTitre=$imp->getColA();//titre
+									
+									//echo "<br/>959 NUMERO DE DOSSIER  vcol >".$cptcol." >".$vcol."< ".$sTitre."<";
 														
 									/*if(trim($vcol)=="ec")
 									{
@@ -940,36 +999,42 @@ LIMIT 0 , 30
 									$imp->setColF($vcol);//TempsLiturgiques
 									break;								
 								case 7:
-									$imp->setColG($vcol);//FONCTIONS
+									$imp->setColG($vcol);//FONCTIONS TempsLiturgiques
 									break;
 								case 8:
-									$imp->setColH($vcol);//COTE
+									$imp->setColH($vcol);//...................... COTE
 									break;
-								case 9:
+								case 9:/* ................COLONNE I ............tessiture	 VOIX */
+									
 									$imp->setColI($vcol);//VOIX
+									//echo "<br/> tessiture >".$vcol."<";
 									break;								
-								case 10:
+								case 10:/* 
+											colonne J O de Oui dans ce cas l’ouvre est en CANON . 
+											*/
 									$imp->setColJ($vcol);
 									break;
-								case 11:
+								case 11:/* colonne K MUSIQUE SACREE */
 									$imp->setColK($vcol);//GENRE si valeur dans cette colonne type musique = SACREE
 									break;
-								case 12:
+								case 12/* colonne L MUSIQUE PROFANE */:
 									$imp->setColL($vcol);//GENRE si valeur dans cette colonne type musique = PROFANE
 									break;								
-								case 13:
-									$imp->setColM($vcol);//SIECLE
+								case 13:/* colonne */
+									//$imp->setColM($vcol);//SIECLE
 									break;
-								case 14://DOSSIER BIS
+								case 14:/* colonne N ..................SIECLE */
+									$imp->setColM($vcol);//SIECLE									
+									//echo "<br/> SIECLE >$vcol <<br/>";
 									break;
 								case 15:
 									$imp->setColO($vcol);//ACCOMPAGNEMENT
 									break;
 								case 16:
-									$imp->setColP($vcol);//COMMENTAIRES
+									//$imp->setColP($vcol);//COMMENTAIRES
 									break;
 								case 17:
-									$imp->setColQ($vcol);//COMMENTAIRES
+									//$imp->setColQ($vcol);//COMMENTAIRES
 									break;
 								default:
 									break;
@@ -977,8 +1042,18 @@ LIMIT 0 , 30
 							}
 													
 						}
+						
+						//echo "<br/> RES >".$iRech;
+						if($iRech>0)
+						{
+							//var_dump($imp);
+							
+							//echo "<br/> COLA >".$imp->getColA()."<";
+							//echo "<br/> COLB >".$imp->getColB()."<";
+							
+							//die('1025');
+						}
 					
-						//var_dump($imp);
 						//die("671");
 
 						$aLignesImport[]=$imp;
@@ -986,7 +1061,10 @@ LIMIT 0 , 30
 										
 				}
 				
-				/*On ferme le fichier*/
+				/**
+				 * On ferme le fichier
+				 * */
+				
 				fclose($handle);
 			
 			}
@@ -997,7 +1075,7 @@ LIMIT 0 , 30
 			//echo "aLignesImport ".var_dump($aLignesImport);
 				
 			
-//die('672');
+			//echo ('<br/>1057');
 			
 			/**
 			 * import dans la BD
@@ -1030,7 +1108,6 @@ LIMIT 0 , 30
 					*/
 				
 					//die(" resultat sql init".($bQok) ? "sql ok" : "sql pas ok".$sSql);
-								
 					
 					$sSql="delete from oeuvresBundle:Oeuvres";
 					$query=$this->getEntityManager()->createQuery($sSql);
@@ -1046,10 +1123,21 @@ LIMIT 0 , 30
 						
 					}							
 
+					/**
+					 * tessitures
+					 */
+					//echo ('<br/>1108');
+					
 					try {
 						$sSql="delete from oeuvresBundle:Voix";
 						$query=$this->getEntityManager()->createQuery($sSql);
 						$bQok=$query->execute();
+						if($bQok)
+						{
+						}
+						//echo "<br/> INITIALISATION VOIX >".$sSql."<";
+						//var_dump($bQok);
+						//die('1119');
 					}catch (\Exception $e)
 					{
 						die("pb Voix ".$sSql." ".$e->getMessage());
@@ -1138,7 +1226,7 @@ LIMIT 0 , 30
 				}
 			}
 			
-			echo "<br/> PARCOURS DES LIGNES LUES <br/><br/>";
+			//echo "<br/>1208	-------- PARCOURS DES LIGNES LUES <br/><br/>";
 			
 			/**
 			 * par cours des lignes
@@ -1150,16 +1238,32 @@ LIMIT 0 , 30
 				
 				$valf=trim($aLigne->getColA());
 				
-				//echo "<br/>".$valf.";"."0"."<br/>";
+				//echo "<br/>".$valf."<<br/>";
+				
+				//var_dump($aLigne);
+							
+				$valf=($valf=='*') ? '':$valf;
+				
+				$valfcom=strtr($valf, 1, 1);
+				$valfcom=trim($valfcom);
+				//echo "<br/>\valfcom".$valfcom."<br/>";
+				
+				$valf=($valfcom=='*') ? '':$valf;
+				
+				//echo "<br/><br/>1232 >".$valf."< dossier en cours >".$aLigne->getColC()."<";
 				
 				if($valf!='')//TITRE
 				{
 					$nom=trim($aLigne->getColB());
 					$prenom=trim($aLigne->getColBP());
 					
-					$harmonisateur="";//trim($aLigne->getColHar());
-						
+					//echo "<br/> COMPOSITEUR >".$nom."< PRENOM >".$prenom."<<br/>";
+					
+					$harmonisateur="";
+					
 					$baTraiter=1;						
+					
+					//echo "<br/> 1245 ddebut >".$sDossierDebut."< fin >".$sDossierFin."< COLONNE C >".$aLigne->getColC();
 					
 					if($sDossierDebut!='' && is_numeric($sDossierDebut))
 					{
@@ -1195,25 +1299,36 @@ LIMIT 0 , 30
 					if($baTraiter==1)
 					{
 					
-						//echo "<br/>  DOSSIER >".$aLigne->getColC()."< DEBUT >".$sDossierDebut." FIN >".$sDossierFin."<";
+						//echo "<br/> 1281 DOSSIER >".$aLigne->getColC()."< DEBUT >".$sDossierDebut." FIN >".$sDossierFin."<";
 						
 					//if($nom!='')
 					//{
 						/*
 						 * tester Anonyme et ""
 						 */
+					
+						$bCanon=0;
+					
 						$banonyme=false;
 						$banonymebd=false;
 						$nom=strtoupper($nom);
+						$prenom='';
 						
 						$nomcompo=$nom;
 						
-						$an=explode("/", $nom);
+						$an=null;
+					
+						$i=strpos($nom, "/");
+						if($i>0)
+						{
+							$an=explode("/", $nom);
+							
+						}
 						
 						if(is_array($an))
 						{
 							
-							//echo "<br/> 1182 <br/>";
+							//echo "<br> 1283 <br>";
 							//var_dump($an);
 							/*if($baa)
 							 {
@@ -1226,34 +1341,85 @@ LIMIT 0 , 30
 							//echo "<br/>1116 nb=".count($aColCom)."<br/>";
 						
 							$nom=$an[0];
-							$nomcompo=$nom;
+							$snonvide=is_null($nom) ? 'nomNULL ' : 'nom NON NULL';
+							$snonvide2=($nom=='') ? 'nomESTVIDE ' : 'nomNESTPASVIDE';
 							
+							//echo '<br/>1308 NOM>'.trim($nom).'< PRENOM >'.$prenom.'<'.$snonvide."< >".$snonvide2.'<';
+							
+							$nomcompo=$nom;
+														
 							if(count($an)>1)
 							{
-								$nom=$an[0];				
-								//echo "<br/> 1201 \$nom >".$nom."< <br/>";
+								$nom=trim($an[0]);				
+								//echo "<br>1308 \$nom >".$nom."< <br>";
 								
-								$harmonisateur=$an[1];
-								//echo "<br/> 1201 \$harmonisateur >".$harmonisateur."<";
-								
-								//$anh=explode(" ", $harmonisateur);								
+								$harmonisateur=trim(strtoupper($an[1]));
+								//echo "<br>1309 \$harmonisateur >".$harmonisateur."<";
+
+								$prenom='';//$an[1];
+								$ancomposit=explode(" ", $nom);
+								if(count($ancomposit)>1)
+								{
+									//echo '<br>1315--- ancomposit <br>';
+									//var_dump($ancomposit);
+									$prenom=$ancomposit[1];
+									$sprenom2=trim(strtoupper($prenom));
+									
+									
+								}
+									
+								//$anh=explode(" ", $harmonisateur);
 								//var_dump($anh);
 								
-								$prenom=$an[1];
 								//echo "<br/>*********** 1202 \$prenom >".$prenom."<";
 								
-								if(count($an)>2){
-									$prenom.=" ".$an[2];
-									if(count($an)>3){
-										$prenom.=" ".$an[3];
-									}
-								}						
-								//echo "<br/> 1209 \$prenom >".$prenom."<";
+								//echo '<br>1344 NOM>'.trim($nom).'< PRENOM >'.$prenom.'<';
 								
+								if(count($an)>2){
+									if($prenom=='')
+									{
+										$prenom.=" ".$an[2];
+										if(count($an)>3){
+											$prenom.=" ".$an[3];
+											$sprenom2=trim(strtoupper($prenom));
+										}
+									}
+
+								}						
+
+								$ancomp=explode(" ", $nom);
+								if($harmonisateur!='')
+								{
+									$ancomp=explode(" ", $harmonisateur);
+									
+								}
+								
+								
+								if(is_array($ancomp))
+								{
+									//echo '<br>1332 ancomp <br>'.count($ancomp).'>';
+									//var_dump($ancomp);
+									$nomhar=trim(strtoupper($ancomp[0]));
+									
+									$prenomhar='';
+									if(count($ancomp)>1)
+									{
+										//echo '<br>1360 NOMHAR >'.trim($nomhar).'< PRENOMHAR >'.$prenomhar.'<';
+										$prenomhar=trim(strtoupper($ancomp[1]));
+										
+									}
+								}
+								//echo '<br>1365 NOMHAR >'.trim($nomhar).'< PRENOMHAR >'.$prenomhar.'<';
+								
+								/*
 								if(trim(strtoupper($nom))!=="ANONYME")
 								{
 									$harmonisateur=$nom;
 										
+								}*/
+								if (trim($nomhar!=''))
+								{
+									
 								}
 								
 								
@@ -1262,6 +1428,13 @@ LIMIT 0 , 30
 							//die("618");						
 						}
 						$nom=strtoupper($nom);
+						$snonvide=is_null($nom) ? 'nomNULL ' : 'nom NON NULL';
+						$snonvide2=($nom=='') ? 'nomESTVIDE ' : 'nomNESTPASVIDE';
+						
+						$sprenom2=trim(strtoupper($prenom));
+						
+						
+						//echo '<br>1388 NOM>'.trim($nom).'< PRENOM >'.$sprenom2.'<'.$snonvide."< >".$snonvide2.'<';
 						
 						//echo "<br/> 1224 COMPOSITEUR >".$nomcompo."<";
 						
@@ -1276,15 +1449,32 @@ LIMIT 0 , 30
 							$nom=strtoupper($nom);
 							//$harmonisateur=$nom;
 											
-//echo "<br/>1138 NOM >".$nom."<";							
+							//COURREGESecho "<br/>1310 NOM >".$nom."<";
+							
 							if(is_array($an))
 							{						
-								$nom=$an[0];					
+								$nom=$an[0];
 																
 								if(count($an)>1)
 								{
 									$nom=$an[0];
-									$prenom=$an[1];
+									/** traitement cas
+									 * DE	COURREGES
+										DE	KLERK
+										DE	LA RUE
+										DE	LALANDE
+										DE	MARZI BEPI
+										DE	MAUCOURT
+										DE	RANSE
+
+									 */
+									if(trim(strtoupper($nom))=='DE')
+									{
+										$nom.=' '.$an[1];
+									}else {
+										$prenom=$an[1];
+										
+									}
 									if(count($an)>2){
 										$prenom.=" ".$an[2];
 										if(count($an)>3){
@@ -1315,7 +1505,51 @@ LIMIT 0 , 30
 						
 						$nom=ucfirst(trim($nom));
 						$idcompo=0;
+						$sNomsec='';
 						
+						$snonvide=is_null($nom) ? 'nomNULL ' : 'nom NON NULL';
+						$snonvide2=($nom=='') ? 'nomESTVIDE ' : 'nomNESTPASVIDE';
+						
+						$bCanon=$imp->getColJ();
+						
+						//echo '<br>.....1412 NOM>'.trim($nom).'< PRENOM >'.$sprenom2.'<'.$snonvide."< >".$snonvide2.'<';
+						
+						/*
+						if($sprenom2=='MESSAGER')
+						{
+							//die($nom.' '.$sprenom2);
+							
+						}
+						if(trim($nom)=='')
+							{
+								switch (trim(strtoupper($sprenom2)))
+							{
+								case 'MESSAGER':
+									die('1431*** >'.$nom.' '.$sprenom2);
+									break;
+								case '';
+								break;
+								case '';
+								break;
+								case '';
+								break;
+								case '';
+								break;
+								case '';
+								break;
+								case '';
+								break;
+								
+							}
+						}
+						
+						if(trim($sprenom2)=='MESSAGER')
+						{
+							die('1451... >'.$nom.' '.$sprenom2);
+							
+						}
+						*/
+							
 						if($banonyme==false && $nom!='')
 						{
 
@@ -1333,7 +1567,7 @@ LIMIT 0 , 30
 								$idcompo= $eml->getRepository('oeuvresBundle:Compositeurs')->rechercheCompositeur($nom,$prenom);
 								if($idcompo==0)
 								{
-									$idcompo=$eml->getRepository('oeuvresBundle:Compositeurs')->insertionCompositeur($nom,$prenom);
+									$idcompo=$eml->getRepository('oeuvresBundle:Compositeurs')->insertionCompositeur($nom,$prenom,$sNomsec);
 									if($idcompo==0)
 									{
 										die("Erreur");
@@ -1346,6 +1580,9 @@ LIMIT 0 , 30
 							
 							}else{
 
+								/**
+								 * renommer VICTORIA/VITTORIA
+								 */
 								
 								if(strtoupper(trim($nom))=="ANONYME")
 								{
@@ -1371,10 +1608,18 @@ LIMIT 0 , 30
 										}
 									}
 								}
+								
+								if(strtoupper(trim($nom))=="VITTORIA")
+								{
+									$sNomsec="VICTORIA";
+								}
+								
+
+
 								$idcompo= $eml->getRepository('oeuvresBundle:Compositeurs')->rechercheCompositeur($nom,$prenom);
 								if($idcompo==0)
 								{
-									$idcompo=$eml->getRepository('oeuvresBundle:Compositeurs')->insertionCompositeur($nom,$prenom);
+									$idcompo=$eml->getRepository('oeuvresBundle:Compositeurs')->insertionCompositeur($nom,$prenom,$sNomsec);
 									if($idcompo==0)
 									{
 										die("Erreur");
@@ -1391,23 +1636,46 @@ LIMIT 0 , 30
 						$idharmo=0;
 						if($harmonisateur!='')
 						{
+							
+							
 							//echo "<br/><br/>1340 harmonisateur >".$harmonisateur."<";							
 							$nomcompo=	$aLigne->getColB();	
 							$prenomcomp=$aLigne->getColBP();
+							
 							$snomh=	$aLigne->getColHar();						
 							$spreh=	$aLigne->getColHarp();							
+							/*if($nomhar!='')
+							{
+								
+							}
+							if($prenomhar!='')
+							{
+							}*/
 							
+							$snomh=$nomhar;
+							
+							$spreh=$prenomhar;
+							
+							//echo '<br>1603 NOMHAR >'.trim($nomhar).'< PRENOMHAR >'.$prenomhar.'<';
+							//echo '<br>1604 NOMHAR >'.trim($snomh).'< PRENOMHAR >'.$spreh.'<';
+							
+							$sNomsec='';
+							if(strtoupper(trim($snomh))=="VITTORIA")//VICTORIA VITTORIA
+							{
+								$sNomsec="VICTORIA";
+							}
 							//echo "<br/>1358 \$nomcompo >".$nomcompo;					
 							//echo "<br/>1359 \$prenomcomp >".$prenomcomp;					
 							//echo "<br/>1360 \$snomh >".$snomh;					
 							//echo "<br/>1361 \$spreh >".$spreh;
 
+							//$idharmo= $eml->getRepository('oeuvresBundle:Compositeurs')->rechercheCompositeur($snomh,$spreh);
 							$idharmo= $eml->getRepository('oeuvresBundle:Compositeurs')->rechercheCompositeur($snomh,$spreh);
-								
+							
 							if($idharmo==0)
 							{
 							
-								$idharmo=$eml->getRepository('oeuvresBundle:Compositeurs')->insertionCompositeur($snomh,$spreh);
+								$idharmo=$eml->getRepository('oeuvresBundle:Compositeurs')->insertionCompositeur($snomh,$spreh,$sNomsec);
 							
 								//echo "<br/>1134 INSERTTION HARMONISATEUR idharmo=".$idharmo." NOM >".$snomh."< PRE >".$spreh."<";
 							
@@ -1441,7 +1709,7 @@ LIMIT 0 , 30
 						$iTypedeMusique=0;//MUSIQUE_SACREE MUSIQUE_PROFANE						
 						
 						$valf=$this->epure($valf);
-						$idoeuvre=$this->rechercheOeuvre($valf);
+						$idoeuvre=$this->rechercheOeuvre($valf,$idcompo);
 						if($idoeuvre==0)
 						{
 							/*
@@ -1460,7 +1728,7 @@ LIMIT 0 , 30
 							//echo "<br/> 1292 ".$valf."<";
 							//echo "<br/> 1293 idcompositeur=".$idcompo." idharmo=".$idharmo;
 								
-							$idoeuvre=$this->insertionOeuvre($valf,$idcompo,$idharmo,$aLigne->getColC(),$banonyme,STATUT_EN_COURS,$aLigne->getColH(),$aLigne->getColM());
+							$idoeuvre=$this->insertionOeuvre($valf,$idcompo,$idharmo,$aLigne->getColC(),$banonyme,STATUT_EN_COURS,$aLigne->getColH(),$aLigne->getColM(),$bCanon);
 							unset($idharmo);
 						}
 						
@@ -1498,17 +1766,150 @@ LIMIT 0 , 30
 							
 							/**
 							 * 
-							 * voix 
+							 * voix tessiture
 							 * */
 							
 							$sLib=$aLigne->getColI();
-							$sLib=trim($sLib);
-							
+							//echo "<br/> 1744 >".$sLib."<";
+							$sLib=trim($sLib);							
 							
 							if($sLib!="")
 							{
-								$sLib=str_ireplace("/"," ", $sLib);
+								//$sLib=str_ireplace("/"," ", $sLib);
+								
+								$sLib=str_ireplace(chr(44),"/", $sLib);			// VIRGULE
+								
+								$sLib=str_ireplace(chr(32), chr(47), $sLib);	//ESPACE par /
+								$sLib=str_ireplace(" ", chr(47), $sLib);		//ESPACE PAR /
+								
+								$sLib=str_ireplace("ET", chr(47), $sLib);		//et PAR /
+								$sLib=str_ireplace("et", chr(47), $sLib);		//ET PAR /
+								
+								$sUnisson="Unisson";
+																
+								switch (trim(strtolower($sLib)))
+								{
+									case "unisson":
+									case "unisso":
+									case "uniss":
+									case "unis":
+									case "uni":
+									case "un":
+									case "u":
+											$sLib=$sUnisson;
+								}
+								//$i=strpos(trim(strtolower($sLib)), $sUnisson);
+								
+								$sLib2=trim(strtolower($sLib));
+								
+								
+								$ique='';
+								$slibtess='';
+								
+								$i=strpos($sLib2, trim(strtolower($sUnisson)));
+								if($i>0)
+								{
+									$aUnis=explode("/", $sLib);
+									
+									if(is_array($aUnis))
+									{
+										//echo "<br/> TESSITURE UNISSION ".$sLib."\n";
+										
+										foreach ($aUnis as $kv=>$svunis)
+										{
+											//echo "<br/>1596 texte >".$kv.'< >'.$svunis."<";
+											
+											switch ($kv)
+											{
+												case 0:
+													$ique=$svunis;
+													//echo "<br/> quantite >".$ique."<";
+													break;
+												case 1:
+													$slibtess=trim(strtoupper($svunis));
+													//echo "<br/>texte tessiture >".$slibtess."<";
+													break;
+												default:
+													
+											}
+
+										}
+										
+										$sUnissontrim=trim(strtoupper($sUnisson));
+
+										//echo "<br/>1614 tessiture >".$slibtess."< >".$sUnissontrim.'<';
+										
+										if($slibtess!='')
+										{
+											//echo "<br/>1619 TESSITURE UNISSION QTE=".$ique;
+											
+											$i=strpos($slibtess, $sUnissontrim);
+											
+											//echo "<br/>1622 TESSITURE UNISSION QTE=".$ique." recherche I=".$i."<";
+											
+											if($i>0)
+											{
+												//echo "<br/>1626 TESSITURE UNISSION QTE=".$ique;
+												
+												$sLib=$sUnisson;
+												
+												if (is_numeric($ique))
+												{
+													
+													if($ique>1)
+													{
+														//$sLib=$sUnisson."+".$sUnisson;
+														for($i=2;$i<=$ique;$i++)
+														{
+															$sLib.="+".$sUnisson;
+															//echo "<br/>1639 \$i >".$i.'<';
+														}
+													}
+												}
+												
+												//echo "<br/>1644 ..........TESSITURE UNISSION ".$sLib."\n";
+												
+											}
+										}
+										
+										
+									}
+								}
+								
+								
+
+								$sLib=str_replace("unisson", $sUnisson, $sLib);
+
 								//$idtpslit= rechercheTempsLiturgique($aLigne->getColF());
+								
+								$aUnis=explode("/", $sLib);
+								$sLib2='';
+								if(is_array($aUnis))
+								{
+									foreach ($aUnis as $vuni)
+									{
+										$svunis=$vuni;
+										
+										switch (trim(strtolower($vuni)))
+										{
+											case "unisson":
+											case "unisso":
+											case "uniss":
+											case "unis":
+											case "uni":
+											case "un":
+											case "u":
+												$svunis=strtoupper($sUnisson);
+										}
+										if(trim($svunis)!='')
+										{											
+											$sLib2.=($sLib2!='') ? '/'.$svunis : $svunis;											
+										}
+									}
+									
+								}
+								
+								//echo "<br/>1675 SLIB >".$sLib."< SLIB2 >".$sLib2.'<';
 								
 								$idvoix= $eml->getRepository('oeuvresBundle:Voix')->rechercheVoix($sLib);
 								
@@ -1520,7 +1921,7 @@ LIMIT 0 , 30
 										
 								}
 							
-								//echo "<br/> fin Voix ...".$sLib." ( ".$idvoix.")";
+								//echo "<br/> fin Tessiture Voix ...>".$sLib." ( ".$idvoix.")";
 								
 							}
 							
@@ -1704,6 +2105,13 @@ LIMIT 0 , 30
 							}
 							
 									
+							/**
+							 * CANON O / N 
+							 */
+							$bCanon=$aLigne->getColJ();
+							
+							/**
+							 * 
 							if($aLigne->getColP()!='')
 							{
 								$scommentaires.=$aLigne->getColP();
@@ -1714,14 +2122,15 @@ LIMIT 0 , 30
 								$scommentaires.=$aLigne->getColQ();
 							}
 							
-							
+														 */
+
 							/**
 							 * maj OEUVRE
 							 * */							
 							
 
 						
-							$eml->getRepository('oeuvresBundle:Oeuvres')->majOeuvre($idoeuvre,$idtpslit,$idvoix,$idfonc,$idgenre,$aIdlangues,$scommentaires);
+							$eml->getRepository('oeuvresBundle:Oeuvres')->majOeuvre($idoeuvre,$idtpslit,$idvoix,$idfonc,$idgenre,$aIdlangues,$scommentaires,$bCanon);
 							
 							//echo "<br/> fin maj oeuvre ...".$sLib." ( ".$idtpslit.")";							
 														
@@ -1760,14 +2169,16 @@ LIMIT 0 , 30
 	 * @param string $sTitre
 	 * @return number
 	 */
-	public function rechercheOeuvre($sTitre)
+	public function rechercheOeuvre($sTitre,$iCompositeur)
 	{
 		$id=0;
 		$s=sprintf("%s",$sTitre);
-	
+		
 		$sql="SELECT
 				t.id from oeuvresBundle:Oeuvres t
 				WHERE t.titreOeuvre = '".$s."'";
+		
+		$sql.=" and t.compositeur_id=$iCompositeur";
 	
 		$query = $this->getEntityManager()
 		->createQuery(
@@ -1797,9 +2208,12 @@ LIMIT 0 , 30
 	/**
 	 *
 	 */
-	public function insertionOeuvre($sTitre,$idcompo,$idhar,$sRef,$banonyme=false,$avancement_id,$sCote,$siecle)
+	public function insertionOeuvre($sTitre,$idcompo,$idhar,$sRef,$banonyme=false,$avancement_id,$sCote,$siecle,$bCanon)
 	{
 
+		$bCanon=($bCanon=='') ? 0 : $bCanon;
+		$bCanon=strval($bCanon);
+		
 		$idcree=0;
 		
 		$sRef=is_null($sRef) ? " " : $sRef;
@@ -1821,8 +2235,7 @@ LIMIT 0 , 30
 		$sCote=substr($sCote, 0,20);
 		
 		$sTitre=$this->epure($sTitre);
-		
-		$dataArray=array('titreOeuvre'=>$sTitre
+				$dataArray=array('titreOeuvre'=>$sTitre
 				,'traductiontitreOeuvre'=>$sTitre
 				,'actif'=>1
 				,'reference'=>$sRef
@@ -1834,7 +2247,8 @@ LIMIT 0 , 30
 				,'tps_litur_id'=>0
 				,'cote'=>$sCote
 				,'siecle'=>$siecle
-		);
+						,'canon'=>$bCanon
+				);
 		
 		//echo "<br/> insertionOeuvre >".$sTitre." COMPO=".$idcompo." IDHAR=".$idhar;
 		
@@ -1851,7 +2265,7 @@ LIMIT 0 , 30
 	
 	}
 	
-	public function majOeuvre($id,$idtpslit,$idvoix,$idfonc,$idgenre,$aIdlangues,$sCommentaires)
+	public function majOeuvre($id,$idtpslit,$idvoix,$idfonc,$idgenre,$aIdlangues,$sCommentaires,$bCanon)
 	{
 	
 		$conn=$this->getEntityManager()->getConnection();
@@ -1876,6 +2290,13 @@ LIMIT 0 , 30
 		}else{
 			$sCommentaires='Importée le : '.$s.chr(13).chr(10);
 		}
+		/*
+		 * ,'canon'=>$bCanon
+		);
+		 */
+		$bCanon=($bCanon=='') ? 0 : $bCanon;
+		$bCanon=($bCanon!='O') ? '1' : '0';
+		$bCanon=strval($bCanon);
 		
 		$qB = $this->getEntityManager()->createQueryBuilder();
 		$qB ->update('oeuvresBundle:Oeuvres', 'p')
@@ -1884,13 +2305,15 @@ LIMIT 0 , 30
 		->set('p.fonction_id', '?3')	
 		->set('p.genre_id', '?4')
 		->set('p.commentaire', '?5')
+		->set('p.canon', '?7')
 		->where('p.id = ?6')
 		->setParameter(1, $idtpslit)
 		->setParameter(2, $idvoix)
 		->setParameter(3, $idfonc)
 		->setParameter(4, $idgenre)
 		->setParameter(5, $sCommentaires)
-		->setParameter(6, $id);
+		->setParameter(6, $id)
+		->setParameter(7, $bCanon);
 		
 		try {
 
@@ -1973,6 +2396,8 @@ LIMIT 0 , 30
 		return $texte;
 	}
 	
+
+
 	
 }
 
@@ -1990,14 +2415,16 @@ class import
 	private $colG;//Fonctions
 	private $colH;//cote
 	private $colI;//voix
-	private $colJ;//???
-	private $colK;//11 COLONNE K >> GENRE MUSIQUE SACREE 			si valeur dans cette colonne type musique = SACREE Typesmusiques
-	private $colL;//12 COLONNE L >> GENRE MUSIQUE PROFANE			si valeur dans cette colonne type musique = PROFANE Typesmusiques
-	private $colM;//13 SIECLE
-	private $colN;//14 reference
-	private $colO;//15 Accompagnements
-	private $colP;//16 commentaires
-	private $colQ;//17 commentaires
+	private $colJ;//??? CANON OU PAS ******************
+	private $colK;//11 instruments orchestration 
+		//COLONNE K >> GENRE MUSIQUE SACREE 			si valeur dans cette colonne type musique = SACREE Typesmusiques
+	private $colL;//12 COLONNE L >> GENRE MUSIQUE SACREE			si valeur dans cette colonne type musique = PROFANE Typesmusiques
+	private $colM;//13 MUSIQUE PROFANE
+	private $colN;//14 SIECLE
+	private $colO;//15 OK O N
+	//SUPPRESSION 
+	//private $colP;//16 commentaires
+	//private $colQ;//17 commentaires
 	
 	/*
 11 COLONNE K >> MUSIQUE SACREE 			si valeur dans cette colonne type musique = SACREE
@@ -2206,6 +2633,7 @@ class import
 		return $this;
 		
 	}
+	/*
 	public function getColP()
 	{
 		return $this->colP;
@@ -2228,6 +2656,6 @@ class import
 		return $this;
 	
 	}	
-
+*/
 	
 }

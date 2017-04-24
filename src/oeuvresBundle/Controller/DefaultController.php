@@ -4,6 +4,10 @@ namespace oeuvresBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Bundle\SecurityBundle\Tests\Functional\app\AppKernel;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+
+use Symfony\Component\Security\Http\Firewall\ContextListener;
 
 class DefaultController extends Controller
 {
@@ -21,7 +25,20 @@ class DefaultController extends Controller
     	}
     	//echo "<br/>".$gUserLoginLogged;
     	//die("DEFAULT INDEX ACTION");
+    	
+//$this->getRequest()->getc
 
+    	/**
+    	 * 
+    	 * @var ContextListener $context
+    	 */
+    	//$cl=new ContextListener($this->container);
+    	//var_dump($cl);
+    	
+    	$context["legendetessitures"] = "legendetessitures from DefaultController";
+    	//var_dump($context);
+    	//die("DEFAULT INDEX ACTION");
+    	
     	return $this->render('oeuvresBundle:Default:index.html.twig');
     }
 }

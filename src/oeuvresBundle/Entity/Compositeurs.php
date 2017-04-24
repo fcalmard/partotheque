@@ -46,6 +46,13 @@ class Compositeurs
     /**
      * @var string
      *
+     * @ORM\Column(name="nomsec", type="string", length=255, unique=false,nullable=true)
+     */
+    private $nomsec;
+    
+    /**
+     * @var string
+     *
      * @ORM\Column(name="prenom", type="string", length=255, unique=false,nullable=true)
      */
     private $prenom;
@@ -130,6 +137,21 @@ class Compositeurs
     	return $this;
     }
     
+    
+    public function getNomsec()
+    {
+    	return $this->nomsec;
+    }
+    /**
+     *
+     * @param string $nom
+     * @return \oeuvresBundle\Entity\Compositeurs
+     */
+    public function setNomsec($nom)
+    {
+    	$this->nomsec=$nom;
+    	return $this;
+    }
     /**
      *
      */

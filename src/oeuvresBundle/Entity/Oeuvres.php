@@ -28,9 +28,8 @@ use oeuvresBundle\Repository\CompositeursRepository;
 /**
  * Oeuvres
  *
- * @ORM\Table(name="Oeuvres",uniqueConstraints={@ORM\UniqueConstraint(name="titreOeuvre_idx", columns={"titreOeuvre"})})
+ * @ORM\Table(name="Oeuvres")
  * @ORM\Entity(repositoryClass="oeuvresBundle\Repository\OeuvresRepository")
- * @UniqueEntity(fields={"titreOeuvre"}, message="Cette oeuvre existe déja")
  * 
  */
 class Oeuvres
@@ -63,7 +62,7 @@ class Oeuvres
     /**
      * @var string
      *
-     * @ORM\Column(name="titreOeuvre", type="string", length=128, unique=true)
+     * @ORM\Column(name="titreOeuvre", type="string", length=128, unique=false)
      */
     private $titreOeuvre;
     
@@ -167,6 +166,16 @@ class Oeuvres
      *
      */    
     private $sscategvoix_id;
+    
+    /**
+     * 
+     * @var integer
+     * 
+     * @ORM\Column(name="canon", type="boolean",nullable=true)
+     * 
+     */
+    private $canon;
+    
     
     /**
      * @ORM\Column(name="duree",type="float",nullable=true, scale=2,options={"default"= 0}))
@@ -292,6 +301,21 @@ class Oeuvres
     	    	
     	return $this;
     }    
+    
+    public function getCanon()
+    {
+    	return $this->canon==1;
+    }
+    /**
+     * 
+     * @param integer $a
+     */
+    public function setCanon($a)
+    {
+    	$a=($a) ? 1 : 0;
+    	
+    	$this->canon=$a;
+    }
 
     /**
      *

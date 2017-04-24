@@ -38,7 +38,12 @@
     </head>
     <body>
     
-    <div class="modalwait"><!-- Place at bottom of page --></div>
+    <div class="modalwait">
+    <!-- Place at bottom of page -->
+        			<div id='idimageimport0'>
+					<img alt='Import ' src='/web/images/loading.gif' />";
+			</div>
+    </div>
     
     			<div id='idimageimport'>
 					<img alt='Import ' src='/web/images/loading.gif' />";
@@ -108,7 +113,9 @@
 
     
 		<a id="haut"></a>
-
+<div style="display:none;>
+<p>Mouse is at coordinates: <span style="display:none; "></span>.</p>
+</div>
                 <div class="navbar navbar-default navbar-static-top" role="navigation" id="navigationdiv" >
                     <div class="container">
 
@@ -119,7 +126,61 @@
 	                            <a class="navbar-brand" href="{{ path('homepage') }}">
 	                                Page d'accueil
 	                            </a>
-	
+	                            
+	                            <!-- tooltip légende tessitures de voix-->
+	                            
+	                            <a class="navbar-brand tooltip" href="#" onclick="tooltip.pop(this, '#listetessitures', {sticky:true, position:0, cssClass:'no-padding'})">
+	                                		<img alt='Légende' src='/web/images/question.png' />'
+	                            </a>
+
+	 		<!-- tooltip -->
+	         <div id="tooltiplisetessitures" style="display:none;">
+            	<div id="listetessitures" class='' >
+                	<div id='lsttessitures' style="padding:20px;">
+                    	<h1>Légende tessitures</h1>
+                    	<p>
+                             <table class="tabletessitures">
+                                 <thead class="theadtessitures" >
+                                 	<tr>
+                                 		<td>Code&nbsp;&nbsp;&nbsp;</td>
+                                 		<td>Libelle</td>
+                                 	</tr>
+                                 	
+                                 </thead>
+                                 	                                 	<tr>
+                                 	
+                                 	<td>S</td><td>Soprane</td>
+                                 	</tr>
+                                 	<tr>
+                                 		<td>A</td><td>Alto (femme)</td>
+                                 	</tr>
+                                 	<tr>
+                                 		<td>T</td><td>Ténor</td>
+                                 	</tr>
+                                 	<tr>
+                                 		<td>Bar</td><td>Baryton</td>
+                                 	</tr>
+                                 	<tr>
+                                 		<td>mS</td><td>mezzo Soprane</td>
+                                 	</tr>
+                                 	<tr>
+                                 		<td>Ca</td><td>contre Alto</td>                             		
+                                 	</tr>
+                                 	<tr>
+                                 		<td>cA</td><td>contre Alto</td>                             		
+                                 	</tr>
+                                 	<tr>
+                                 		<td>hteC</td><td>haute Contre</td>                             		
+									<tr>                                 		
+                                 		<td>B</td><td>Basse</td>
+                                 	</tr>
+		                     </table>
+                     </p>
+                </div>
+            </div>
+        </div>
+        
+        
 	                        </div>
     		             {% endif %}
                         
@@ -237,7 +298,12 @@
         	        	{% set CodeLoginEnCours=app.request.session.get("gUserLoginLogged") %}
         	        	{{ app.request.session.set(CodeLoginEnCours ~ "_oeuvres_modifencours",1) }}
         	        	
-        		{% endif %}
+        		{% else %}
+        		
+
+	
+	        	{% endif %}
+	
         {% endblock %}
         
 
@@ -252,6 +318,9 @@
         var bougeX;
         var bougeY;
 
+        var dlgboxtessselected;        
+
+        
         function bouger(evenement,id)
         {
         document.onmousemove = bouger;
@@ -733,9 +802,108 @@
 
 
 		    	});
+/*
+ * listetessitures
+ "tooltiplisetessitures"
+ 
+ $("#listetessitures").mousedown(function(){
+     //alert("Mouse down lisetessitures!");
+	 dlgboxtessselected=true;
+	 $("span").text('dlgboxtessselected OUI')
+ });
+ $("#listetessitures").mouseup(function(){
+     //alert("mouseup lisetessitures!");
+	 //dlgboxtessselected=false;
+	 $("span").text('dlgboxtessselected NON mouseup')
+	 
+	 
+ });
+ $("#listetessitures").mouseleave(function(){
+	 dlgboxtessselected=false;
+
+	 $("span").text('dlgboxtessselected NON mouseleave')
+	 
+     //alert("mouseleave lisetessitures!");
+ });
+
+ */
+
+
+ $(document).mousemove(function(event){
+
+		//var tooltipSpan = document.getElementById('tooltiplisetessitures');
+//mcTooltipWrapper
+	if(dlgboxtessselected)
+	{
+
+/*
+ * 		bougeX = evenement.pageX;
+	bougeY = evenement.pageY;
+        document.onmousemove = bouger;
+
+        var id='tooltiplisetessitures'
+        	 document.getElementById(id).style.marginLeft = bougeX-55 +"px";
+        document.getElementById(id).style.marginTop = bougeY-55 + "px";
+
+        //+ document.getElementById(id).style.marginLeft
+        */
+	    //$("span").text('SELECTED bougeX:'+bougeX+' bougeY:'+bougeY);
+
+		//$("span").text('SELECTED');
+		
+	}
+
+ });
+//bouger bougeY-55 lisetessitures
+//+' marginTop:'+document.getElementById(id).style.marginTop
+/*
+ document.addEventListener('mousemove', function(e) {
+
+		$("span").text('...');
+		 
+	 if(dlgboxtessselected)
+		{
+			$("span").text('SELECTED');
+
+
+			var obj=document.getElementById("listetessitures");
+
+			$("span").text('SELECTED INNER HTML ='+obj.innerHTML);
+			
+
+			
+			//var mesInputs=document.getElementById("calories").getElementsByTagName("div");
+			obj=obj.getElementsByTagName("div");
+			
+			//obj=obj.getElementsByTagName("div");
+			
+			if(obj)
+				{
+
+				$("span").text('......885'+obj[0]);
+
+				var x = document.getElementsByTagName("listetessitures")[0]);
 				
+				$("span").text('......889'+x);
+				
+				
+			        //obj.style.position='relative';  
+
+			        //obj.style.left = "10px";
+			        
+				}
+	        
+			//document.getElementById(id).style.marginLeft = e.clientX-55 +"px";
+			//document.getElementById(id).style.marginTop = e.clientY-55 + "px";
+			//document.getElementById(id).style.left = e.clientX + "px";
+			//document.getElementById(id).style.top = e.clientY + "px";
+
+	        
+		}
+ });
+*/
 				    
-				/*alert('document ready FIN');*/
+				//alert('document ready FIN');
   	        	
 	        } ) ;
 			
@@ -900,6 +1068,12 @@
 			{
 				$("#dialog").hide()
 			}
+
+			/*-- tooltip ---------------------*/
+			
+			var tooltipSpan = document.getElementById('tooltiplisetessitures');
+
+			
 			
 		</script>
 		

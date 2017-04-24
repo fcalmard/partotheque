@@ -47,11 +47,16 @@ class TempsLiturgiquesRepository extends EntityRepository
 	public function getCouleurs($id)
 	{
 		//$aCoul=array();
+		//echo "<br/>getcouleurs ID=".$id;
+		//die('getcouleurs');
+		$id=($id=='') ? 0 : $id;
+		$oTps=array();
 		
-		$oTps=null;
-		$query = $this->getEntityManager()
-		->createQuery(
-				'SELECT
+		if($id!=0)
+		{
+			$query = $this->getEntityManager()
+			->createQuery(
+					'SELECT
 				t.id,
 				t.active,
 				t.libelle,
@@ -61,13 +66,26 @@ class TempsLiturgiquesRepository extends EntityRepository
 				t.datecreateAt
 				FROM oeuvresBundle:TempsLiturgiques t
 				WHERE t.active=1 and t.id='.$id.' order by t.libelle'
-				);
-		try {
-			$oTps=$query->getResult();
-		} catch (\Doctrine\ORM\NoResultException $e) {
-			return $aCoul;
+					);
+			try {
+				$oTps=$query->getResult();
+			} catch (\Doctrine\ORM\NoResultException $e) {
+				return $aCoul;
+			}
 		}
-		return array('couleurfg'=>$oTps[0]['couleurfg'],'couleur'=>$oTps[0]['couleur'],'couleurdef'=>$oTps[0]['couleurdef']);		
+
+		
+		$coulwhite='#ffffff';
+		$coulblack='#000000';
+		$coulbeige='#f5f5dc';
+		
+		$coul=isset($oTps[0]['couleur']) ? $oTps[0]['couleur'] : $coulbeige;
+		
+		$couleurdef=isset($oTps[0]['couleurdef']) ? $oTps[0]['couleurdef'] : '#000000';
+		
+		$coulfg=isset($oTps[0]['couleurfg']) ? $oTps[0]['couleurfg'] : $coulblack;
+		
+		return array('couleurfg'=>$coulfg,'couleur'=>$coul,'couleurdef'=>$couleurdef);		
 		
 	}
 	public function rechercheTempsLiturgique($sLibelle)
@@ -179,7 +197,7 @@ class TempsLiturgiquesRepository extends EntityRepository
 				WHERE t.id in ".$sListeIds;
 			
 			
-			//die($sql);
+			die($sql);
 			
 			$query = $this->getEntityManager()
 			->createQuery(

@@ -19,12 +19,18 @@
 			{{ form_label(edit_form.nom, 'Nom') }}
 			{{ form_widget(edit_form.nom) }}
 			{{ form_errors(edit_form.nom) }}
-			
+
+
 			{{ form_label(edit_form.prenom, 'Prénom') }}
 			{{ form_widget(edit_form.prenom) }}
 			{{ form_errors(edit_form.prenom) }}			
-						<br/>
-
+									
+			<br>
+			
+			{{ form_label(edit_form.nomsec, 'nomsec') }}
+			{{ form_widget(edit_form.nomsec) }}
+			{{ form_errors(edit_form.nomsec) }}
+			
 			{{ form_label(edit_form.nationalite, 'Nationalité') }}
 			{{ form_widget(edit_form.nationalite) }}
 			{{ form_errors(edit_form.nationalite) }}
@@ -42,8 +48,6 @@
 			{{ form_widget(edit_form.historique) }}
 			{{ form_errors(edit_form.historique) }}			
 															
-																		
-
 			{{ form_end(edit_form) }}
 			    		
 		</div>
@@ -104,11 +108,23 @@
 			        </a>				
 				</td>
 				{% if entity.id %}
+					
+					<td class="tdtblactionsbdp">
+				
+				           <a href="{{ path('oeuvres_compo', { 'compoid': entity.id }) }}">
+    	                      	<img alt="Oeuvres" src="/web/images/music2.png">
+    	                   </a>
+    	             </td>
+    	                        
 				<td class="tdtblactionsbdp">
 				    <a href="{{ path('compositeurs_confim_delete', { 'id': entity.id }) }}">
 			             <img alt="Désactiver" src="/web/css/images/desactiver.png" width="64px" height="64px" >
 				    </a>			
 				</td>
+				
+								    
+			
+    	                        
 				{% endif %}
 								
 				<td style="background-color:beige; " >

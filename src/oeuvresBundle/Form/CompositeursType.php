@@ -15,9 +15,10 @@ class CompositeursType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom','text',array('required'=>true,'label_attr' => array('class' => 'clsLabelEntity')))
-            ->add('prenom','text',array('required'=>false,'label_attr' => array('class' => 'clsLabelEntity')))
-            ->add('nationalite','text',array('required'=>false,'label_attr' => array('class' => 'clsLabelEntity')))
+        	->add('nom','text',array('required'=>true,'label_attr' => array('class' => 'clsLabelEntity')))
+        	->add('nomsec','text',array('required'=>false,'label_attr' => array('class' => 'clsLabelEntity')))
+        	->add('prenom','text',array('required'=>false,'label_attr' => array('class' => 'clsLabelEntity')))
+        	->add('nationalite','text',array('required'=>false,'label_attr' => array('class' => 'clsLabelEntity')))
 /*
             ->add('datenaiss', 'date', array(
             		'label' => 'Né le',

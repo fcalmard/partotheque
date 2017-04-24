@@ -1,0 +1,37 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Tessitures list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Codetessiture</th>
+                <th>Libelletessiture</th>
+                <th>Datecreateat</th>
+                <th>Actif</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('tessitures_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.CodeTessiture }}</td>
+                <td>{{ entity.libelleTessiture }}</td>
+                <td>{% if entity.datecreateAt %}{{ entity.datecreateAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.actif }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('tessitures_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% endblock %}

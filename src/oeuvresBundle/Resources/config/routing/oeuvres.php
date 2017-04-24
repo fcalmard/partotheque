@@ -9,6 +9,11 @@ $collection->add('oeuvres', new Route('/', array(
     '_controller' => 'oeuvresBundle:Oeuvres:index',
 )));
 
+$collection->add('oeuvres_compo', new Route('/{compoid}/compooeuvres', array(
+		'_controller' => 'oeuvresBundle:Oeuvres:index',
+)));
+
+
 $collection->add('oeuvres_filtrer', new Route('/{tous}/filtrer', array(
 		'_controller' => 'oeuvresBundle:Oeuvres:filtrer',
 )));

@@ -407,9 +407,23 @@
 
                 </td>
 	                
-	                	
+	                <!-- COMPOSITEUR -->
 
-	                <td>{{ entity.compositeur }}</td>	     
+	                <td>
+
+		                {% if entity.idcompositeur is defined %}
+	                	
+    		                {% if entity.idcompositeur!=0 %}
+    	                   	
+        	                   	<a href="{{ path('compositeurs_show', { 'id': entity.idcompositeur }) }}">
+        	                   	{{ entity.compositeur }}
+        	                   	</a>
+	                   	    
+    	                   	{% endif %}
+	                   	{% endif %}
+	                
+	                </td>	 
+		                    
 	                <td>{{ entity.genre }}</td>
 	                <td>
 	                {{ entity.tpslliturgique }}
@@ -448,13 +462,21 @@
 
 	<div class="finlisteetform">
 
-        <ul>
-	        <li>
-	            <a href="{{ path('oeuvres_new') }}">
-		            <img alt="ajout" src="/web/css/images/add.png">
-	            </a>
-	        </li>
-    	</ul>
+        <table>
+        <tr>
+        	<td>
+        	            <a href="{{ path('oeuvres_new') }}">
+        		            <img alt="ajout" src="/web/css/images/add.png">
+        	            </a>	
+        	</td>
+        	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        	<td>
+        	            <a href="{{ path('compositeurs') }}">
+        		            <img alt="compositeurs" src="/web/images/composer2.png">
+        	            </a>	
+        	</td>
+        </tr>
+        </table>
 
    	</div>
 

@@ -129,6 +129,11 @@ class OeuvresType extends AbstractType
     	'required'=>false,
     	'class'=>'oeuvresBundle:Souscategvoix'))
     	    	
+    	/*
+    	 * canon
+    	 */
+    	->add('canon','checkbox',array('required'=>false))
+    	
     	->add('avancement_id','entity',array(
     			'property'=>'libelle',
     			'label'=>'Avancement',

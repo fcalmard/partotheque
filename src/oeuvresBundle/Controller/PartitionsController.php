@@ -66,10 +66,17 @@ class PartitionsController extends Controller
        		$entity->setPathfichier($sFile);
        		 
             $entity->setOeuvreId($oeuvre_id);
+            
+            $sdossier='99566';
+            
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('oeuvres_edit', array('id' => $oeuvre_id)));
+            return $this->redirect($this->generateUrl('oeuvres_edit', 
+            		array('id' => $oeuvre_id,
+            				'dossieroeuvre'=>$sdossier
+            		
+            )));
             //return $this->redirect($this->generateUrl('partitions_show', array('id' => $entity->getId(),'oeuvre_id'=>$oeuvre_id)));
         }
         
@@ -80,11 +87,17 @@ class PartitionsController extends Controller
         /*
          * retrouver l'oeuvre
          */
+        $sdossier='';
         $repoOeuvre = $em->getRepository('oeuvresBundle:Oeuvres');
         
         $entityOeuvres = $repoOeuvre->find($oeuvre_id);
+        if($entityOeuvres)
+        {
+        	$sdossier=$entityOeuvres->getReference();
+        	 
+        }
         
-
+        
         
         $soeuvre=$entityOeuvres->getTitreoeuvre();
                 
@@ -92,6 +105,7 @@ class PartitionsController extends Controller
             'entity' => $entity,
         		'mode' => 'create',
         		'oeuvre_id'=>$oeuvre_id,
+        		'dossieroeuvre'=>$sdossier,
         		'oeuvre'=>$soeuvre,
         		
             'edit_form'   => $form->createView(),
@@ -185,6 +199,8 @@ class PartitionsController extends Controller
         }        
         $soeuvre=$entityoeuvre->getTitreoeuvre();
         
+        $sdossier=$entityoeuvre->getReference();
+        
         $editForm = $this->createEditForm($entity);
 
         return $this->render('oeuvresBundle:Partitions:edit.html.twig', array(
@@ -192,6 +208,7 @@ class PartitionsController extends Controller
         		'mode'=>'modif',
         		'oeuvre_id'=>$oeuvre_id,
         		'oeuvre'=>$soeuvre,
+        		'dossieroeuvre'=>$sdossier,
             'edit_form'   => $editForm->createView(),
         ));
     }

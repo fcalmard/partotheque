@@ -34,6 +34,13 @@ class Partitions
      */
     private $id;
    
+    /**
+     *
+     * @var String
+     * @ORM\Column(name="reference", type="string",nullable=false, length=100, unique=false)
+     *
+     */
+    private $reference;
     
     /**
      * @var string
@@ -147,6 +154,23 @@ class Partitions
     public function setLibelle($l)
     {
     	$this->libelle=$l;
+    	return $this;
+    }
+    /**
+     *
+     */
+    public function getReference()
+    {
+    	return $this->reference;
+    }
+    /**
+     *
+     * @param string $reference
+     * @return \oeuvresBundle\Entity\Partitions
+     */
+    public function setReference($reference)
+    {
+    	$this->reference=$reference;
     	return $this;
     }
     

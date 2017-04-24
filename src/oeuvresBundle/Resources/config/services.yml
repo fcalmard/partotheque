@@ -12,4 +12,6 @@ services:
         arguments: ["%my_mailer.transport%"]
     infoService:
         class:  oeuvresBundle\Services\messageServiceClass
-        arguments: [@mailer, @templating]       
+        arguments: [@mailer, @templating]
+    legendetessituresService:
+        class: oeuvresBundle\Services\legendetessituresService

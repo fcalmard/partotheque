@@ -48,7 +48,7 @@ class UtilisateursType extends AbstractType
          
         'class'=>'oeuvresBundle:Profils'
         )
-        )                        
+        )                       
         ;
     }
     
