@@ -754,13 +754,13 @@ LIMIT 0 , 30
 										if($iposorc!='')
 										{
 											
-											echo '<br/> 755 COLONNEK >'.$iposorc.'< >'.$vcol.'<';
+											echo '<br/> 757 COLONNEK >'.$vcol.'<';
 											
 											$iposorc=($iposorc=='') ? 0 : intval($iposorc);
 											$iposorc=(is_null($iposorc)) ? 0 : intval($iposorc);
 										
 											/**
-											 * ........... + -
+											 * ........... + - :
 											 */
 											$iposorc2=strpos($vcol,'+');
 											
@@ -774,6 +774,13 @@ LIMIT 0 , 30
 												if($iposorc2!='')
 												{
 													$aColMultOrche=explode('-',$vcol);
+												}else {
+													$iposorc2=strpos($vcol,':');
+													//echo '<br/><br/> 779 POSITION O >'.$iposorc.'<';													
+													if($iposorc2!='')
+													{
+														$aColMultOrche=explode(':',$vcol);
+													}
 												}
 											}
 											$iNbOrche=0;
@@ -788,66 +795,37 @@ LIMIT 0 , 30
 											$sOrchestrations='';
 											if($iNbOrche>0)
 											{
-												echo '<br/>790 <br/>';
-												var_dump($aColMultOrche);
-												//echo '<br/> NBMULTORCH=';
-												//echo $iNbOrche;
-												//echo '<br/>';												
+										
 												foreach ($aColMultOrche as $co=>$orch)
 												{
-													
-													$iposorc2=strpos($orch,'O');
-													
-													$iRechO=intval($iposorc2);
-													
-													echo '<br/>797 >'.$co.'< ORCH >'.$orch.'< RECHERCHE O>'.$iposorc2.'< RECHO >'.$iRechO."<";
-													
-													if($iRechO!=0)
+													$iposorc2=strpos($orch,"O");
+													$borch=is_int($iposorc2);
+
+													if($borch==false)
 													{
-														
+														//echo '<br/>829 PAS D ORCHESTRATION';
+													}else{
 														$sOrchestrations.=($sOrchestrations!='') ? ':' : '';
 														$sOrchestrations.=$orch;
-														
-														echo '<br/>807 >'.$sOrchestrations.'<';
-														
+														echo '<br/><br/>836 ******* ORCHESTRATION >'.$sOrchestrations.'<';
 													}
-														
-													
 												}
 											}else 
 											{
-												echo "<br/>814 >".$vcol."< POSITION =".$iposorc;//.'< TAILLE='.strlen($vcol);
+												//echo "<br/>814 >".$vcol."< POSITION =".$iposorc;//.'< TAILLE='.strlen($vcol);
 												$sOrchestrations.=($sOrchestrations!='') ? ':' : '';
 												$sOrchestrations.=$vcol;
 												
 											}
 											if($sOrchestrations!='')
 											{
-												echo "<br/>	 >".$sOrchestrations."< ";
+												//echo "<br/>	 >".$sOrchestrations."< ";
 											}
-											
-											/*
-											$aColOrche=explode('O',$vcol);
-											
-											if(is_array($aColOrche))
-											{
-												var_dump($aColOrche);
-												echo '<br/> NBORCH=';
-												echo count($aColOrche);
-												echo '<br/>';
-												var_dump($aColOrche);
-												
-											}
-											*/
-											
 										}
-
-										
 									}
 									break;
 								default:
 									$vcol=$this->epure($vcol);
-									
 									$vcol=strtoupper($vcol);//MAJUSCULES
 									
 							}
@@ -1012,9 +990,9 @@ LIMIT 0 , 30
 												
 												if(trim(strtoupper($nomcompo))=="ANONYME")
 												{
-													//echo "<br/>820 harmonisateur >".$harmonisateur."<";													
-													//echo "<br/>821 nom >".$snomh;
-													//echo "<br/>822 prenom >".$spreh;
+													//echo "<br/>harmonisateur >".$harmonisateur."<";													
+													//echo "<br/>nom >".$snomh;
+													//echo "<br/> prenom >".$spreh;
 												}
 												
 											}
