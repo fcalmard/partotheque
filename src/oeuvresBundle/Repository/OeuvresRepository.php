@@ -714,6 +714,7 @@ LIMIT 0 , 30
 					 */
 					$aLigne=explode(chr(9), $buffer);
 					
+					$sOrchestrations='';//colOrch
 					
 					//var_dump($sDossierFin);
 
@@ -736,7 +737,114 @@ LIMIT 0 , 30
 									$vcol=$this->epure($vcol);
 									
 									break;
-								
+								case 11://instruments COLK
+									
+									$sOrchestrations='';
+									$vcol=$this->epure($vcol);
+																		
+									$vcol=str_ireplace(chr(34), "", $vcol);
+									$vcol=str_ireplace(chr(32), "", $vcol);
+									$vcol=str_ireplace(" ", "", $vcol);
+									
+									
+									$iposorc=0;
+									if($vcol!='')
+									{
+										$iposorc=strpos($vcol,'O');
+										if($iposorc!='')
+										{
+											
+											echo '<br/> 755 COLONNEK >'.$iposorc.'< >'.$vcol.'<';
+											
+											$iposorc=($iposorc=='') ? 0 : intval($iposorc);
+											$iposorc=(is_null($iposorc)) ? 0 : intval($iposorc);
+										
+											/**
+											 * ........... + -
+											 */
+											$iposorc2=strpos($vcol,'+');
+											
+											if($iposorc2!='')
+											{
+												$aColMultOrche=explode('+',$vcol);
+												
+											}
+											else {
+												$iposorc2=strpos($vcol,'-');
+												if($iposorc2!='')
+												{
+													$aColMultOrche=explode('-',$vcol);
+												}
+											}
+											$iNbOrche=0;
+											
+											if(is_array($aColMultOrche))
+											{
+												$iNbOrche=count($aColMultOrche);
+											}
+											/**
+											 * si plusieurs Orchestrations
+											 */
+											$sOrchestrations='';
+											if($iNbOrche>0)
+											{
+												echo '<br/>790 <br/>';
+												var_dump($aColMultOrche);
+												//echo '<br/> NBMULTORCH=';
+												//echo $iNbOrche;
+												//echo '<br/>';												
+												foreach ($aColMultOrche as $co=>$orch)
+												{
+													
+													$iposorc2=strpos($orch,'O');
+													
+													$iRechO=intval($iposorc2);
+													
+													echo '<br/>797 >'.$co.'< ORCH >'.$orch.'< RECHERCHE O>'.$iposorc2.'< RECHO >'.$iRechO."<";
+													
+													if($iRechO!=0)
+													{
+														
+														$sOrchestrations.=($sOrchestrations!='') ? ':' : '';
+														$sOrchestrations.=$orch;
+														
+														echo '<br/>807 >'.$sOrchestrations.'<';
+														
+													}
+														
+													
+												}
+											}else 
+											{
+												echo "<br/>814 >".$vcol."< POSITION =".$iposorc;//.'< TAILLE='.strlen($vcol);
+												$sOrchestrations.=($sOrchestrations!='') ? ':' : '';
+												$sOrchestrations.=$vcol;
+												
+											}
+											if($sOrchestrations!='')
+											{
+												echo "<br/>	 >".$sOrchestrations."< ";
+											}
+											
+											/*
+											$aColOrche=explode('O',$vcol);
+											
+											if(is_array($aColOrche))
+											{
+												var_dump($aColOrche);
+												echo '<br/> NBORCH=';
+												echo count($aColOrche);
+												echo '<br/>';
+												var_dump($aColOrche);
+												
+											}
+											*/
+											
+										}
+
+										
+									}
+									break;
 								default:
 									$vcol=$this->epure($vcol);
 									
@@ -1014,8 +1122,15 @@ LIMIT 0 , 30
 											*/
 									$imp->setColJ($vcol);
 									break;
-								case 11:/* colonne K MUSIQUE SACREE */
+								case 11:/* colonne K INSTRUMENT MUSIQUE SACREE SORCHESTRATIONS */
+									if($sOrchestrations!='')
+									{
+										echo '<br/>1119 >'.$vcol.'< sOrchestrations >'.$sOrchestrations.'<';
+										
+									}
+									
 									$imp->setColK($vcol);//GENRE si valeur dans cette colonne type musique = SACREE
+									
 									break;
 								case 12/* colonne L MUSIQUE PROFANE */:
 									$imp->setColL($vcol);//GENRE si valeur dans cette colonne type musique = PROFANE
@@ -2418,6 +2533,7 @@ class import
 	private $colJ;//??? CANON OU PAS ******************
 	private $colK;//11 instruments orchestration 
 		//COLONNE K >> GENRE MUSIQUE SACREE 			si valeur dans cette colonne type musique = SACREE Typesmusiques
+	private $colOrch;//Orchestrations
 	private $colL;//12 COLONNE L >> GENRE MUSIQUE SACREE			si valeur dans cette colonne type musique = PROFANE Typesmusiques
 	private $colM;//13 MUSIQUE PROFANE
 	private $colN;//14 SIECLE
@@ -2589,6 +2705,25 @@ class import
 		return $this;
 	
 	}
+	/**
+	 * 
+	 * @param string $sVal
+	 * @return \oeuvresBundle\Repository\import
+	 */
+	public function setColOrch($sVal)
+	{
+		$this->colOrch=$sVal;
+		return $this;
+	}
+	/**
+	 *
+	 * @return string
+	 */
+	public function getColOrch()
+	{
+		return $this->colOrch;
+	}
+	
 	public function getColL()
 	{
 		return $this->colL;

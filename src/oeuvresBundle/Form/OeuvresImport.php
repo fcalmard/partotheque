@@ -2,27 +2,10 @@
 
 namespace oeuvresBundle\Form;
 
-use oeuvresBundle\Repository\AvancementsRepository;
-use oeuvresBundle\Repository\LanguesRepository;
-
-use oeuvresBundle\Entity\Avancements;
-
-use Doctrine\DBAL\Types\FloatType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-
-use oeuvresBundle\Repository\TempsLiturgiquesRepository;
-use oeuvresBundle\Repository\CompositeursRepository;
-use oeuvresBundle\Repository\FonctionsRepository;
-use oeuvresBundle\Repository\VoixRepository;
-use oeuvresBundle\Repository\SouscategvoixRepository;
-
-use oeuvresBundle\Repository\AccompagnementsRepository;
-use oeuvresBundle\Repository\GenresRepository;
-use Doctrine\ORM\EntityRepository;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class OeuvresImport extends AbstractType
 {
@@ -44,6 +27,8 @@ class OeuvresImport extends AbstractType
     	->add('dernierdossier','text',array('label'=>'Dernier dossier à importer','required'=>false,'mapped'=>false))
     	 
     	->add('simulation','checkbox',array('label'=>'Simulation Import','required'=>false,'mapped'=>false))
+    	
+    	->add('ok','submit')
     	;
     	 
     }

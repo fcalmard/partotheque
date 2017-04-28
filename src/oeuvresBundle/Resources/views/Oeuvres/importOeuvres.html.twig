@@ -1,47 +1,68 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-	<div class="titrelisteetform">
 
-    <h1>Importer les Oeuvres</h1>
+	<!-- test connexion -->
+
+	{%  if CodeProfilEnCours is defined %}
+
+    	<div class="titrelisteetform">
+    
+        <h1>Importer les Oeuvres</h1>
+    	
+    	</div>
 	
-	</div>
-    <div class="listeetform">
-
-		<div class="showform">
-
-    		{%  if message is defined %}
-    		    <p>
-    			<h1>{{ message }}</h1>
-    			</p>
-    		{% else %}
-        		<p>
-        		<h1>Confirmez vous l'import ?</h1>
-        		</p>
+        <div class="listeetform">
+    
+    		<div class="showform">
+    
+        		{%  if message is defined %}
+        		    <p>
+        			<h1>{{ message }}</h1>
+        			</p>
+        		{% else %}
+            		<p>
+            		<h1>Confirmez vous l'import ?</h1>
+            		</p>
+            		
+            		<p id="importencours"><h1>Import en cours...</h1></p>
+            		
+        		{% endif %}
         		
-        		<p id="importencours"><h1>Import en cours...</h1></p>
-        		
-    		{% endif %}
-    		<div id="divcompteur" >
+	    		{{ form_start(import_form) }}
+
+    			{{ form_label(import_form.fichierimport, 'Fichier d import') }}
+    			{{ form_widget(import_form.fichierimport) }}
+    			{{ form_errors(import_form.fichierimport) }}
+    			    			
+    			&nbsp;&nbsp;{{ form_widget(import_form.ok) }}
+			
+	    		{{ form_end(import_form) }}
+	    		
+	    		<br/>
+    			<br/>
+    			<br/>
+	    		<div id="divcompteur" >
+        		</div>
+    
     		</div>
-    		{{ form(import_form) }}
-    			
-		</div>
-	</div>
 
-	<div class="finlisteetform">
+    	</div>
 
-		<table>
-			<tr>
-				<td class="tdtblactionsbdp">
-			        <a href="{{ path('oeuvres') }}">
-			            <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
-			        </a>
-				</td>
-			</tr>
-		</table>
-	</div>	
-	
+    	<div class="finlisteetform">
+    		<table>
+    			<tr>
+    				<td class="tdtblactionsbdp">
+    			        <a href="{{ path('oeuvres') }}">
+    			            <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
+    			        </a>
+    				</td>
+    			</tr>
+    		</table>
+    	</div>	
+    					      
+    {% endif %}
+
 {% endblock %}
 
 {% block javascripts %}
@@ -49,19 +70,19 @@
 		{{ parent() }}
         
 	        <script type="text/javascript">
-	        $body = $("body");
-
 	        
+	        $body = $("body");
+        
 			$("#menu1").hide();
 			$("#menu2").hide();
 			$("#menu3").hide();
-
 
 			$("#oeuvresbundle_import_submit").click(function(){
 		        $("#importencours").hide();
 			});
 						
 			</script>
+
 {% endblock %}
 
 

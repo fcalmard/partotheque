@@ -96,7 +96,14 @@ class Oeuvres
      * 
      */
     private $Partitions;
-    
+    /**
+     * 
+     * @var string Orchestrations
+     * 
+     * @ORM\Column(name="Orchestrations", type="string",nullable=true)
+     * 
+     */
+    private $Orchestrations;
     /**
      *
      * @var tps_litur_id
@@ -371,7 +378,26 @@ class Oeuvres
     public function getAccompagnementId()
     {
     	return $this->accompagnement_id;
-    }    
+    }
+    /**
+     * setOrchestrations
+     * @param string $sO
+     * @return \oeuvresBundle\Entity\Oeuvres
+     */
+    public function setOrchestrations($sO)
+    {
+    	$this->Orchestrations=$sO;
+    	return $this;
+    }
+    /**
+     * getOrchestrations
+     * 
+     * @return string
+     */
+    public function getOrchestrations()
+    {
+    	return $this->Orchestrations;
+    }
     
     public function getDuree()
     {
