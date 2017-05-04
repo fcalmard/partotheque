@@ -114,6 +114,13 @@
 		            </tr>
 		            
 		            <tr class="ligneshow" >
+		                <th>Orchestrations</th>
+		                 {% if Orchestrations is defined %}
+		                 <td>{{ Orchestrations }}</td>
+		                 {% endif %}		                 
+		            </tr>		     		            
+
+		            <tr class="ligneshow" >
 		                <th>Langues</th>
 		                 {% if Langues is defined %}
 		                 <td>{{ Langues }}</td>

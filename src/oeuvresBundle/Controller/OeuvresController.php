@@ -1269,6 +1269,9 @@ class OeuvresController extends Controller
         	$sscategvoix=$sscategvoix->getLibelle();
         }
                 
+        $sOrchestrations=$entity->getOrchestrations();
+        
+        
         $accompagnement='';
         $idt=$entity->getAccompagnementId();
         if(!is_null($idt) && $idt!=0)
@@ -1333,7 +1336,7 @@ class OeuvresController extends Controller
         		'sDossierTraductions'=>$sDossierTraductions,
         		
         		'Partitions'      => $aPartitions,
-        		
+        		'Orchestrations' =>$sOrchestrations,
         		'sDossierPartitions'=>$sDossierPartitions,
         		'canon'=>$bCanon,
         		

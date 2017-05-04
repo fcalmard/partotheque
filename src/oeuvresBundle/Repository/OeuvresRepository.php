@@ -286,11 +286,32 @@ class OeuvresRepository extends EntityRepository
 				
 				foreach ($aTri as $koTri=>$oTri)
 				{
+					//echo "<br/>oTri";
+					//var_dump($oTri);
 					if($oTri!="")
 					{
 												
-						
-						$sTri=$koTri.' '.$oTri;
+						/*
+						 * reference
+						 */
+						if(strtolower($koTri)=="o.reference")
+						{
+							/*
+							 * CONVERT(reference,UNSIGNED)
+							 */
+							$sxtri="CONVERT(o.reference,UNSIGNED)";
+							$sxtri="CAST(o.reference,INTEGER)";
+							$sxtri="TRIM(ADD(o.reference,0))";
+							
+							//$sTri=$koTri.' '.$oTri;
+							
+							$sTri=$sxtri.' '.$oTri;
+							
+							//die("TRI PAR REFERENCE >".$sTri."<");
+						}else 
+						{
+							$sTri=$koTri.' '.$oTri;
+						}
 						
 						//echo "<br/> OTRI $koTri >";
 						//ECHO $sTri;
@@ -664,7 +685,7 @@ LIMIT 0 , 30
 
 		$itrace=fopen('trace', 'wr');
 		
-		//echo ("IMPORT EN COURS...... >".$sFichier);
+		//echo ("IMPORT EN COURS...... >".$sFichier);//.' dossierdebut >'.$sDossierDebut.'< dossierfin >'.$sDossierFin.'<');
 		
 		$eml=$this->getEntityManager();
 		
@@ -691,6 +712,9 @@ LIMIT 0 , 30
 			
 			/*Ouverture du fichier en lecture seule*/
 			$handle = fopen($sFichier, 'r');
+			
+			$icptfichier=0;//$icptOeuvre
+			
 			/*Si on a réussi à ouvrir le fichier*/
 			if ($handle)
 			{
@@ -712,12 +736,63 @@ LIMIT 0 , 30
 					 * 
 					 * @var array $aLigne
 					 */
-					$aLigne=explode(chr(9), $buffer);
-					
+
 					$sOrchestrations='';//colOrch
 					
+					//var_dump($sDossierDebut);
 					//var_dump($sDossierFin);
+					$aLigne=explode(chr(9), $buffer);
+					
+					//var_dump(count($aLigne));
+					
+					$baTraiter=0;
+					$iDossierencours=0;
+					
+					if(count($aLigne)>1)
+					{
+						$baTraiter=1;
+						$iDossierencours=$aLigne[2];
+						
+					}
+					
+					if($sDossierDebut!='' && is_numeric($sDossierDebut))
+					{
+						$binf=($iDossierencours<$sDossierDebut);
+						
+					}else {
+						$binf=false;
+					}
+					
+					//echo '<br/>735 dossier en cours ='.$iDossierencours.' debut= '.$sDossierDebut.' fin='.$sDossierFin.'<';
+					
+					if($sDossierFin!='' && is_numeric($sDossierFin))
+					{
+						$bsup=($iDossierencours>$sDossierFin);
+						
+					}else {
+						$bsup=false;
+					}
+					
 
+					if($binf)
+					{
+						$baTraiter=0;
+					}else 
+					{
+						if($bsup)
+						{
+							$baTraiter=0;
+						}
+					}
+
+					if($baTraiter==1)
+					{
+					
+						//echo "<br/>".$cpt." >".$buffer;
+						$icptfichier++;
+						//$icptOeuvre
+						//echo "<br/>773 \$icptfichier=".$icptfichier;
+						
 						$imp = new import();
 						
 						foreach ($aLigne as $cptcol=>$vcol)
@@ -727,34 +802,39 @@ LIMIT 0 , 30
 							$vcol=trim($vcol);
 							
 							//$vcol=$this->epure($vcol);
+
+							//var_dump($aLigne[$cptcol]);
 							
 							switch ($cptcol)
 							{
 								case 3://numero de dossier COLLONE 3
-									//echo "<br/>726 DOSSIER >".$vcol." <br/>";
+									//echo "<br/>765 DOSSIER >".$vcol." <br/>";
 									break;
 								case 9://tessiture voix COLONNE I
 									$vcol=$this->epure($vcol);
 									
 									break;
 								case 11://instruments COLK
+									$aColMultOrche=null;
+
+									//echo '<br/> 789 ****** COLONNEK >'.$vcol.'<';
 									
 									$sOrchestrations='';
+
 									$vcol=$this->epure($vcol);
-																		
-									$vcol=str_ireplace(chr(34), "", $vcol);
-									$vcol=str_ireplace(chr(32), "", $vcol);
-									$vcol=str_ireplace(" ", "", $vcol);
 									
-									
+
 									$iposorc=0;
 									if($vcol!='')
 									{
 										$iposorc=strpos($vcol,'O');
+										
 										if($iposorc!='')
 										{
+
+											//echo '<br/> 801 ****** COLONNEK >'.$vcol.'< >'.$iposorc.'<';
 											
-											echo '<br/> 757 COLONNEK >'.$vcol.'<';
+											//die('**********	803');
 											
 											$iposorc=($iposorc=='') ? 0 : intval($iposorc);
 											$iposorc=(is_null($iposorc)) ? 0 : intval($iposorc);
@@ -792,7 +872,7 @@ LIMIT 0 , 30
 											/**
 											 * si plusieurs Orchestrations
 											 */
-											$sOrchestrations='';
+											//$sOrchestrations='';
 											if($iNbOrche>0)
 											{
 										
@@ -803,32 +883,42 @@ LIMIT 0 , 30
 
 													if($borch==false)
 													{
-														//echo '<br/>829 PAS D ORCHESTRATION';
+														//echo '<br/>807 PAS D ORCHESTRATION';
 													}else{
 														$sOrchestrations.=($sOrchestrations!='') ? ':' : '';
 														$sOrchestrations.=$orch;
-														echo '<br/><br/>836 ******* ORCHESTRATION >'.$sOrchestrations.'<';
+														//echo '<br/>810 ******* ORCHESTRATION >'.$sOrchestrations.'<';
 													}
 												}
 											}else 
 											{
-												//echo "<br/>814 >".$vcol."< POSITION =".$iposorc;//.'< TAILLE='.strlen($vcol);
+												//echo "<br/>816 >".$vcol."< POSITION =".$iposorc;//.'< TAILLE='.strlen($vcol);
 												$sOrchestrations.=($sOrchestrations!='') ? ':' : '';
 												$sOrchestrations.=$vcol;
+												//echo '<br/>818 ******* ORCHESTRATION >'.$sOrchestrations.'<';
+												
 												
 											}
 											if($sOrchestrations!='')
 											{
-												//echo "<br/>	 >".$sOrchestrations."< ";
 											}
+											
 										}
 									}
+									/*
+									if($sOrchestrations!='')
+									{
+										echo "<br/>	 887 ORCHESTRATION >".$sOrchestrations."< ";
+									}*/
+									
 									break;
 								default:
 									$vcol=$this->epure($vcol);
 									$vcol=strtoupper($vcol);//MAJUSCULES
 									
 							}
+							
+							
 							if ($cptcol!=9)//<>
 							{
 								
@@ -1063,7 +1153,7 @@ LIMIT 0 , 30
 									
 									$sTitre=$imp->getColA();//titre
 									
-									//echo "<br/>959 NUMERO DE DOSSIER  vcol >".$cptcol." >".$vcol."< ".$sTitre."<";
+									//echo "<br/>1082 NUMERO DE DOSSIER  vcol >".$vcol." >".$cptcol."< ".$sTitre."<";
 														
 									/*if(trim($vcol)=="ec")
 									{
@@ -1100,10 +1190,15 @@ LIMIT 0 , 30
 											*/
 									$imp->setColJ($vcol);
 									break;
-								case 11:/* colonne K INSTRUMENT MUSIQUE SACREE SORCHESTRATIONS */
+								case 11:/* colonne K 
+									INSTRUMENT MUSIQUE SACREE 
+									ORCHESTRATIONS
+									 */
 									if($sOrchestrations!='')
 									{
-										echo '<br/>1119 >'.$vcol.'< sOrchestrations >'.$sOrchestrations.'<';
+										$imp->setColOrch($sOrchestrations);
+										
+										//echo '<br/>1178 >'.$vcol.'< sOrchestrations >'.$sOrchestrations.'<';
 										
 									}
 									
@@ -1139,18 +1234,22 @@ LIMIT 0 , 30
 						//echo "<br/> RES >".$iRech;
 						if($iRech>0)
 						{
-							//var_dump($imp);
 							
 							//echo "<br/> COLA >".$imp->getColA()."<";
 							//echo "<br/> COLB >".$imp->getColB()."<";
 							
 							//die('1025');
 						}
+						//$sOrchestrations
+						//echo '<br/>1156 ********** >'.$sOrchestrations.'<';
+						//var_dump($imp);
+						
 					
 						//die("671");
-
+						//echo "<br/> 1128 taille tableau ".count($aLignesImport);
 						$aLignesImport[]=$imp;
-					
+						
+					}//$iDossierencours $baTraiter
 										
 				}
 				
@@ -1159,6 +1258,9 @@ LIMIT 0 , 30
 				 * */
 				
 				fclose($handle);
+				
+				//die('<br/> FIN LECTURE ****1202');//$baTraiter
+				
 			
 			}
 			
@@ -1167,6 +1269,7 @@ LIMIT 0 , 30
 			
 			//echo "aLignesImport ".var_dump($aLignesImport);
 				
+			//echo "<br/> 1251 taille tableau ".count($aLignesImport);
 			
 			//echo ('<br/>1057');
 			
@@ -1319,13 +1422,20 @@ LIMIT 0 , 30
 				}
 			}
 			
-			//echo "<br/>1208	-------- PARCOURS DES LIGNES LUES <br/><br/>";
+			//echo "<br/>1404	-------- PARCOURS DES LIGNES LUES <br/><br/>";
 			
 			/**
-			 * par cours des lignes
+			 * par cours des lignes $baTraiter
 			 */
+			//die('1350');
 			//echo "<br/>";
 			$icpt=0;
+			
+			$inbOeuvres=count($aLignesImport)-1;
+			
+			$icptOeuvre=0;
+			$icptOeuvremodifiee=0;
+			
 			foreach ($aLignesImport as $iligne=>$aLigne)
 			{
 				
@@ -1342,8 +1452,10 @@ LIMIT 0 , 30
 				//echo "<br/>\valfcom".$valfcom."<br/>";
 				
 				$valf=($valfcom=='*') ? '':$valf;
+				$sDossierencours=$valf;
+				//echo "<br/><br/>1430 >".$valf."< dossier en cours >".$aLigne->getColC()."<".$icptOeuvre;
 				
-				//echo "<br/><br/>1232 >".$valf."< dossier en cours >".$aLigne->getColC()."<";
+				$sTitreO=$valf;
 				
 				if($valf!='')//TITRE
 				{
@@ -1354,10 +1466,12 @@ LIMIT 0 , 30
 					
 					$harmonisateur="";
 					
-					$baTraiter=1;						
+					$baTraiter=1;
 					
-					//echo "<br/> 1245 ddebut >".$sDossierDebut."< fin >".$sDossierFin."< COLONNE C >".$aLigne->getColC();
+					/*
 					
+					//echo "<br/> 1375 ddebut >".$sDossierDebut."< fin >".$sDossierFin."< COLONNE C >".$aLigne->getColC();
+					//die('1376');
 					if($sDossierDebut!='' && is_numeric($sDossierDebut))
 					{
 						if($aLigne->getColC()!='' && is_numeric($aLigne->getColC()))
@@ -1386,13 +1500,13 @@ LIMIT 0 , 30
 							}
 						}
 					}
-					
+					*/
 					
 					
 					if($baTraiter==1)
 					{
 					
-						//echo "<br/> 1281 DOSSIER >".$aLigne->getColC()."< DEBUT >".$sDossierDebut." FIN >".$sDossierFin."<";
+						//echo "<br/> 1468 DOSSIER >".$aLigne->getColC()."< DEBUT >".$sDossierDebut." FIN >".$sDossierFin."<";
 						
 					//if($nom!='')
 					//{
@@ -1531,6 +1645,8 @@ LIMIT 0 , 30
 						
 						//echo "<br/> 1224 COMPOSITEUR >".$nomcompo."<";
 						
+						$icptOeuvre++;
+						
 						if($nom=="ANONYME")
 						{
 							//$banonyme=true;
@@ -1606,42 +1722,6 @@ LIMIT 0 , 30
 						$bCanon=$imp->getColJ();
 						
 						//echo '<br>.....1412 NOM>'.trim($nom).'< PRENOM >'.$sprenom2.'<'.$snonvide."< >".$snonvide2.'<';
-						
-						/*
-						if($sprenom2=='MESSAGER')
-						{
-							//die($nom.' '.$sprenom2);
-							
-						}
-						if(trim($nom)=='')
-							{
-								switch (trim(strtoupper($sprenom2)))
-							{
-								case 'MESSAGER':
-									die('1431*** >'.$nom.' '.$sprenom2);
-									break;
-								case '';
-								break;
-								case '';
-								break;
-								case '';
-								break;
-								case '';
-								break;
-								case '';
-								break;
-								case '';
-								break;
-								
-							}
-						}
-						
-						if(trim($sprenom2)=='MESSAGER')
-						{
-							die('1451... >'.$nom.' '.$sprenom2);
-							
-						}
-						*/
 							
 						if($banonyme==false && $nom!='')
 						{
@@ -1805,6 +1885,7 @@ LIMIT 0 , 30
 						$idoeuvre=$this->rechercheOeuvre($valf,$idcompo);
 						if($idoeuvre==0)
 						{
+							//echo "<br/>1865 CREATION OEUVRE compteur=".$icptOeuvre."/".$inbOeuvres;
 							/*
 							if(trim($aLigne->getColK()!=""))
 							{
@@ -1818,11 +1899,21 @@ LIMIT 0 , 30
 							
 							$idharmo=(isset($idharmo)) ? $idharmo : 0;
 							
+							$sOrchestrations=$aLigne->getColOrch();
+							
 							//echo "<br/> 1292 ".$valf."<";
 							//echo "<br/> 1293 idcompositeur=".$idcompo." idharmo=".$idharmo;
-								
-							$idoeuvre=$this->insertionOeuvre($valf,$idcompo,$idharmo,$aLigne->getColC(),$banonyme,STATUT_EN_COURS,$aLigne->getColH(),$aLigne->getColM(),$bCanon);
+							//echo '<br/>1907 sOrchestrations >'.$sOrchestrations.'<';
+							
+							$idoeuvre=$this->insertionOeuvre($valf,$idcompo,$idharmo,$aLigne->getColC(),$banonyme,STATUT_EN_COURS,$aLigne->getColH(),$aLigne->getColM(),$bCanon,$sOrchestrations);
 							unset($idharmo);
+						}else 
+						{
+							$icptOeuvremodifiee++;
+							
+							//echo "<br/>1890 OEUVRE trouvée compteur=".$icptOeuvre."/".$inbOeuvres." \$icptOeuvremodifiee=".$icptOeuvremodifiee.$sTitreO."".$nom;
+							//echo "<br/>".$sTitreO.chr(9).chr(9).$nom;
+							
 						}
 						
 						/*
@@ -2203,32 +2294,21 @@ LIMIT 0 , 30
 							 */
 							$bCanon=$aLigne->getColJ();
 							
-							/**
-							 * 
-							if($aLigne->getColP()!='')
-							{
-								$scommentaires.=$aLigne->getColP();
-							}
-							if($aLigne->getColQ()!='')
-							{
-								$scommentaires.='\n';
-								$scommentaires.=$aLigne->getColQ();
-							}
+							$sOrchestrations=$aLigne->getColOrch();
 							
-														 */
-
 							/**
 							 * maj OEUVRE
 							 * */							
+							//echo '<br/>2296 MODIF sOrchestrations >'.$sOrchestrations.'<';
 							
-
-						
-							$eml->getRepository('oeuvresBundle:Oeuvres')->majOeuvre($idoeuvre,$idtpslit,$idvoix,$idfonc,$idgenre,$aIdlangues,$scommentaires,$bCanon);
+							$eml->getRepository('oeuvresBundle:Oeuvres')->majOeuvre($idoeuvre,$idtpslit,$idvoix,$idfonc,$idgenre,$aIdlangues,$scommentaires,$bCanon,$sOrchestrations);
 							
 							//echo "<br/> fin maj oeuvre ...".$sLib." ( ".$idtpslit.")";							
 														
 						}
 						$icpt++;
+						
+						//echo "<br/><br/>2311 dossier en cours >".$sDossierencours."< >".$sOrchestrations."< (".$idoeuvre.") avancement ".$icptOeuvre."/".$inbOeuvres;
 						
 						/*
 						
@@ -2241,13 +2321,14 @@ LIMIT 0 , 30
 						
 					}// test $sDossierFin
 					
-				}
+				}// test titre
 
-			}
+			}// boucle dans tableau oeuvres
 				
 			echo "</div>";
-		}
-
+			
+		}// test existence fichier d'import1
+		
 		//echo "<br/> nombre de lignes traitées : ".$cpt;
 		
 		//die("<br/>IMPORT TERMINE ".$sFichier);
@@ -2301,7 +2382,7 @@ LIMIT 0 , 30
 	/**
 	 *
 	 */
-	public function insertionOeuvre($sTitre,$idcompo,$idhar,$sRef,$banonyme=false,$avancement_id,$sCote,$siecle,$bCanon)
+	public function insertionOeuvre($sTitre,$idcompo,$idhar,$sRef,$banonyme=false,$avancement_id,$sCote,$siecle,$bCanon,$sOrchestrations)
 	{
 
 		$bCanon=($bCanon=='') ? 0 : $bCanon;
@@ -2341,6 +2422,7 @@ LIMIT 0 , 30
 				,'cote'=>$sCote
 				,'siecle'=>$siecle
 						,'canon'=>$bCanon
+						,'Orchestrations'=>$sOrchestrations
 				);
 		
 		//echo "<br/> insertionOeuvre >".$sTitre." COMPO=".$idcompo." IDHAR=".$idhar;
@@ -2358,7 +2440,7 @@ LIMIT 0 , 30
 	
 	}
 	
-	public function majOeuvre($id,$idtpslit,$idvoix,$idfonc,$idgenre,$aIdlangues,$sCommentaires,$bCanon)
+	public function majOeuvre($id,$idtpslit,$idvoix,$idfonc,$idgenre,$aIdlangues,$sCommentaires,$bCanon,$sOrchestrations=null)
 	{
 	
 		$conn=$this->getEntityManager()->getConnection();
@@ -2467,23 +2549,26 @@ LIMIT 0 , 30
 		//$texte = trim(strtolower($texte));
 		$texte=trim($texte);
 		$texte = htmlentities($texte, ENT_NOQUOTES, 'utf-8');
+//		echo "<br/>>$texte< 2542";
 		$texte = preg_replace('#&([A-za-z])(?:acute|cedil|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $texte);
 		$texte = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $texte); // pour les ligatures
 		$texte = preg_replace('#&[^;]+;#', '', $texte); // supprime les autres caractères
-		$texte = preg_replace('#&[^;]+;#', '', $texte); // supprime les autres caractères
-	
+		
 		$texte = strtr(
 				$texte,
-				'@ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ',
-				'aAAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy'
+				'@ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ0123456789',
+				'aAAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy0123456789'
 				);
+		
+		
 		$texte=str_ireplace(chr(34), " ", $texte);
 		$texte=str_ireplace(chr(39), "", $texte);
 		
 		/*
 044      054    2C   00101100        ,    (comma)		 * 
 		 */
-		$texte=str_ireplace(chr(54), " ", $texte);
+		// 6 $texte=str_ireplace(chr(54), " ", $texte);
+		
 		
 		//$texte=strtr($texte, chr(54)," ");		
 		return $texte;

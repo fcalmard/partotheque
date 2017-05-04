@@ -60,6 +60,8 @@ class OeuvresType extends AbstractType
     	)
     	)
     	
+    	->add('Orchestrations','text',array('label'=>'Orchestrations'))
+    	
     	->add('fonction_id','entity',array(
     			'property'=>'libelle',
     			'label'=>'Fonction du rite liturgique',
