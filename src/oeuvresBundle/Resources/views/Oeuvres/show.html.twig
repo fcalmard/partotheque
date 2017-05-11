@@ -1,16 +1,16 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-
-     {% if couleurdef is defined %}
-        {% if couleurdef== 0 %}
-     	    <div class="titrelisteetformoeuvre" >
-	     {% else %}
-	    	<div class="titrelisteetform" >
-	     {% endif %}
-     {% else %}
-    	<div class="titrelisteetform" >
-     {% endif %}
+	{%  if CodeProfilEnCours is defined %}
+         {% if couleurdef is defined %}
+            {% if couleurdef== 0 %}
+         	    <div class="titrelisteetformoeuvre" >
+    	     {% else %}
+    	    	<div class="titrelisteetform" >
+    	     {% endif %}
+         {% else %}
+        	<div class="titrelisteetform" >
+         {% endif %}
 
 
     <h1>{{ entity.titreOeuvre }} 
@@ -72,6 +72,13 @@
 		                 <td>{{ Genre }}
 		                 {% endif %}
 		            </tr>
+		            
+		            <tr class="ligneshow" >
+		                <th>Type de musique</th>
+		                 {% if Typedemusique is defined %}
+		                 <td>{{ Typedemusique }}
+		                 {% endif %}
+		            </tr>		            
 		            	                
 		            <tr class="ligneshow" >
 		                <th>Temps liturgique</th>
@@ -463,6 +470,7 @@
 		</table>
 
 	</div>
+	{% endif %}
 {% endblock %}
 
 {% block javascripts %}

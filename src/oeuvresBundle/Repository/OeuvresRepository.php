@@ -146,6 +146,21 @@ class OeuvresRepository extends EntityRepository
 
 							}
 							break;
+						case 'anonyme':
+							if(!is_null($valf))
+							{
+								if(trim($valf)!="")
+								{
+									if($valf)
+									{
+										//die('SELECTION ANONYME');
+										$sWhere=($sWhere!="") ? $sWhere." and " : $sWhere;
+										$sWhere.="o.anonyme=1";
+									}
+								}
+							}
+							
+							break;
 						case 'siecle':
 							if(trim($valf)!="")
 							{
@@ -333,6 +348,7 @@ class OeuvresRepository extends EntityRepository
 					o.reference,
 					o.titreOeuvre,
 					o.traductiontitreOeuvre,
+					o.anonyme,
 					o.cote,
 					o.siecle,
 					t.id as idtpslliturgique,
@@ -811,8 +827,7 @@ LIMIT 0 , 30
 									//echo "<br/>765 DOSSIER >".$vcol." <br/>";
 									break;
 								case 9://tessiture voix COLONNE I
-									$vcol=$this->epure($vcol);
-									
+									$vcol=$this->epure($vcol);									
 									break;
 								case 11://instruments COLK
 									$aColMultOrche=null;
@@ -821,8 +836,7 @@ LIMIT 0 , 30
 									
 									$sOrchestrations='';
 
-									$vcol=$this->epure($vcol);
-									
+									$vcol=$this->epure($vcol);							
 
 									$iposorc=0;
 									if($vcol!='')
@@ -912,6 +926,8 @@ LIMIT 0 , 30
 									}*/
 									
 									break;
+								case 12:/* Colonne L MUSIQUE SACREE */
+									
 								default:
 									$vcol=$this->epure($vcol);
 									$vcol=strtoupper($vcol);//MAJUSCULES
@@ -1205,14 +1221,14 @@ LIMIT 0 , 30
 									$imp->setColK($vcol);//GENRE si valeur dans cette colonne type musique = SACREE
 									
 									break;
-								case 12/* colonne L MUSIQUE PROFANE */:
-									$imp->setColL($vcol);//GENRE si valeur dans cette colonne type musique = PROFANE
+								case 12/* colonne L MUSIQUE SACREE */:
+									$imp->setColL($vcol);//type de musique si valeur dans cette colonne type musique = SACREE
 									break;								
-								case 13:/* colonne */
-									//$imp->setColM($vcol);//SIECLE
+								case 13:/* ColM colonne M MUSIQUE PROFANE*/
+									$imp->setColM($vcol);//type de musique si valeur dans cette colonne type musique = PROFANE
 									break;
 								case 14:/* colonne N ..................SIECLE */
-									$imp->setColM($vcol);//SIECLE									
+									$imp->setColN($vcol);//SIECLE									
 									//echo "<br/> SIECLE >$vcol <<br/>";
 									break;
 								case 15:
@@ -1421,6 +1437,21 @@ LIMIT 0 , 30
 					
 				}
 			}
+			/**
+			 * 
+			 * DELETE FROM `Typesmusiques` WHERE 1;
+			 * 
+			 */
+			try {
+				$sSql="delete from Typesmusiques";
+				$params = array();
+				$stmt = $eml->getConnection()->prepare($sSql);
+				$stmt->execute($params);
+			}catch (\Exception $e)
+			{
+				die("pb delete TYYPES DE MUSIQUES".$sSql." ".$e->getMessage());
+				
+			}				
 			
 			//echo "<br/>1404	-------- PARCOURS DES LIGNES LUES <br/><br/>";
 			
@@ -1904,8 +1935,10 @@ LIMIT 0 , 30
 							//echo "<br/> 1292 ".$valf."<";
 							//echo "<br/> 1293 idcompositeur=".$idcompo." idharmo=".$idharmo;
 							//echo '<br/>1907 sOrchestrations >'.$sOrchestrations.'<';
-							
-							$idoeuvre=$this->insertionOeuvre($valf,$idcompo,$idharmo,$aLigne->getColC(),$banonyme,STATUT_EN_COURS,$aLigne->getColH(),$aLigne->getColM(),$bCanon,$sOrchestrations);
+							/**
+							 * getColN SIECLE
+							 */
+							$idoeuvre=$this->insertionOeuvre($valf,$idcompo,$idharmo,$aLigne->getColC(),$banonyme,STATUT_EN_COURS,$aLigne->getColH(),$aLigne->getColN(),$bCanon,$sOrchestrations);
 							unset($idharmo);
 						}else 
 						{
@@ -2139,16 +2172,17 @@ LIMIT 0 , 30
 							 */
 							
 							$sLibGenre="";
-											
-							if(trim($aLigne->getColK()!=""))
-							{
-								$iTypedeMusique=MUSIQUE_SACREE;
-								$sLibGenre=$aLigne->getColK();
-							}
+							//getColK
 							if(trim($aLigne->getColL()!=""))
 							{
-								$iTypedeMusique=MUSIQUE_PROFANE;
+								$iTypedeMusique=MUSIQUE_SACREE;
 								$sLibGenre=$aLigne->getColL();
+							}
+							//getColL
+							if(trim($aLigne->getColM()!=""))
+							{
+								$iTypedeMusique=MUSIQUE_PROFANE;
+								$sLibGenre=$aLigne->getColM();
 							}
 
 							//echo "<br/> getColK >".$aLigne->getColK()."<";
@@ -2324,6 +2358,42 @@ LIMIT 0 , 30
 				}// test titre
 
 			}// boucle dans tableau oeuvres
+				
+				
+				/**
+				 * 
+				Types de Musiques;										
+				 */
+				
+				$idtypemusi=MUSIQUE_LITURGIQUE;
+				$sLib="Musique liturgique";			
+				$idtypemusi=$eml->getRepository('oeuvresBundle:Typesmusiques')->insertionTypedemusique($idtypemusi,$sLib);
+				if($idtypemusi!=0)
+				{
+					//die('succes de l\' insertion type de musique '.$sLib);
+				}else{
+					die('echec insertion type de musique '.$sLib);
+				}
+				
+				$idtypemusi=MUSIQUE_SACREE;
+				$sLib="Musique sacrée";
+				$idtypemusi=$eml->getRepository('oeuvresBundle:Typesmusiques')->insertionTypedemusique($idtypemusi,$sLib);
+				if($idtypemusi!=0)
+				{
+					//die('succes de l\' insertion type de musique '.$sLib);
+				}else{
+					die('echec insertion type de musique '.$sLib);
+				}
+				
+				$idtypemusi=MUSIQUE_PROFANE;
+				$sLib="Musique profane";
+				$idtypemusi=$eml->getRepository('oeuvresBundle:Typesmusiques')->insertionTypedemusique($idtypemusi,$sLib);
+				if($idtypemusi!=0)
+				{
+					//die('succes de l\' insertion type de musique '.$sLib);
+				}else{
+					die('echec insertion type de musique '.$sLib);
+				}
 				
 			echo "</div>";
 			

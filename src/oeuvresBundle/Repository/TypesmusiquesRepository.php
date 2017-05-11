@@ -36,4 +36,40 @@ class TypesmusiquesRepository extends EntityRepository
 		
 		
 	}
+	
+	/**
+	 *
+	 */
+	public function insertionTypedemusique($id,$sLibelle)
+	{
+		
+		$idcree=0;
+		
+		$sLibelle=trim($sLibelle);
+		
+		$conn=$this->getEntityManager()->getConnection();
+		
+		$nowUtc = new \DateTime( 'now',  new \DateTimeZone( 'UTC' ) );
+		
+		$s= $nowUtc->format('Y-m-d h:i:s');
+		
+		$dataArray=array('id'=>$id,'libelle'=>$sLibelle
+				,'active'=>1
+				,'datecreateAt'=>$s
+		);
+		//echo "<br/>insertionTypedemusique >".$sLibelle."<";
+		try {
+			$bOk=$conn->insert('Typesmusiques', $dataArray);
+			
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			die("Erreur ".$e->getMessage());
+		}
+		
+		$idcree=$conn->lastInsertId();
+		
+		return $idcree;
+		
+	}
+	
+	
 }

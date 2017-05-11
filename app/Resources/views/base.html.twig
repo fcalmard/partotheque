@@ -36,86 +36,88 @@
 		
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
-    <body>
     
-    <div class="modalwait">
-    <!-- Place at bottom of page -->
-        			<div id='idimageimport0'>
-					<img alt='Import ' src='/web/images/loading.gif' />";
-			</div>
-    </div>
+    <body onload="cachewait()" >
     
-    			<div id='idimageimport'>
-					<img alt='Import ' src='/web/images/loading.gif' />";
-			</div>
-			
-    <div class="modal fade" id="myModal" role="dialog">
-	    <div class="modal-dialog">
-	    
-	      <!-- Modal content-->
-	      <div class="modal-content">
-	        <div class="modal-header">
-	          <button type="button" class="close" data-dismiss="modal">&times;</button>
-	          <h4 class="modal-title">Modal Header</h4>
-	        </div>
-	        <div class="modal-body">
-	          <p>Some text in the modal.</p>
-	        </div>
-	        <div class="modal-footer">
-	          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	        </div>
-	      </div>
-	      
-	    </div>
-  	</div>
-  	
-    <div class="modal fade" id="modalConfirmAbandonSaisie" role="dialog">
-	    <div class="modal-dialog">
-	    
-	      <!-- Modal content-->
-	      <div class="modal-content">
-	        <div class="modal-header">
-	          <button type="button" class="close" data-dismiss="modal">&times;</button>
-	          <h4 class="modal-title">Abandon saisie en cours</h4>
-	        </div>
-	        <div class="modal-body">
-	          <p>Voulez vous abandonner la saisie en cours.</p>
-	        </div>        
-	        
-			<div class="container">
-			  <form role="form">
-	
-			    <button type="submit" class="btn">Oui</button>
-			    
-			    &nbsp;
-			    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			    
-			  </form>
-			</div>
-			        
-	      </div>
-	      
-	    </div>
-  	</div>
-  	
-    <div class="modal fade" id="zmodalConfirmAbandonSaisie" role="dialog">
 
-		<div class="container">
-		  <h2>Vertical (basic) form</h2>
-		  <form role="form">
-
-		    <button type="submit" class="btn btn-default">Submit</button>
-		  </form>
-		</div>
-
-  	</div>  	
-  
+        <div id="modalwait" class="modalwait">
+        <!-- Place at bottom of page -->
+            			<div id='idimageimport0'>
+    					<img alt='Import ' src='/web/images/loading.gif' />";
+    			</div>
+        </div>
+        
+        			<div id='idimageimport'>
+    					<img alt='Import ' src='/web/images/loading.gif' />";
+    			</div>
+    			
+        <div class="modal fade" id="myModal" role="dialog">
+    	    <div class="modal-dialog">
+    	    
+    	      <!-- Modal content-->
+    	      <div class="modal-content">
+    	        <div class="modal-header">
+    	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+    	          <h4 class="modal-title">Modal Header</h4>
+    	        </div>
+    	        <div class="modal-body">
+    	          <p>Some text in the modal.</p>
+    	        </div>
+    	        <div class="modal-footer">
+    	          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    	        </div>
+    	      </div>
+    	      
+    	    </div>
+      	</div>
+      	
+        <div class="modal fade" id="modalConfirmAbandonSaisie" role="dialog">
+    	    <div class="modal-dialog">
+    	    
+    	      <!-- Modal content-->
+    	      <div class="modal-content">
+    	        <div class="modal-header">
+    	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+    	          <h4 class="modal-title">Abandon saisie en cours</h4>
+    	        </div>
+    	        <div class="modal-body">
+    	          <p>Voulez vous abandonner la saisie en cours.</p>
+    	        </div>        
+    	        
+    			<div class="container">
+    			  <form role="form">
+    	
+    			    <button type="submit" class="btn">Oui</button>
+    			    
+    			    &nbsp;
+    			    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    			    
+    			  </form>
+    			</div>
+    			        
+    	      </div>
+    	      
+    	    </div>
+      	</div>
+      	
+        <div class="modal fade" id="zmodalConfirmAbandonSaisie" role="dialog">
+    
+    		<div class="container">
+    		  <h2>Vertical (basic) form</h2>
+    		  <form role="form">
+    
+    		    <button type="submit" class="btn btn-default">Submit</button>
+    		  </form>
+    		</div>
+    
+      	</div>  	
+      
 
     
 		<a id="haut"></a>
-<div style="display:none;>
-<p>Mouse is at coordinates: <span style="display:none; "></span>.</p>
-</div>
+            <div style="display:none;>
+            <p>Mouse is at coordinates: <span style="display:none; "></span>.</p>
+            </div>
                 <div class="navbar navbar-default navbar-static-top" role="navigation" id="navigationdiv" >
                     <div class="container">
 
@@ -133,55 +135,54 @@
 	                                		<img alt='Légende' src='/web/images/question.png' />'
 	                            </a>
 
-	 		<!-- tooltip -->
-	         <div id="tooltiplisetessitures" style="display:none;">
-            	<div id="listetessitures" class='' >
-                	<div id='lsttessitures' style="padding:20px;">
-                    	<h1>Légende tessitures</h1>
-                    	<p>
-                             <table class="tabletessitures">
-                                 <thead class="theadtessitures" >
-                                 	<tr>
-                                 		<td>Code&nbsp;&nbsp;&nbsp;</td>
-                                 		<td>Libelle</td>
-                                 	</tr>
-                                 	
-                                 </thead>
-                                 	                                 	<tr>
-                                 	
-                                 	<td>S</td><td>Soprane</td>
-                                 	</tr>
-                                 	<tr>
-                                 		<td>A</td><td>Alto (femme)</td>
-                                 	</tr>
-                                 	<tr>
-                                 		<td>T</td><td>Ténor</td>
-                                 	</tr>
-                                 	<tr>
-                                 		<td>Bar</td><td>Baryton</td>
-                                 	</tr>
-                                 	<tr>
-                                 		<td>mS</td><td>mezzo Soprane</td>
-                                 	</tr>
-                                 	<tr>
-                                 		<td>Ca</td><td>contre Alto</td>                             		
-                                 	</tr>
-                                 	<tr>
-                                 		<td>cA</td><td>contre Alto</td>                             		
-                                 	</tr>
-                                 	<tr>
-                                 		<td>hteC</td><td>haute Contre</td>                             		
-									<tr>                                 		
-                                 		<td>B</td><td>Basse</td>
-                                 	</tr>
-		                     </table>
-                     </p>
-                </div>
-            </div>
-        </div>
-        
-        
-	                        </div>
+                    	 		<!-- tooltip -->
+                    	         <div id="tooltiplisetessitures" style="display:none;">
+                                	<div id="listetessitures" class='' >
+                                    	<div id='lsttessitures' style="padding:20px;">
+                                        	<h1>Légende tessitures</h1>
+                                        	<p>
+                                                 <table class="tabletessitures">
+                                                     <thead class="theadtessitures" >
+                                                     	<tr>
+                                                     		<td>Code&nbsp;&nbsp;&nbsp;</td>
+                                                     		<td>Libelle</td>
+                                                     	</tr>
+                                                     	
+                                                     </thead>
+                                                     	                                 	<tr>
+                                                     	
+                                                     	<td>S</td><td>Soprane</td>
+                                                     	</tr>
+                                                     	<tr>
+                                                     		<td>A</td><td>Alto (femme)</td>
+                                                     	</tr>
+                                                     	<tr>
+                                                     		<td>T</td><td>Ténor</td>
+                                                     	</tr>
+                                                     	<tr>
+                                                     		<td>Bar</td><td>Baryton</td>
+                                                     	</tr>
+                                                     	<tr>
+                                                     		<td>mS</td><td>mezzo Soprane</td>
+                                                     	</tr>
+                                                     	<tr>
+                                                     		<td>Ca</td><td>contre Alto</td>                             		
+                                                     	</tr>
+                                                     	<tr>
+                                                     		<td>cA</td><td>contre Alto</td>                             		
+                                                     	</tr>
+                                                     	<tr>
+                                                     		<td>hteC</td><td>haute Contre</td>                             		
+                    									<tr>                                 		
+                                                     		<td>B</td><td>Basse</td>
+                                                     	</tr>
+                    		                     </table>
+                                         </p>
+                                    </div>
+                                </div>
+                            </div>        
+	                     </div>
+	                     
     		             {% endif %}
                         
 		                        <!-- ********************** -->
@@ -293,6 +294,9 @@
                 
                 
         {% block body %}
+        
+        	{%  if CodeProfilEnCours is defined %}
+        
                 {% if app.request.session.get("gUserLoginLogged") is defined and app.request.session.get("gUserLoginLogged")=="" %}
         
         	        	{% set CodeLoginEnCours=app.request.session.get("gUserLoginLogged") %}
@@ -303,6 +307,8 @@
 
 	
 	        	{% endif %}
+	        
+	        {% endif %}
 	
         {% endblock %}
         
@@ -314,13 +320,17 @@
         
         <script type="text/javascript">
 
+
         var dlgboxselected;
         var bougeX;
         var bougeY;
 
         var dlgboxtessselected;        
 
-        
+        function testsubmit()
+        {
+	    }
+	    
         function bouger(evenement,id)
         {
         document.onmousemove = bouger;
@@ -352,9 +362,6 @@
         }
 
         $body = $("body");
-
-
-
         
         function dialoghide()
         {
@@ -364,15 +371,27 @@
 
         function trtencourshide()
         {
-       		alert("trtencourshide");
+        	$( "#attente" ).show();
+       		
         }
+
+        /*affichewait();*/
         
+        function affichewait()
+        {
+        	
+        }
+
+        function cachewait()
+        {
+        	$( "#modalwait" ).hide();
+        }
+
         
         setInterval(reloadFunction, 300000);
         
 	        $(document).ready( function () {
-
-	        	
+            	        	
 	        	/*$('[data-toggle="popover"]').popover();*/
 	        	
 	        	//$('#oeuvresbundle_tempsliturgiques_couleur').colorpicker();
@@ -902,8 +921,9 @@
 		}
  });
 */
-				    
-				//alert('document ready FIN');
+				//cachewait();
+
+				/*alert('document ready FIN');*/
   	        	
 	        } ) ;
 			
@@ -1092,4 +1112,5 @@
         {% endblock %}
         
     </body>
+    
 </html>

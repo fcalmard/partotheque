@@ -2,6 +2,8 @@
 
 namespace oeuvresBundle\Controller;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -22,18 +24,30 @@ class CompositeursController extends Controller
      */
     public function indexAction()
     {
-    	
+    	//$this->setSessionModifEnCours(0);
     	$gUserLoginLogged="";
     	$session = $this->getRequest()->getSession();
+    	//var_dump($session);
     	if($session)
     	{
     		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    		
     	}
     	if($gUserLoginLogged=='')
     	{
-    		return new RedirectResponse($this->generateUrl('homepage'));
+    		try {
+    			$redir= new RedirectResponse($this->generateUrl('homepage'));
+    			
+    			return $redir;
+    			
+    		}catch (\ErrorException $e)
+    		{
+    			die('compositeurs 30 >'.$gUserLoginLogged.'<');
+    			
+    		}
     	}
-
+    	//die('compositeurs 37');
+    	
     	
         $em = $this->getDoctrine()->getManager();
 

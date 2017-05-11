@@ -161,9 +161,10 @@ class OeuvresFiltreType extends AbstractType
     	
     	->add('compositeurOeuvre','text',array('label'=>'Compositeur','required'=>false))
     	
+    	->add('anonyme','checkbox',array('label'=>'est Anonyme','required'=>false))
+    	
     	->add('siecle','text',array('label'=>'Siècle','required'=>false))
     	 
-    	
     	->add('genre_id','entity',array(
     			'property'=>'libelle',
     			'label'=>'Genre',

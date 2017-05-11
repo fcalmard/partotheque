@@ -593,7 +593,7 @@ button.close{padding:0;cursor:pointer;background:transparent;border:0;-webkit-ap
 .modalwait
 {
 			
-	display:    none;
+	display:    block;
 	position:   fixed;
 	z-index:    1000;
 	top:        0;

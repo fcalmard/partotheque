@@ -147,7 +147,7 @@ class OeuvresController extends Controller
     	 */
     	$entity = new Oeuvres();
     	$list = array();
-    	
+    	$banonyme=0;
     	//var_dump($aFiltre);
     	
     	if (!is_null($aFiltre))
@@ -167,6 +167,9 @@ class OeuvresController extends Controller
 	    						break;
 	    					case "compositeur_id":
 	    						$compositeur_id=$avFiltre['compositeur_id'];
+	    						break;
+	    					case "anonyme":
+	    						$banonyme=$avFiltre['anonyme'];
 	    						break;
 	    					case "genre_id":
 	    						$genre_id=$avFiltre['genre_id'];
@@ -308,6 +311,7 @@ class OeuvresController extends Controller
     			'titreOeuvre'=>$titreOeuvre,
         		'compositeur_id'=>$compositeur_id,
         		'nomcompositeur'=>$nomcompositeur,
+        		'anonyme'=>$banonyme,
         		'siecle'=>$siecle,
         		'langue'=>$aLangues,
         		'affiche_filtre'=>$affiche,
@@ -800,6 +804,8 @@ class OeuvresController extends Controller
     	
     	$skFiltre="filtre_oeuvres_".$gUserLoginLogged;
     	
+    	$banonyme=0;
+    	
     	if($idcompo!=0)
     	{
     		
@@ -821,6 +827,7 @@ class OeuvresController extends Controller
     		$aFiltre[]=array("titreOeuvre"=>$titreOeuvre);
     		$aFiltre[]=array("compositeur_id"=>$compositeur_id);
     		$aFiltre[]=array("nomcompositeur"=>'');
+    		$aFiltre[]=array("anonyme"=>$banonyme);
     		$aFiltre[]=array("siecle"=>$siecle);
     		$aFiltre[]=array("langue"=>$Langues);
     		$aFiltre[]=array("genre_id"=>$genre_id);
@@ -849,6 +856,9 @@ class OeuvresController extends Controller
 	    	$compositeur_id=isset($post['compositeur_id']) ? $post['compositeur_id'] : 0;
 	    	
 	    	$nomcompositeur=$post['compositeurOeuvre'];
+
+	    	$banonyme=isset($post['anonyme']) ? $post['anonyme'] : 0;
+	    	//var_dump($banonyme);
 	    	
 	    	$siecle=$post['siecle'];
 	    	
@@ -895,6 +905,7 @@ class OeuvresController extends Controller
 	    		$aFiltre[]=array("titreOeuvre"=>$titreOeuvre);
 	    		$aFiltre[]=array("compositeur_id"=>$compositeur_id);
 	    		$aFiltre[]=array("nomcompositeur"=>$nomcompositeur);
+	    		$aFiltre[]=array("anonyme"=>$banonyme);
 	    		$aFiltre[]=array("siecle"=>$siecle);
 	    		$aFiltre[]=array("langue"=>$Langues);
 	    		$aFiltre[]=array("genre_id"=>$genre_id);
@@ -999,13 +1010,14 @@ class OeuvresController extends Controller
     	/**
     	 * retour à la liste filtrée
     	 */
-    	
+    	//var_dump($banonyme);
     	return $this->render('oeuvresBundle:Oeuvres:index.html.twig', array(
     			'entities' => $entities,
     			'filtre_form'   => $filtre_form->createView(),
     			'titreOeuvre'=>$titreOeuvre,
     			'compositeur_id'=>$compositeur_id,
     			'nomcompositeur'=>$nomcompositeur,
+    			'anonyme'=>$banonyme,
     			'siecle'=>$siecle,
     			'langue'=>$Langues,
     			'genre_id'=>$genre_id,
@@ -1285,6 +1297,7 @@ class OeuvresController extends Controller
         }
         
         $genre='';
+        $stypedemusique='';
         $idt=$entity->getGenreId();
         if(!is_null($idt) && $idt!=0)
         {
@@ -1292,6 +1305,19 @@ class OeuvresController extends Controller
         
         	if (!$genre) {
         		throw $this->createNotFoundException('pb de recherche Genre.');
+        	}else{
+        		$idtypedemusique=$genre->getTypesmusId();
+        		if(!is_null($idtypedemusique) && $idtypedemusique!=0)
+        		{
+        			$typemusique = $em->getRepository('oeuvresBundle:Typesmusiques')->find($idtypedemusique);
+        			if(!$typemusique){
+        				throw $this->createNotFoundException('pb de recherche Type de musique.');
+        				
+        			}else{
+        				$stypedemusique=$typemusique->getLibelle();
+        			}
+        			
+        		}
         	}
         	$genre=$genre->getLibelle();
         }        
@@ -1341,6 +1367,7 @@ class OeuvresController extends Controller
         		'canon'=>$bCanon,
         		
         		'Genre'=>$genre,
+        		'Typedemusique'=>$stypedemusique,
         		'Langues'=>$Langues,
         		'couleur'=>$couleur,
         		'couleurfg'=>$couleurfg,
@@ -1381,6 +1408,8 @@ class OeuvresController extends Controller
         $sscatvoix_id=$entity->getSscategvoixId();
         
         $idGenre=$entity->getGenreId();
+        
+        $stypedemusique='';
         
         $idAvancement=$entity->getAvancementId();
         
@@ -1440,6 +1469,8 @@ class OeuvresController extends Controller
         		 'sscatvoix_id'=>$sscatvoix_id,
         		'accompagnement_id'=>$idAccompagnement,
         		'genre_id'=>$idGenre,
+        		'Typedemusique'=>$stypedemusique,
+        		
         		'avancement_id'=>$idAvancement,
         		'fichiertraduction'=>$fichiertraduction,
         		'sDossierPartitions'=>$sDossierPartitions,
@@ -1660,7 +1691,8 @@ class OeuvresController extends Controller
     		
     		$sDossierDebut="";
     		$sDossierFin="";
-    		
+    		//var_dump($_FILES);
+    		//die('1664');
     		//traductionfile
     		if (isset($_FILES['oeuvresbundle_import']))
     		{

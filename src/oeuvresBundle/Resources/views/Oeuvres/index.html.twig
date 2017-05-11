@@ -31,13 +31,7 @@
 	    </div>
   	</div>
   	
-  	    <div class="attente" id="attente" role="">
-  	
-  	<img src="/web/images/chargem.gif" alt="..." />
-  	<br/>
-  	<img src="/web/images/chargem.gif" alt="..." />
-  	
-  	  	    </div>
+
   	
 
 	<div class="titrelisteetform">
@@ -65,10 +59,10 @@
 
 					   	{% if affiche_filtre is defined and affiche_filtre ==1 %}
 
-			          	<img alt="Cacher les critères de filtre" src="/web/images/arrow-up.png"/>
+			          	<img alt="..." src="/web/images/arrow-up.png"/>
 			          	
    						{% else %}
-			          		<img alt="Afficher les critères de filtre" src="/web/images/arrow-down.png"/>
+			          		<img alt="..." src="/web/images/arrow-down.png"/>
    						{% endif %}
 			          	
 					</a>
@@ -93,9 +87,15 @@
 				{{ form_widget(filtre_form.compositeurOeuvre) }}
 				{{ form_errors(filtre_form.compositeurOeuvre) }}
 						
+						
+						
 				{{ form_label(filtre_form.compositeur_id, 'Compositeur') }}
 				{{ form_widget(filtre_form.compositeur_id) }}
-				{{ form_errors(filtre_form.compositeur_id) }}					
+				{{ form_errors(filtre_form.compositeur_id) }}
+				
+				{{ form_label(filtre_form.anonyme, 'Anonyme') }}
+				{{ form_widget(filtre_form.anonyme) }}
+				{{ form_errors(filtre_form.anonyme) }}									
 
 				<br/>
 		   		{{ form_label(filtre_form.siecle, 'Siècle') }}
@@ -581,7 +581,15 @@
 
 	    }
 		{% endif %}	
-		
+
+		{% if anonyme is defined %}
+		var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_anonyme");
+		if(obj)
+		{
+		obj.checked={{ anonyme }};
+		}
+		{% endif %}			
+
 		{% if siecle is defined %}		
 	    var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_siecle");
 	    if(obj)

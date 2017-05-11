@@ -1,7 +1,7 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-
+	{%  if CodeProfilEnCours is defined %}
 	<div class="titrelisteetform">
    	 	<h1>Liste des Accompagnements</h1>
    	</div>
@@ -69,6 +69,7 @@
 	    	</ul>
 		
 		</div>
+		{% endif %}
     {% endblock %}
     
 {% block javascripts %}

@@ -13,6 +13,7 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
+    	//die('home');
     	$gUserLoginLogged="";
     	$session = $this->getRequest()->getSession();
     	if($session)

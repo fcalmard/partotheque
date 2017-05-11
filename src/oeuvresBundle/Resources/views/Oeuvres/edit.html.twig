@@ -1,9 +1,10 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
+	{%  if CodeProfilEnCours is defined %}
 
-<div id="dialog" style="display:none" class="modal-dialog" >
-</div> 
+    <div id="dialog" style="display:none" class="modal-dialog" >
+    </div> 
 
      {% if couleurdef is defined %}
         {% if couleurdef== 0 %}
@@ -63,9 +64,23 @@
 				{{ form_errors(edit_form.harmon_id) }}					
 													
 			<br/>
+                <table>
+                <tr>
+                <td>
 				{{ form_label(edit_form.genre_id, 'Genre') }}
 				{{ form_widget(edit_form.genre_id) }}
 				{{ form_errors(edit_form.genre_id) }}
+				</td>
+
+                {% if Typedemusique is defined %}
+				
+				<td style='width:200px;' >Type de musique
+	                 {{ Typedemusique }}
+				<td >
+                {% endif %}
+		                 
+				</tr>
+				</table>
 
 			<br/>
 
@@ -500,6 +515,7 @@
 		</table>
 			
 	</div>
+	{% endif %}
 {% endblock %}
 
 
