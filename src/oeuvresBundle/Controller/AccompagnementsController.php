@@ -2,6 +2,8 @@
 
 namespace oeuvresBundle\Controller;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -10,8 +12,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use oeuvresBundle\Entity\Accompagnements;
 use oeuvresBundle\Form\AccompagnementsType;
 
-use oeuvresBundle\Entity\Compositions;
-use oeuvresBundle\Repository\CompositionsRepository;
+//use oeuvresBundle\Entity\Compositions;
+//use oeuvresBundle\Repository\CompositionsRepository;
 
 /**
  * Accompagnements controller.
@@ -329,7 +331,8 @@ class AccompagnementsController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Accompagnements')->find($id);
         
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Accompagnements entity.('.$id.")");
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'accompagnements','id'=>$id)));
+        	//throw $this->createNotFoundException('Unable to find Accompagnements entity.('.$id.")");
         }
 
         $aComposition = $em->getRepository('oeuvresBundle:Accompagnements')->ChargeComposition($id);
@@ -351,7 +354,9 @@ class AccompagnementsController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Accompagnements')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Accompagnements entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'accompagnements','id'=>$id)));
+        	
+            //throw $this->createNotFoundException('Unable to find Accompagnements entity.');
         }
 
         $aComposition = $em->getRepository('oeuvresBundle:Accompagnements')->ChargeComposition($id);

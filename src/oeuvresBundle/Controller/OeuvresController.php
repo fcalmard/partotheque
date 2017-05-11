@@ -13,19 +13,20 @@ use oeuvresBundle\Form\OeuvresType;
 use oeuvresBundle\Form\OeuvresImport;
 use oeuvresBundle\Form\OeuvresFiltreType;
 
-use \PDO;
-use Doctrine\DBAL\Schema\Schema;
+//use \PDO;
+//use Doctrine\DBAL\Schema\Schema;
 
-use Doctrine\ORM\Tools\SchemaTool;
+//use Doctrine\ORM\Tools\SchemaTool;
+
 use Symfony\Component\HttpFoundation\Session\Session;
 
 //use oeuvresBundle\Repository\PartitionsRepository;
 
-use oeuvresBundle\Repository\TempsLiturgiquesRepository;
-use oeuvresBundle\Repository\CompositeursRepository;
-use oeuvresBundle\Repository\FonctionsRepository;
-use oeuvresBundle\Repository\LanguesRepository;
-use Doctrine\ORM\Repository\RepositoryFactory;
+//use oeuvresBundle\Repository\TempsLiturgiquesRepository;
+//use oeuvresBundle\Repository\CompositeursRepository;
+//use oeuvresBundle\Repository\FonctionsRepository;
+//use oeuvresBundle\Repository\LanguesRepository;
+//use Doctrine\ORM\Repository\RepositoryFactory;
 
 /**
  * Oeuvres controller.
@@ -857,7 +858,14 @@ class OeuvresController extends Controller
 	    	
 	    	$nomcompositeur=$post['compositeurOeuvre'];
 
+	    	//$sanonyme=isset($post['anonyme']) ? $post['anonyme'] : 'non';
+	    	//var_dump($_POST);
+	    	//var_dump('saisie >'.$post['anonyme']);
 	    	$banonyme=isset($post['anonyme']) ? $post['anonyme'] : 0;
+	    	//$banonyme=($banonyme) ? 1 : 0;
+	    	//echo ('post');
+	    	//var_dump($sanonyme);
+	    	//=($sanonyme=='oui');
 	    	//var_dump($banonyme);
 	    	
 	    	$siecle=$post['siecle'];
@@ -1190,7 +1198,10 @@ class OeuvresController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Oeuvres')->find($id);
         
         if (!$entity) {
-        	throw $this->createNotFoundException('pb de recherche de l\'Oeuvres.');
+        	
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'oeuvres','id'=>$id)));
+        	
+        	//throw $this->createNotFoundException('pb de recherche de l\'Oeuvres.');
         }
         
         $couleur="";
@@ -1386,7 +1397,8 @@ class OeuvresController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Oeuvres')->find($id);
         
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Oeuvres entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'oeuvres','id'=>$id)));
+            //throw $this->createNotFoundException('Unable to find Oeuvres entity.');
         }
 
         $couleur="#ff0000";

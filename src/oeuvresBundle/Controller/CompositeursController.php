@@ -334,7 +334,8 @@ class CompositeursController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Compositeurs')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Problème de lecture compositeur.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'compositeurs','id'=>$id)));
+            //throw $this->createNotFoundException('Problème de lecture compositeur.');
         }
 //die("show".$id);
         return $this->render('oeuvresBundle:Compositeurs:show.html.twig', array(
@@ -353,7 +354,8 @@ class CompositeursController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Compositeurs')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Compositeur non trouvé');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'compositeurs','id'=>$id)));
+        	//throw $this->createNotFoundException('Compositeur non trouvé');
         }
 
         $editForm = $this->createEditForm($entity);

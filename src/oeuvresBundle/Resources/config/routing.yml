@@ -75,5 +75,7 @@ oeuvres_liste:
     defaults: { _controller: oeuvresBundle:Oeuvres:index }
 oeuvres_tessitures:
     resource: "@oeuvresBundle/Resources/config/routing/tessitures.php"
-
+oeuvres_entiteinex:
+    resource: "@oeuvresBundle/Resources/config/routing/entiteinex.php"
+    prefix:   /entiteinex    
     

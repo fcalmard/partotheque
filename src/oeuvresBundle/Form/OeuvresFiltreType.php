@@ -128,6 +128,7 @@ class OeuvresFiltreType extends AbstractType
     	
     	->add('titreOeuvre','text',array('label'=>'Titre','required'=>false))
   	
+    	->add('anonyme','checkbox',array('required'=>false))
     	
     	->add('compositeur_id','entity',array(
     			'property'=>'nom prenom',
@@ -149,19 +150,7 @@ class OeuvresFiltreType extends AbstractType
     					)
     	)
     	
-    	
-
-    			/*
-    	->add('compositeur_id','choice',array('choices'=>$aListeCompo,
-    			'multiple'=>false,
-    			'expanded' => false
-    			
-    	))
-    	*/
-    	
-    	->add('compositeurOeuvre','text',array('label'=>'Compositeur','required'=>false))
-    	
-    	->add('anonyme','checkbox',array('label'=>'est Anonyme','required'=>false))
+    	->add('compositeurOeuvre','text',array('label'=>'Compositeur','required'=>false))  	
     	
     	->add('siecle','text',array('label'=>'Siècle','required'=>false))
     	 

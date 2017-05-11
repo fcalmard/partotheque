@@ -651,6 +651,15 @@ button.close{padding:0;cursor:pointer;background:transparent;border:0;-webkit-ap
 	            	
 }
 
+.label30
+{
+	width:30px;
+}
+.clscheckbox
+{
+	width:30px;
+}
+
 /* When the body has the loading class, we turn
    the scrollbar off with overflow:hidden */
 body.loading {
