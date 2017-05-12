@@ -1,0 +1,43 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+
+   	<div class="titrelisteetform" >
+
+    <h1>Enregistrement non trouvé
+        {% if entite is defined %} pour la table : {{ entite |upper}}
+        ( {% if id is defined %}{{ id }}{% endif %} )
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a class="linkoptmenu" href="{{ path(entite|lower) }}">
+				<img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
+			</a>
+        {% endif %}			        
+    </h1>
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+	{{ parent() }}
+
+       <script type="text/javascript">
+
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+
+		     {% if couleurdef is defined %}
+	         {% if couleurdef== 0 %}
+				$('.titrelisteetformoeuvre').css('background-color', 'red'); // ma méthode modifiera la propriété "color" et la définira à "red"
+				$('.titrelisteetformoeuvre').css('background-color', '{{couleur}}'); // ma méthode modifiera la propriété "color" et la définira à "red"
+				$('.titrelisteetformoeuvre').css('color', '{{couleurfg}}');
+	
+				 {% endif %}
+		    {% endif %}
+		     
+			
+       </script>
+{% endblock %}
+
+
