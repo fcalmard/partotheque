@@ -382,7 +382,8 @@ class TempsLiturgiquesController extends Controller
         $entity = $em->getRepository('oeuvresBundle:TempsLiturgiques')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('TempsLiturgiques inexistant.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'tempsliturgiques','id'=>$id)));
+        	//throw $this->createNotFoundException('TempsLiturgiques inexistant.');
         }
 
         return $this->render('oeuvresBundle:TempsLiturgiques:show.html.twig', array(
@@ -401,7 +402,9 @@ class TempsLiturgiquesController extends Controller
         $entity = $em->getRepository('oeuvresBundle:TempsLiturgiques')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find TempsLiturgiques entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'tempsliturgiques','id'=>$id)));
+        	
+            //throw $this->createNotFoundException('Unable to find TempsLiturgiques entity.');
         }
 
         $editForm = $this->createEditForm($entity);

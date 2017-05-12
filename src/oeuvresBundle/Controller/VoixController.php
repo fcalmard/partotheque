@@ -318,7 +318,8 @@ class VoixController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Voix')->find($id);
         
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Voix entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'voix','id'=>$id)));
+            //throw $this->createNotFoundException('Unable to find Voix entity.');
         }
         
         /*
@@ -345,7 +346,8 @@ class VoixController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Voix')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Voix entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'voix','id'=>$id)));
+            //throw $this->createNotFoundException('Unable to find Voix entity.');
         }
 
         $editForm = $this->createEditForm($entity);

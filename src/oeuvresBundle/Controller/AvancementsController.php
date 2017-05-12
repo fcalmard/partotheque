@@ -341,7 +341,8 @@ class AvancementsController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Avancements')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Problème de lecture Avancement.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'avancements','id'=>$id)));
+        	//throw $this->createNotFoundException('Problème de lecture Avancement.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -363,7 +364,9 @@ class AvancementsController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Avancements')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Problème de lecture Avancement.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'avancements','id'=>$id)));
+        	
+            //throw $this->createNotFoundException('Problème de lecture Avancement.');
         }
 
         $editForm = $this->createEditForm($entity);

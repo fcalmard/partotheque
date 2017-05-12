@@ -118,7 +118,8 @@ class MenusController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Menus')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Menus entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'menus','id'=>$id)));
+        	//throw $this->createNotFoundException('Unable to find Menus entity.');
         }
 
 
@@ -138,7 +139,8 @@ class MenusController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Menus')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Menus entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'menus','id'=>$id)));
+            //throw $this->createNotFoundException('Unable to find Menus entity.');
         }
 
         $editForm = $this->createEditForm($entity);

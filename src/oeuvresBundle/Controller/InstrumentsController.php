@@ -2,6 +2,8 @@
 
 namespace oeuvresBundle\Controller;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -301,7 +303,8 @@ class InstrumentsController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Instruments')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Instruments entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'instruments','id'=>$id)));
+        	//throw $this->createNotFoundException('Unable to find Instruments entity.');
         }
 
         return $this->render('oeuvresBundle:Instruments:show.html.twig', array(
@@ -320,7 +323,9 @@ class InstrumentsController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Instruments')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Instruments entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'instruments','id'=>$id)));
+        	
+            //throw $this->createNotFoundException('Unable to find Instruments entity.');
         }
 
         $editForm = $this->createEditForm($entity);

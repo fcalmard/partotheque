@@ -307,7 +307,8 @@ class GenresController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Genres')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Genres entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'genres','id'=>$id)));
+        	//throw $this->createNotFoundException('Unable to find Genres entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -329,7 +330,9 @@ class GenresController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Genres')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Genres entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'genres','id'=>$id)));
+        	
+            //throw $this->createNotFoundException('Unable to find Genres entity.');
         }
 
         $editForm = $this->createEditForm($entity);

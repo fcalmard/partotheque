@@ -114,7 +114,8 @@ class ProfilsController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Profils')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Profils entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'profils','id'=>$id)));
+            //throw $this->createNotFoundException('Unable to find Profils entity.');
         }
 
 
@@ -134,7 +135,8 @@ class ProfilsController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Profils')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Profils entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'profils','id'=>$id)));
+            //throw $this->createNotFoundException('Unable to find Profils entity.');
         }
         
 

@@ -318,7 +318,8 @@ class TypesmusiquesController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Typesmusiques')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Typesmusiques entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'typesmusiques','id'=>$id)));
+            //throw $this->createNotFoundException('Unable to find Typesmusiques entity.');
         }
 
 
@@ -338,7 +339,8 @@ class TypesmusiquesController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Typesmusiques')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Typesmusiques entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'typesmusiques','id'=>$id)));
+            //throw $this->createNotFoundException('Unable to find Typesmusiques entity.');
         }
 
         $editForm = $this->createEditForm($entity);

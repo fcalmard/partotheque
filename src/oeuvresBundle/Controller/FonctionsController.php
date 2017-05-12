@@ -258,7 +258,8 @@ class FonctionsController extends Controller
     	}
     	if($gUserLoginLogged=='')
     	{
-    		return new RedirectResponse($this->generateUrl('homepage'));
+    		return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'fonctions','id'=>$id)));
+    		//return new RedirectResponse($this->generateUrl('homepage'));
     	}
     	    	
         $em = $this->getDoctrine()->getManager();
@@ -266,7 +267,8 @@ class FonctionsController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Fonctions')->find($id);
         
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Fonctions entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'fonctions','id'=>$id)));
+            //throw $this->createNotFoundException('Unable to find Fonctions entity.');
         }
 //
         $entities = $em->getRepository('oeuvresBundle:Fonctions')->ChargeListeIds( );
@@ -296,7 +298,8 @@ class FonctionsController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Fonctions')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Fonctions entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'fonctions','id'=>$id)));
+            //throw $this->createNotFoundException('Unable to find Fonctions entity.');
         }
 
         $editForm = $this->createEditForm($entity);     

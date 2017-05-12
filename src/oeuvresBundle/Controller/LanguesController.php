@@ -270,7 +270,8 @@ class LanguesController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Langues')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Langues entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'langues','id'=>$id)));
+        	//throw $this->createNotFoundException('Unable to find Langues entity.');
         }
 
 /*
@@ -307,7 +308,9 @@ class LanguesController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Langues')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Langues entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'langues','id'=>$id)));
+        	
+            //throw $this->createNotFoundException('Unable to find Langues entity.');
         }
 
         $editForm = $this->createEditForm($entity);

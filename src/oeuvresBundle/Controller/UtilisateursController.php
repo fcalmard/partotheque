@@ -2,6 +2,8 @@
 
 namespace oeuvresBundle\Controller;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -251,7 +253,8 @@ class UtilisateursController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Utilisateurs')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Utilisateurs entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'utilisateurs','id'=>$id)));
+            //throw $this->createNotFoundException('Unable to find Utilisateurs entity.');
         }
 
 
@@ -271,7 +274,8 @@ class UtilisateursController extends Controller
         $entity = $em->getRepository('oeuvresBundle:Utilisateurs')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Utilisateurs entity.');
+        	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'utilisateurs','id'=>$id)));
+            //throw $this->createNotFoundException('Unable to find Utilisateurs entity.');
         }
 
         $editForm = $this->createEditForm($entity);
