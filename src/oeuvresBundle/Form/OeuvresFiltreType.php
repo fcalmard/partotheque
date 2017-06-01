@@ -2,12 +2,6 @@
 
 namespace oeuvresBundle\Form;
 
-use oeuvresBundle\Repository\AvancementsRepository;
-
-use oeuvresBundle\Entity\Avancements;
-
-use Doctrine\DBAL\Types\FloatType;
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -18,8 +12,7 @@ use oeuvresBundle\Repository\FonctionsRepository;
 use oeuvresBundle\Repository\VoixRepository;
 use oeuvresBundle\Repository\GenresRepository;
 use oeuvresBundle\Repository\LanguesRepository;
-use Doctrine\ORM\EntityRepository;
-use oeuvresBundle\Repository\OeuvresRepository;
+
 /*
  
 Titre
@@ -63,15 +56,7 @@ class OeuvresFiltreType extends AbstractType
     	//die('63');
     	
     	/*
-    	$builder->add('isAttending', 'choice', array(
-    			'choices'  => array(
-    					'Maybe' => null,
-    					'Yes' => true,
-    					'No' => false,
-    			),
-    			// *this line is important*
-    			'choices_as_values' => true,
-    	));
+
     	
     	//getDoctrine()->getManager();
     	
@@ -83,34 +68,6 @@ class OeuvresFiltreType extends AbstractType
     	
     	//$qb = $em->createQueryBuilder();
     	
-    	/*
-    	$qb->select(array('c'))
-    	->from('oeuvresBundle\Entity\Compositeurs', 'c');
-
-    	// $qb instanceof QueryBuilder
-    	$query = $qb->getQuery();
-    	// Execute Query
-    	$oCompositeurs = $query->getResult();
-    	
-    	var_dump($oCompositeurs);
-
-    	die('56');
-
-    	*/
-    	
-    	/*
-    	 * 
-    	 */
-    	
-    	//$em=$this->getEntityManager();
-    	/*
-    	*/
-    	
-    	//var_dump($comporepo)
-    	//;
-    	//die('48');
-    	
-    	//$em = $this->getDoctrine();
     	
     	//Ordre de 1 à 10
     	//Pour ne pas avoir deux fois le même ordre il faut supprimer les ordre déja attribuer
@@ -119,10 +76,7 @@ class OeuvresFiltreType extends AbstractType
     		$ordre[$i] = $i;
     	}
     	
-    	/*$conn=$this->getEntityManager()->getConnection();
-    	
-    	$comporepo=new CompositeursRepository($conn, 'CompositeursRepository');
-    	*/
+*/
     	
     	$builder 	 
     	

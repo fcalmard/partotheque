@@ -56,5 +56,8 @@ $collection->add('tempsliturgiques_confirm_action_delete', new Route('/{id}/conf
 $collection->add('tempsliturgiques_pagine', new Route('/{idxenreg}/{sens}/{action}/pagine', array(
 		'_controller' => 'oeuvresBundle:TempsLiturgiques:pagine',
 )));
+$collection->add('tempsliturgiques_filtrer', new Route('/{tous}/tempsliturgiques', array(
+		'_controller' => 'oeuvresBundle:TempsLiturgiques:filtrer',
+)));
 
 return $collection;

@@ -59,5 +59,9 @@ $collection->add('compositeurs_pagine', new Route('/{idxenreg}/{sens}/{action}/p
 		'_controller' => 'oeuvresBundle:Compositeurs:pagine',
 )));
 
+$collection->add('compositeurs_filtrer', new Route('/{tous}/filtrer', array(
+		'_controller' => 'oeuvresBundle:Compositeurs:filtrer',
+)));
+
 
 return $collection;

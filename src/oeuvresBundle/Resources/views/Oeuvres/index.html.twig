@@ -36,6 +36,71 @@
 
 	<div class="titrelisteetform">
    	 	<h1>Liste des œuvres
+   	 	
+   	 		   	{%  set filtres = "" %}
+   	 	   	 	
+   	 	   	 	{% if titreOeuvre is defined and titreOeuvre !="" %}
+   	 		   		{% set filtres = filtres ~ "titre : " ~ titreOeuvre %}
+   	 	   	 	{% endif %}
+   	 	
+   	 	   	 	
+   	 		   	{% if anonyme is defined and anonyme ==1 %}
+   	 		   	    {% if filtres != "" %}
+   	 		   		    {% set filtres = filtres ~ ",Anonyme" %}
+   	 		   		{% else %}
+   	 		   		   	{% set filtres = filtres ~ "Anonyme" %}
+   	 		   		{% endif %}
+   	 	   	 	{% endif %}
+
+   	 	   	 	{% if nomcompositeur is defined and nomcompositeur !="" %}
+   	 		   	    {% if filtres != "" %}
+   	 		   		    {% set filtres = filtres ~ ", Compositeur : " ~ nomcompositeur %}
+   	 		   		{% else %}
+   	 		   		   	{% set filtres = filtres ~ " Compositeur : " ~ nomcompositeur %}
+   	 		   		{% endif %}   	 	   	 	
+   	 	   	 	{% endif %}
+   	 	   	 	
+   	 	   	 	{% if nomcompositeursel is defined and nomcompositeursel !="" %}
+   	 		   	    {% if filtres != "" %}
+   	 		   		    {% set filtres = filtres ~ ", " ~ nomcompositeursel %}
+   	 		   		{% else %}
+   	 		   		   	{% set filtres = filtres ~ " " ~ nomcompositeursel %}
+   	 		   		{% endif %}   	 	   	 	
+   	 	   	 	{% endif %}
+   	 	   	 	
+   	 	   	 	{# tpsLiturgique #}
+   	 	   	 	{% if tpsLiturgique is defined and tpsLiturgique !="" %}
+   	 		   	    {% if filtres != "" %}
+   	 		   		    {% set filtres = filtres ~ ", " ~ tpsLiturgique %}
+   	 		   		{% else %}
+   	 		   		   	{% set filtres = filtres ~ " " ~ tpsLiturgique %}
+   	 		   		{% endif %}   	 	   	 	
+   	 	   	 	{% endif %}
+   	 	   	 	
+   	 	   	 	{% if fonction_id is defined and fonction_id!=0 %}
+   	 	   	 	    {% if slibfonction is defined %}
+       	 		   		{% if filtres != "" %}
+       	 		   		    {% set filtres = filtres ~ ", " ~ slibfonction %}
+       	 		   		{% else %}
+       	 		   		   	{% set filtres = filtres ~ " " ~ slibfonction %}
+       	 		   		{% endif %}
+   	 		   		{% endif %}
+   	 	   	 	{% endif %}
+   	 	   	 	
+   	 	   	 	{% if voix_id is defined and voix_id!=0 %}
+   	 	   	 	    {% if slibvoix is defined %}
+       	 		   		{% if filtres != "" %}
+       	 		   		    {% set filtres = filtres ~ ", " ~ slibvoix %}
+       	 		   		{% else %}
+       	 		   		   	{% set filtres = filtres ~ " " ~ slibvoix %}
+       	 		   		{% endif %}
+   	 		   		{% endif %}   	 	   	 	
+ 		   		{% endif %}   	 	   	 	
+   	 	   	 	
+	 	   	    {% if filtres != "" %}
+	 	   	         ( {{ filtres }})
+   	 	   	 	{% endif %}
+   	 	
 				<!-- -->
    	 	   	 	<a href="" >
 
@@ -53,9 +118,12 @@
 								                
 				</a>
 				
+				<!-- href="/web/app_dev.php/oeuvres/filtres" -->
+				
    	 	   	 	<a href="" >
 
-			         <a class="tooltip" href="{{ path('oeuvres_affiche_filtres') }}" onmouseover="tooltip.pop(this, '<h3>Afficher ou cacher les critères de filtre</h3>')">
+			         <a id="oeuvres_affiche_filtres" class="tooltip" 
+			         style="width: 200px;height: 200px;" onmouseover="tooltip.pop(this, '<h3>Afficher ou cacher les critères de filtre</h3>')">
 
 					   	{% if affiche_filtre is defined and affiche_filtre ==1 %}
 
@@ -72,83 +140,90 @@
    	 	
    	 	</h1>
    	</div>
-   	{% if affiche_filtre is defined and affiche_filtre ==1 %}
-	   	{% if filtre_form is defined %}
-	   		<div class="filtreform" id="divfiltresoeuvre">
-						
-				<br/>
-				{{ form_start(filtre_form) }}
-							
-				{{ form_label(filtre_form.titreOeuvre, 'Titre') }}
-				{{ form_widget(filtre_form.titreOeuvre) }}
-				{{ form_errors(filtre_form.titreOeuvre) }}
-		
-		<div style='width:100%'>
-				{{ form_label(filtre_form.anonyme, 'Anonyme') }}
-				{{ form_widget(filtre_form.anonyme) }}
-				{{ form_errors(filtre_form.anonyme) }}		
-				
-				{{ form_label(filtre_form.compositeurOeuvre, 'Compositeur') }}
-				{{ form_widget(filtre_form.compositeurOeuvre) }}
-				{{ form_errors(filtre_form.compositeurOeuvre) }}
-						
-						
-						
-				{{ form_label(filtre_form.compositeur_id, 'Compositeur') }}
-				{{ form_widget(filtre_form.compositeur_id) }}
-				{{ form_errors(filtre_form.compositeur_id) }}
-				
-							</div>
-
-				<br/>
-		   		{{ form_label(filtre_form.siecle, 'Siècle') }}
-				{{ form_widget(filtre_form.siecle) }}
-				{{ form_errors(filtre_form.siecle) }}					
-		
-				{{ form_label(filtre_form.genre_id, 'Genre') }}
-				{{ form_widget(filtre_form.genre_id) }}
-				{{ form_errors(filtre_form.genre_id) }}
-
-				{{ form_label(filtre_form.Langues, 'Langue') }}
-				{{ form_widget(filtre_form.Langues) }}
-				{{ form_errors(filtre_form.Langues) }}
-		
-				<br/>
-				{{ form_label(filtre_form.tps_litur_id, 'Temps liturgique') }}
-				{{ form_widget(filtre_form.tps_litur_id) }}
-				{{ form_errors(filtre_form.tps_litur_id) }}										
-
-		   		{{ form_label(filtre_form.fonction_id, 'Fonction du rite liturgique') }}
-				{{ form_widget(filtre_form.fonction_id) }}
-				{{ form_errors(filtre_form.fonction_id) }}
-	
-		   		{{ form_label(filtre_form.voix_id, 'Voix') }}
-				{{ form_widget(filtre_form.voix_id) }}
-				{{ form_errors(filtre_form.voix_id) }}					
-		
-				<br/>
-				
-						
-						<div class="grpbuttons">
-		
-							{{ form_widget(filtre_form.submit) }}
-					        &nbsp;
-					         <a class="tooltip" href="{{ path('oeuvres_filtrer', { 'tous': 1 }) }}" onmouseover="tooltip.pop(this, '<h3>Supprimer la sélection</h3>')">
-					          	Supprimer la sélection <img alt="Supprimer la sélection" src="/web/css/images/aff_all.png"/>
-							</a>
-											
-							<br/>
-			
-						</div>  								   					
-		
-				{{ form_end(filtre_form) }}
-			
-			<br/>
-																	
-	   		</div>
-	   		
-	   	{% endif %}
-   	{% endif %}
+   	
+   	
+   	
+   	{# filtreform #}
+       	{# if affiche_filtre is defined and affiche_filtre ==1 #}
+    	   	{# if filtre_form is defined #}
+    	   	 
+    	   		<div class="filtreform" id="divfiltresoeuvre">
+    						
+    				<br/>
+    				{{ form_start(filtre_form) }}
+    							
+    				{{ form_label(filtre_form.titreOeuvre, 'Titre') }}
+    				{{ form_widget(filtre_form.titreOeuvre) }}
+    				{{ form_errors(filtre_form.titreOeuvre) }}
+    		
+    		<div style='width:100%'>
+    		
+    				{{ form_label(filtre_form.anonyme, 'Anonyme') }}
+    				{{ form_widget(filtre_form.anonyme) }}
+    				{{ form_errors(filtre_form.anonyme) }}		
+    				
+    				{{ form_label(filtre_form.compositeurOeuvre, 'Compositeur') }}
+    				{{ form_widget(filtre_form.compositeurOeuvre) }}
+    				{{ form_errors(filtre_form.compositeurOeuvre) }}
+    						
+    						
+    						
+    				{{ form_label(filtre_form.compositeur_id, 'Compositeur') }}
+    				{{ form_widget(filtre_form.compositeur_id) }}
+    				{{ form_errors(filtre_form.compositeur_id) }}
+    				
+    							</div>
+    
+    				<br/>
+    		   		{{ form_label(filtre_form.siecle, 'Siècle') }}
+    				{{ form_widget(filtre_form.siecle) }}
+    				{{ form_errors(filtre_form.siecle) }}					
+    		
+    				{{ form_label(filtre_form.genre_id, 'Genre') }}
+    				{{ form_widget(filtre_form.genre_id) }}
+    				{{ form_errors(filtre_form.genre_id) }}
+    
+    				{{ form_label(filtre_form.Langues, 'Langue') }}
+    				{{ form_widget(filtre_form.Langues) }}
+    				{{ form_errors(filtre_form.Langues) }}
+    		
+    				<br/>
+    				{{ form_label(filtre_form.tps_litur_id, 'Temps liturgique') }}
+    				{{ form_widget(filtre_form.tps_litur_id) }}
+    				{{ form_errors(filtre_form.tps_litur_id) }}										
+    
+    		   		{{ form_label(filtre_form.fonction_id, 'Fonction du rite liturgique') }}
+    				{{ form_widget(filtre_form.fonction_id) }}
+    				{{ form_errors(filtre_form.fonction_id) }}
+    	
+    		   		{{ form_label(filtre_form.voix_id, 'Voix') }}
+    				{{ form_widget(filtre_form.voix_id) }}
+    				{{ form_errors(filtre_form.voix_id) }}					
+    		
+    				<br/>
+    				
+    						
+    						<div class="grpbuttons">
+    		
+    							{{ form_widget(filtre_form.submit) }}
+    					        &nbsp;
+    					         <a class="tooltip" href="{{ path('oeuvres_filtrer', { 'tous': 1 }) }}" onmouseover="tooltip.pop(this, '<h3>Supprimer la sélection</h3>')">
+    					          	Supprimer la sélection <img alt="Supprimer la sélection" src="/web/css/images/aff_all.png"/>
+    							</a>
+    											
+    							<br/>
+    			
+    						</div>  								   					
+    		
+    				{{ form_end(filtre_form) }}
+    			
+    			<br/>
+    																	
+    	   		</div>
+    	   		
+    	   	{# endif #}
+       	{# endif #}
+   	
    	
     <div class="listeetform avecscroll">
 	    <table class="records_list table table-striped">
@@ -475,15 +550,15 @@
         <table>
         <tr>
         	<td>
-        	            <a href="{{ path('oeuvres_new') }}">
-        		            <img alt="ajout" src="/web/css/images/add.png">
-        	            </a>	
+	            <a href="{{ path('oeuvres_new') }}">
+		            <img alt="ajout" src="/web/css/images/add.png">
+	            </a>	
         	</td>
         	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         	<td>
-        	            <a href="{{ path('compositeurs') }}">
-        		            <img alt="compositeurs" src="/web/images/composer2.png">
-        	            </a>	
+        	    <a href="{{ path('compositeurs') }}">
+        			<img alt="compositeurs" src="/web/images/composer2.png">
+        	    </a>	
         	</td>
         </tr>
         </table>
@@ -542,16 +617,25 @@
 		    {
 		    	obj.value="{{compositeur_id}}";
 		    }
-			{% endif %}
+        {% endif %}
 
 		{% if tps_litur_id is defined %}
     	    var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_tps_litur_id");
-    		{% if obj is defined %}
-    	    <h1>OBJEMPTY</h1>
-           	{% endif %}	
-        {% endif %}	
-	
-		{% if genre_id is defined %}
+		    if(obj)
+	    	    {
+                var valeurs = [0];
+
+                {% for result in tps_litur_id %}
+
+                	valeurs.push({{result}});
+                
+                {% endfor %}                
+
+                $( "#oeuvresbundle_filtre_oeuvres_tps_litur_id" ).val(valeurs)		    	
+	    	    }
+      	{% endif %}	
+
+      	{% if genre_id is defined %}
 		    var obj = document.getElementById("oeuvresbundle_filtre_oeuvres_genre_id");
 		    if(obj)
 		    {

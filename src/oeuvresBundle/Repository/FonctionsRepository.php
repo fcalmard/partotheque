@@ -97,7 +97,43 @@ class FonctionsRepository extends EntityRepository
 	
 		return $id;
 	}
-	
+	/**
+	 *
+	 * @param int $id
+	 * @return string
+	 */
+	public function rechercheLibelle(int $id)
+	{
+		$slib='';
+		
+		$sql="SELECT
+				t.id,t.libelle from oeuvresBundle:Fonctions t
+				WHERE t.id = ".$id;
+		
+		
+		$query = $this->getEntityManager()
+		->createQuery(
+				$sql
+				);
+		
+		try {
+			$aIds=$query->getResult();
+			
+			if(is_array($aIds) && count($aIds)>0)
+			{
+				foreach ($aIds as $kid=>$o)
+				{
+					$slib=$o['libelle'];
+				}
+			}
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			$slib='';
+		}
+		
+		//die('resultat recherche oeuvresBundle:Fonctions '.$slib);
+		
+		return  $slib;
+	}
 	/**
 	 *
 	 */

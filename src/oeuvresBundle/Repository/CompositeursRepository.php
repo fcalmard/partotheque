@@ -4,7 +4,6 @@ namespace oeuvresBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use oeuvresBundle\Entity\Compositeurs;
-use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
  * CompositeursRepository
@@ -15,12 +14,27 @@ use Doctrine\ORM\Query\ResultSetMapping;
 class CompositeursRepository extends EntityRepository
 {
 
-	public function ChargeListe()
+	/**
+	 * 
+	 * @param string $aFiltres
+	 * @return array|NULL
+	 */
+	public function ChargeListe($aFiltres=null)
 	{
-		
-			$query = $this->getEntityManager()
-			->createQuery(
-					'SELECT
+		$btous=true;
+		$scompo='';
+		if(isset($aFiltres) & is_array($aFiltres) & count($aFiltres)!=0)
+		{
+			$scompo=(isset($aFiltres['compositeur'])) ? $aFiltres['compositeur'] : '';
+			$btous=(isset($aFiltres['tous'])) ? $aFiltres['tous'] : 0 ;
+			$btous=!($btous==0);
+			//echo ('filtres présents');
+		}
+		/**
+				SELECT * FROM `Compositeurs` WHERE `nom` LIKE '%RIO%' ORDER BY `nom` DESC 		 * 
+		 * @var string $sSql
+		 */
+		$sSql='SELECT
 					t.id,
 					t.active,
 					t.prenom,
@@ -31,17 +45,34 @@ class CompositeursRepository extends EntityRepository
 					t.datedeces,
 					t.datecreateAt
 					FROM oeuvresBundle:Compositeurs t
-					WHERE t.active=1 order by t.nom asc,t.nomsec asc,t.prenom asc'
-			);
+					WHERE t.active=1';
+		
+			if(!$btous && $scompo!='')
+			{
+				$s=sprintf("%s",$scompo);
+					
+				$sSql.=" and (t.nom like '%$s%'";
+				$sSql.=" or t.nom = '$scompo')";
+				
+			}
+			$sSql.=' order by t.nom asc,t.nomsec asc,t.prenom asc';
+
+			//echo $sSql;
+		
+			$query = $this->getEntityManager()
+				->createQuery($sSql);
 			
 			try {
 				return $query->getResult();
 			} catch (\Doctrine\ORM\NoResultException $e) {
 				return null;
-			}
-		
+			}	
 	}
-	
+	/**
+	 * ChargeListeIds
+	 * @param string $sNom
+	 * @return string
+	 */
 	public function ChargeListeIds($sNom)
 	{
 		
@@ -80,6 +111,8 @@ class CompositeursRepository extends EntityRepository
 	}
 	
 	/**
+	 * 
+	 * rechercheCompositeur
 	 * 
 	 * @param string $sNom
 	 * @param string $sPrenom
@@ -139,7 +172,7 @@ class CompositeursRepository extends EntityRepository
 		
 		
 		$sql="SELECT
-				t.id,t.nom,t.nomsec,t.prenom from oeuvresBundle:Compositeurs t
+				t.id,t.libelle from oeuvresBundle:Fonctions t
 				WHERE t.id = ".$id;
 		
 	
@@ -155,7 +188,7 @@ class CompositeursRepository extends EntityRepository
 			{
 				foreach ($aIds as $kid=>$ocompo)
 				{
-					$sNomCompositeur=$ocompo['nom'];
+					$sNomCompositeur=$ocompo['libelle'];
 				}
 			}
 		} catch (\Doctrine\ORM\NoResultException $e) {

@@ -13,20 +13,8 @@ use oeuvresBundle\Form\OeuvresType;
 use oeuvresBundle\Form\OeuvresImport;
 use oeuvresBundle\Form\OeuvresFiltreType;
 
-//use \PDO;
-//use Doctrine\DBAL\Schema\Schema;
-
-//use Doctrine\ORM\Tools\SchemaTool;
-
 use Symfony\Component\HttpFoundation\Session\Session;
 
-//use oeuvresBundle\Repository\PartitionsRepository;
-
-//use oeuvresBundle\Repository\TempsLiturgiquesRepository;
-//use oeuvresBundle\Repository\CompositeursRepository;
-//use oeuvresBundle\Repository\FonctionsRepository;
-//use oeuvresBundle\Repository\LanguesRepository;
-//use Doctrine\ORM\Repository\RepositoryFactory;
 
 /**
  * Oeuvres controller.
@@ -102,7 +90,10 @@ class OeuvresController extends Controller
     	 * mettre dans index.html.twig
     	 */
     	$aFiltre=$session->get($skFiltre);
-    	 
+    	
+    	//var_dump($aFiltre);
+    	//die('95');
+    	
     	//
     	$aTriOeuvresSession=$session->get($gUserLoginLogged.'_oeuvres_tri');
     	    	 
@@ -148,6 +139,7 @@ class OeuvresController extends Controller
     	 */
     	$entity = new Oeuvres();
     	$list = array();
+    	$sListTpsLiturgique='';
     	$banonyme=0;
     	//var_dump($aFiltre);
     	
@@ -159,7 +151,7 @@ class OeuvresController extends Controller
 	    		{
 	    			foreach ($avFiltre as $skFiltre2=>$avFiltre2)
 	    			{
-	    				//echo "<br/> skFiltre2".$skFiltre2."<";
+	    				//echo "<br/>154 skFiltre2".$skFiltre2."<";
 	    					    
 	    				switch ($skFiltre2)
 	    				{
@@ -182,22 +174,38 @@ class OeuvresController extends Controller
 	    							
 	    						$sListeIds="";
 	    						$atps_litur_id="";
-	    								    							
+	    						
+	    						//echo '<br/>178 *****';
+	    						
 	    						if(is_array($tps_litur_id))
 	    						{
-	    							
+	    							/**
+	    							 * liste
+	    							 */
+	    							/*
 	    							foreach ($tps_litur_id as $idt)
 	    							{
 	    								$sListeIds.=($sListeIds!="") ? ",".$idt:"(".$idt;
-
-	    								$atps_litur_id.=($atps_litur_id!="") ? ",".$idt:"".$idt;   								
+	    								echo '<br/>187 SLISTEID >'.$sListeIds.'<';
+	    								
+	    								$atps_litur_id.=($atps_litur_id!="") ? ",".$idt:"".$idt;   	
+	    								echo '<br/>190 ATPSLITUR >'.$atps_litur_id.'<';
+	    								
+	    								//rechercheLibelleTempsLiturgique
+	    								
 	    									
 	    							}
 	    							
 	    							$atps_litur_id.=($atps_litur_id!="") ? "":"";
 	    							
 	    							$sListeIds.=($sListeIds!="") ? ")":"";
+	    							*/
 	    							
+	    							$sListeIds=$this->sListeId($tps_litur_id,true);
+	    							
+	    							$atps_litur_id=$this->sListeId($tps_litur_id, false);
+	    							
+	    						}else {
 	    							
 	    						}
 	    						//die("169");
@@ -225,9 +233,14 @@ class OeuvresController extends Controller
 	    								//var_dump($atps['id'] );
 	    								//var_dump($atps['libelle'] );
 	    								
-	    								$list[$atps['id']]=$atps['libelle'] ;
-	    										    								
-	    								//var_dump($atps['libelle'])
+	    								$list[$atps['id']]=$atps['libelle'];
+	    										    			
+	    								$sListTpsLiturgique.=($sListTpsLiturgique!='') ? ',' : "";
+	    								
+	    								$sListTpsLiturgique.=$atps['libelle'];
+	    								
+	    								//echo '<br/> 242 >';
+	    								//var_dump($atps['libelle']);
 	    									
 	    							}
 	    						}
@@ -240,9 +253,11 @@ class OeuvresController extends Controller
 	    						break;
 	    					case "fonction_id":
 	    						$fonction_id=$avFiltre['fonction_id'];
+	    						$slibfonction = $em->getRepository('oeuvresBundle:Fonctions')->rechercheLibelle($fonction_id);
 	    						break;
 	    					case "voix_id":
 	    						$voix_id=$avFiltre['voix_id'];
+	    						$slibvoix= $em->getRepository('oeuvresBundle:Voix')->rechercheLibelle($voix_id);
 	    						break;
 	    					case 'nomcompositeur';
 	    						$nomcompositeur=$avFiltre['nomcompositeur'];
@@ -264,17 +279,30 @@ class OeuvresController extends Controller
 	    	}
 
     	}
-    	 
+    	//die('280');
+    	
     	$filtre_form = $this->filtreCreateForm($entity);
     	   
     	$affiche=$session->get($gUserLoginLogged.'_oeuvres_affiche_filtre',0);
     	 
     	$sDossierPartitions=$em->getRepository('oeuvresBundle:Oeuvres')->getDossierPartitions();
+    	
+    	$nomcompositeursel='';
+    	if($compositeur_id!=0)
+    	{
+    		$nomcompositeursel= $em->getRepository('oeuvresBundle:Compositeurs')->rechercheNomCompositeur($compositeur_id);
+    		
+    		//die('931 '.$compositeur_id.'< >'.$nomcompositeursel."<");
+    	}
+    	//$compositeur_id
     	 /*
     	echo "<br/> atps_litur_id".$atps_litur_id."<";
     	'tps_litur_id'=>$tps_litur_id,
     	*/
     	
+    	/**
+    	 * tps_litur_id
+    	 */
     	$atps_litur_id=explode(",", $atps_litur_id);
     	
     	$monocouleur=0;
@@ -303,7 +331,9 @@ class OeuvresController extends Controller
     			}  			 
     		}
     	}
-    	
+    	//var_dump($sListTpsLiturgique);
+    	//var_dump($atps_litur_id);
+    	//die("332 >".$sListTpsLiturgique.'<');
     	$monocouleur=($cpt<2) ? 1 : 0;
     	//echo "<br/>281 CPT=".$cpt."< >".$monocouleur;
         return $this->render('oeuvresBundle:Oeuvres:index.html.twig', array(
@@ -311,6 +341,8 @@ class OeuvresController extends Controller
         		'filtre_form'   => $filtre_form->createView(),
     			'titreOeuvre'=>$titreOeuvre,
         		'compositeur_id'=>$compositeur_id,
+        		'nomcompositeursel'=>$nomcompositeursel,
+        		'tpsLiturgique'=>$sListTpsLiturgique,
         		'nomcompositeur'=>$nomcompositeur,
         		'anonyme'=>$banonyme,
         		'siecle'=>$siecle,
@@ -322,7 +354,10 @@ class OeuvresController extends Controller
         		'atps_litur_id'=>$atps_litur_id,
         		'monocouleur'=>$monocouleur,
         		'fonction_id'=>$fonction_id,
+        		'slibfonction'=>$slibfonction,
         		'voix_id'=>$voix_id,
+        		'slibvoix'=>$slibvoix,
+        		
         		'sDossierPartitions'=>$sDossierPartitions,
         		
         ));
@@ -877,16 +912,81 @@ class OeuvresController extends Controller
 	    	$genre_id=$post['genre_id'];
 	    	
 	    	$tps_litur_id=null;
-	    	 
+	    	
+	    	$list=array();
+	    	$sListTpsLiturgique='';
+	    	$sListeIds="";
+	    	
 	    	if(isset($post['tps_litur_id']))
 	    	{
 	    		$tps_litur_id=$post['tps_litur_id'];
+	    		if($tps_litur_id!='')
+	    		{
+	    			if(is_array($tps_litur_id))
+	    			{
+	    				//echo ">ARRAY";
+	    				//var_dump($tps_litur_id);
+	    				
+	    				foreach ($tps_litur_id as $atps)
+	    				{
+	    					$sListeIds.=($sListeIds!="") ? "," : "";
+	    					$sListeIds.=$atps;
+	    				}
+	    			}else{
+	    				$sListeIds=$tps_litur_id;
+	    			}
+	    			if($sListeIds!='')
+	    			{
+	    				$sListeIds='('.$sListeIds.')';
+	    			}
+	    		}
 	    		
+	    		$atpslit = $em->getRepository('oeuvresBundle:TempsLiturgiques')->listeTempsLiturgique($sListeIds);
+	    		if(is_array($atpslit))
+	    		{
+	    			/*
+	    			foreach ($tps_litur_id as $idt)
+	    			{
+
+	    				
+	    				//rechercheLibelleTempsLiturgique
+	    				
+	    				
+	    			}
+	    			
+	    			$atps_litur_id.=($atps_litur_id!="") ? "":"";
+	    			
+	    			$sListeIds.=($sListeIds!="") ? ")":"";
+	    			*/
+	    			foreach ($atpslit as $kt=>$atps)
+	    			{
+	    				$idt=$atps['id'];
+	    				
+	    				$sListeIds.=($sListeIds!="") ? ",".$idt:"(".$idt;
+	    				
+	    				$list[$atps['id']]=$atps['libelle'];
+	    				
+	    				$sListTpsLiturgique.=($sListTpsLiturgique!='') ? ',' : "";
+	    				
+	    				$sListTpsLiturgique.=$atps['libelle'];
+	    				
+	    			}
+	    		}
 	    	}
-	    	 
+	    	
+	    	//var_dump($sListeIds);
+	    	
 	    	$fonction_id=$post['fonction_id'];
-	    	 
+	    	//var_dump($fonction_id);
+	    	$slibfonction = $em->getRepository('oeuvresBundle:Fonctions')->rechercheLibelle($fonction_id);
+	    	//var_dump($slibfonction);
+	    	
+	    	
 	    	$voix_id=$post['voix_id'];
+	    	
+	    	$slibvoix= $em->getRepository('oeuvresBundle:Voix')->rechercheLibelle($voix_id);
+	    	//echo '>'.$slibvoix.' ... '.$voix_id;
+	    	//die("<br/>989");
 	    	
 	    	/**
 	    	 * 
@@ -901,13 +1001,8 @@ class OeuvresController extends Controller
 	    	
 	    	if($tous==1)
 	    	{
-	    		//$aFiltre=null;
-	    		
-
-	    		
-	    		
+	    		//$aFiltre=null;		
 	    		//die("TOUS");
-	    		
 	    	}else
 	    	{
 	    		$aFiltre[]=array("titreOeuvre"=>$titreOeuvre);
@@ -919,26 +1014,41 @@ class OeuvresController extends Controller
 	    		$aFiltre[]=array("genre_id"=>$genre_id);
 	    		$aFiltre[]=array("tps_litur_id"=>$tps_litur_id);
 	    		$aFiltre[]=array("fonction_id"=>$fonction_id);
+	    		$aFiltre[]=array("slibfonction"=>$slibfonction);
 	    		$aFiltre[]=array("voix_id"=>$voix_id);
-	    		
-	    		
+	    		$aFiltre[]=array("slibvoix"=>$slibvoix);
 	    	}
 	
     	}
     	
+    	//var_dump($aFiltre);
+    	//$aFiltre=$session->get($skFiltre);
     	
-    	if($idcompo!=0)
+    	//var_dump($aFiltre);
+    	//die('1000');
+    	
+    	$nomcompositeursel='';
+    	if($compositeur_id!=0)
     	{
-    		//var_dump($aFiltre);
-    		//var_dump($aTriOeuvresSession);
-    		//die('903...........'.$idcompo);
+    		$nomcompositeursel= $em->getRepository('oeuvresBundle:Compositeurs')->rechercheNomCompositeur($compositeur_id);
+    		
+    		//die('931 '.$compositeur_id.'< >'.$nomcompositeursel."<");
     	}
+    	
+    	//if$post[compositeur]
+    	
+    	
+    	
+    	//$nomcompositeursel="934 compositeur";
+    	//die($nomcompositeursel);
     	
     	/**
     	 * 
     	 */
     	$session->set($skFiltre, $aFiltre);
-    	    	
+    	//echo '<br/>1021<br/>';
+    	//var_dump($aFiltre);
+    	
     	$entities = $em->getRepository('oeuvresBundle:Oeuvres')->ChargeListe($aFiltre);
     	
     	$aSessionTblEnreg=$session->get($gUserLoginLogged.'_oeuvres_tblenreg');
@@ -1014,24 +1124,78 @@ class OeuvresController extends Controller
     		//die('943 >'.$nomcompositeur);
     		
     	}
-    				
+    	//var_dump($aFiltre);
+    	$aFiltre=$session->get($skFiltre);
+    	//echo '<br/>1118<br/>';
+    	foreach ($aFiltre as $skFiltre=>$oFiltre)
+    	{
+    		//echo '<br/>1104<br/>';
+    		//echo ' FILTRE >'.$skFiltre.'< ';
+    		//var_dump($oFiltre);
+    		foreach ($oFiltre as $skFiltre2=>$oFiltre2)
+    		{
+    			//echo '<br/>1109<br/> '.$skFiltre2 .':';
+    			switch ($skFiltre2)
+    			{
+    				case 'titreOeuvre':
+    					break;
+    				case 'compositeur_id':
+    					break;
+    				case 'nomcompositeur':
+    					break;
+    				case 'anonyme':
+    					break;
+    				case 'siecle':
+    					break;
+    				case 'langue':
+    					break;
+    				case 'genre_id':
+    					break;
+    				case 'tps_litur_id':
+    					//var_dump($oFiltre2);//$sListTpsLiturgique
+    					break;
+    				case 'fonction_id':
+    					$slibfonction = $em->getRepository('oeuvresBundle:Fonctions')->rechercheLibelle($fonction_id);
+    					break;
+    				case 'voix_id':
+    					$slibvoix= $em->getRepository('oeuvresBundle:Voix')->rechercheLibelle($voix_id);
+    					break;    					
+    				default:
+    			}
+    		}
+    	}
+    	/*
+    	if(isset($aFiltre['tps_litur_id']))
+    	{
+    		echo '<br/>1105 TPS LITURGIQUES <br/>';
+    		var_dump($aFiltre['tps_litur_id']);
+    	}
+    	echo '<br/>1108<br/>';
+    	var_dump($aFiltre);
+    	*/
     	/**
     	 * retour à la liste filtrée
     	 */
-    	//var_dump($banonyme);
+    	//var_dump($slibvoix);
+    	//die('1181');
+    	
     	return $this->render('oeuvresBundle:Oeuvres:index.html.twig', array(
     			'entities' => $entities,
     			'filtre_form'   => $filtre_form->createView(),
     			'titreOeuvre'=>$titreOeuvre,
     			'compositeur_id'=>$compositeur_id,
+    			'nomcompositeursel'=>$nomcompositeursel,    			
     			'nomcompositeur'=>$nomcompositeur,
     			'anonyme'=>$banonyme,
     			'siecle'=>$siecle,
     			'langue'=>$Langues,
     			'genre_id'=>$genre_id,
     			'tps_litur_id'=>$tps_litur_id,
+    			'tpsLiturgique'=>$sListTpsLiturgique,
     			'fonction_id'=>$fonction_id,
+    			'slibfonction'=>$slibfonction,
     			'voix_id'=>$voix_id,
+    			'slibvoix'=>$slibvoix,
     			'monocouleur'=>$monocouleur
     			 
     	));
@@ -1918,6 +2082,41 @@ class OeuvresController extends Controller
     	return $sFile;
     	 
     }
+    
+
+    /**
+     * 
+     * @param array $aliste
+     * @return string
+     */
+    private function sListeId(array $aliste,bool $bavecpar)
+   {
+   		$sRes='';
+   		//$sListTpsLiturgique
+   		foreach ($aliste as $idt)
+   		{
+   			if($bavecpar)
+   			{
+   				$sRes.=($sRes!="") ? ",".$idt:"(".$idt;
+   				//echo '<br/>2085 SLISTEID >'.$sRes.'<';
+   			}
+   			else{
+   				$sRes.=($sRes!="") ? ",".$idt:"".$idt;
+   				//echo '<br/>2089 ATPSLITUR >'.$sRes.'<';
+   			}
+   		}
+   		if($bavecpar)
+   		{
+   			$sRes.=($sRes!="") ? ")":"";
+   			
+   		}else{
+   			$sRes.=($sRes!="") ? "":"";
+   			
+   		}
+   		
+   		//echo '<br/>2089 FIN SLISETIDS  >'.$sRes.'<';
+   		return $sRes;
+   }
         
 
     

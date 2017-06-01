@@ -53,6 +53,27 @@ class TypesmusiquesController extends Controller
         ));
     }
     
+    public function filtrerAction($tous)
+    {
+    	/**
+    	 * retour à la liste filtrée
+    	 */
+    	//var_dump($tous);
+    	//die('filtrerAction  retour à la liste filtrée');
+    	    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$entities = $em->getRepository('oeuvresBundle:Typesmusiques')->ChargeListe();
+    	
+    	$filtre_form=$this->filtreCreateForm();
+    	
+    	//var_dump($banonyme);
+    	return $this->render('oeuvresBundle:Typesmusiques:index.html.twig', array(
+    			'entities' => $entities,
+    			'filtre_form'   => $filtre_form->createView(),
+    			'tous'=>$tous   			
+    	));
+    }
     
     
     public function pagineAction($idxenreg,$sens,$action)

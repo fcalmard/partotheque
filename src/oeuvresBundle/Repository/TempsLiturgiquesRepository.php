@@ -14,9 +14,7 @@ class TempsLiturgiquesRepository extends EntityRepository
 {
 	
 	public function ChargeListe()
-	{
-		
-		
+	{	
 		$query = $this->getEntityManager()
 		->createQuery(
 				'SELECT
@@ -88,6 +86,44 @@ class TempsLiturgiquesRepository extends EntityRepository
 		return array('couleurfg'=>$coulfg,'couleur'=>$coul,'couleurdef'=>$couleurdef);		
 		
 	}
+	
+	/**
+	 *
+	 * @param integer $id
+	 * @return string
+	 */
+	public function rechercheLibelleTempsLiturgique($id)
+	{
+		$sTempsLiturgique='';
+		
+		$sql="SELECT
+				t.id,t.libelle from oeuvresBundle:TempsLiturgiques t
+				WHERE t.id = ".$id;
+		
+		$query = $this->getEntityManager()
+		->createQuery(
+				$sql
+				);
+		
+		try {
+			$aIds=$query->getResult();
+			
+			if(is_array($aIds) && count($aIds)>0)
+			{
+				foreach ($aIds as $kid=>$ocompo)
+				{
+					$sTempsLiturgique=$ocompo['libelle'];
+				}
+			}
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			$sTempsLiturgique='';
+		}
+		
+		//die('resultat recherche '.$sNomCompositeur);
+		
+		return  $sTempsLiturgique;
+	}
+	
 	public function rechercheTempsLiturgique($sLibelle)
 	{
 		$id=0;
@@ -197,7 +233,7 @@ class TempsLiturgiquesRepository extends EntityRepository
 				WHERE t.id in ".$sListeIds;
 			
 			
-			die($sql);
+			//die($sql);
 			
 			$query = $this->getEntityManager()
 			->createQuery(
@@ -217,10 +253,7 @@ class TempsLiturgiquesRepository extends EntityRepository
 			} catch (\Doctrine\ORM\NoResultException $e) {
 				$aTpsLit=null;
 			}
-		}
-
-	
-	
+		}	
 		return $aTpsLit;
 	}
 	

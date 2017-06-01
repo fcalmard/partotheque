@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use oeuvresBundle\Entity\Compositeurs;
 use oeuvresBundle\Form\CompositeursType;
 use Symfony\Component\HttpFoundation\Session\Session;
+use oeuvresBundle\Form\CompositeursFiltreType;
 
 /**
  * Compositeurs controller.
@@ -28,10 +29,71 @@ class CompositeursController extends Controller
     	$gUserLoginLogged="";
     	$session = $this->getRequest()->getSession();
     	//var_dump($session);
+
+		if($session)
+		{
+			$gUserLoginLogged=$session->get('gUserLoginLogged');
+		}
+    	if($gUserLoginLogged=='')
+    	{
+    		try {
+    			$redir= new RedirectResponse($this->generateUrl('homepage'));
+    			
+    			return $redir;
+    			
+    		}catch (\ErrorException $e)
+    		{
+    			die('compositeurs 30 >'.$gUserLoginLogged.'<');
+    			
+    		}
+    	}
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+        $entities = $em->getRepository('oeuvresBundle:Compositeurs')->ChargeListe();
+
+        $filtre_form=$this->filtreCreateForm();
+        
+        $aEnregId=$this->listeDesIds($entities);
+        
+        $iEnreg=1;
+        $iPage=1;
+        $sColDeTri="";
+        $sColDeTriOrdre="";
+        
+        //echo ('compositeurs 64'.$gUserLoginLogged);
+
+       // $post= $request->request->get('oeuvresbundle_filtre_compositeurs');
+        $aFiltres= $session->get($gUserLoginLogged.'_compositeurs_filtres');
+        
+        $compositeur=$aFiltres['compositeur'];
+        $btous=$aFiltres['tous'];
+        //var_dump($btous);
+        //$scompo=$session
+        
+        $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
+        //,'formfiltres'=>$form
+        return $this->render('oeuvresBundle:Compositeurs:index.html.twig', array(
+            'entities' => $entities	,'filtre_form'   => $filtre_form->createView(),
+        		'compositeur'=>$compositeur
+        		,'tous'=>$btous
+        		
+        ));
+    }
+    
+    public function filtrerAction(Request $request,$tous=1)
+    {
+    	/**
+    	 * retour à la liste filtrée
+    	 */
+    	
+    	$gUserLoginLogged="";
+    	$session = $this->getRequest()->getSession();
+    	//var_dump($session);
+    	
     	if($session)
     	{
     		$gUserLoginLogged=$session->get('gUserLoginLogged');
-    		
     	}
     	if($gUserLoginLogged=='')
     	{
@@ -46,26 +108,51 @@ class CompositeursController extends Controller
     			
     		}
     	}
-    	//die('compositeurs 37');
     	
     	
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('oeuvresBundle:Compositeurs')->ChargeListe();
-
-        
-        $aEnregId=$this->listeDesIds($entities);
-        
-        $iEnreg=1;
-        $iPage=1;
-        $sColDeTri="";
-        $sColDeTriOrdre="";
-        
-        $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
-             
-        return $this->render('oeuvresBundle:Compositeurs:index.html.twig', array(
-            'entities' => $entities,
-        ));
+    	//var_dump($tous);
+    	//die('filtrerAction  retour à la liste filtrée');
+    	
+    	$compositeur='';
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$post = $request->request->get('oeuvresbundle_filtre_compositeurs');
+    	
+    	$compositeur=$post['compositeur'];
+    	//die($compositeur);
+    	
+    	
+    	$tous=isset($post['tous']) ? $post['tous'] : 0;
+    	
+    	if($compositeur!='' || !$tous)
+    	{
+    		$session = new Session();
+    		
+    		$aFiltres=array('compositeur'=>$compositeur,'tous'=>$tous);
+    		
+    		//var_dump($aFiltres);
+    		//$session = new Session();
+    		
+    		$session->set($gUserLoginLogged.'_compositeurs_filtres',$aFiltres);
+    		
+    	}
+    	$entities = $em->getRepository('oeuvresBundle:Compositeurs')->ChargeListe($post);
+    	
+    	$filtre_form=$this->filtreCreateForm();
+    	
+    	
+    	/**
+    	 * Recuperer valeur filtres
+    	 */
+    	
+    	return $this->render('oeuvresBundle:Compositeurs:index.html.twig', array(
+    			'entities' => $entities,
+    			'filtre_form'   => $filtre_form->createView(),
+    			'compositeur'=>$compositeur,
+    			'tous'=>$tous
+    			
+    	));
     }
     
     public function pagineAction($idxenreg,$sens,$action)
@@ -533,4 +620,27 @@ class CompositeursController extends Controller
     	return $bOk;
     }
         
+    
+    /**
+     * Creates a form to create a Oeuvres entity.
+     *
+     * @param Oeuvres $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function filtreCreateForm()
+    {
+    	
+    	$form = $this->createForm(new CompositeursFiltreType(), null,array(
+    			'action' => $this->generateUrl('compositeurs_filtrer', array('tous' => 0)),
+    			'method' => 'POST'
+    	));
+    	
+    	$form->add('submit', 'submit', array('label' => ' '));
+    	
+    	return $form;
+    	
+    }
+    
+    
 }

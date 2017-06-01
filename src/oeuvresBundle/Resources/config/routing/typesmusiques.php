@@ -61,5 +61,8 @@ $collection->add('typesmusiques_confirm_action_delete', new Route('/{id}/confirm
 $collection->add('typesmusiques_pagine', new Route('/{idxenreg}/{sens}/{action}/pagine', array(
 		'_controller' => 'oeuvresBundle:Typesmusiques:pagine',
 )));
+$collection->add('typesmusiquesliturgiques_filtrer', new Route('/{tous}/filtrer', array(
+		'_controller' => 'oeuvresBundle:Typesmusiques:filtrer',
+)));
 
 return $collection;

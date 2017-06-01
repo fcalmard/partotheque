@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use oeuvresBundle\Entity\TempsLiturgiques;
 use oeuvresBundle\Form\TempsLiturgiquesType;
+use oeuvresBundle\Form\TempsLiturgiquesFiltreType;
 
 /**
  * TempsLiturgiques controller.
@@ -50,9 +51,11 @@ class TempsLiturgiquesController extends Controller
         
         $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
         
+        $filtre_form=$this->filtreCreateForm();
         
         return $this->render('oeuvresBundle:TempsLiturgiques:index.html.twig', array(
             'entities' => $entities,
+        		'filtre_form'=>$filtre_form->createView()
         ));
     }
     public function pagineAction($idxenreg,$sens,$action)
@@ -372,6 +375,50 @@ class TempsLiturgiquesController extends Controller
     }
 
     /**
+     * 
+     * @param bool $tous
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function filtrerAction(bool $tous)
+    {
+    	//die('FILTRER ACTION');
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$session = $this->getRequest()->getSession();
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    		
+    		
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		return new RedirectResponse($this->generateUrl('homepage'));
+    	}
+    	
+    	$entities = $em->getRepository('oeuvresBundle:TempsLiturgiques')->ChargeListe();
+    	
+    	$aEnregId=$this->listeDesIds($entities);
+    	
+    	$iEnreg=1;
+    	$iPage=1;
+    	$sColDeTri="";
+    	$sColDeTriOrdre="";
+    	
+    	$this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
+    	
+    	//$filtre_form=$this->filtreCreateForm();     			'filtre_form'=>$filtre_form->createView()
+    	$filtre_form=$this->filtreCreateForm();
+    	
+    	
+    	return $this->render('oeuvresBundle:TempsLiturgiques:index.html.twig', array(
+    			'entities' => $entities,
+    			'filtre_form'=>$filtre_form->createView()
+    	));
+    	
+    }
+    /**
      * Finds and displays a TempsLiturgiques entity.
      *
      */
@@ -511,6 +558,28 @@ class TempsLiturgiquesController extends Controller
     	->add('submit', 'submit', array('label' => 'Oui'))
     	->getForm()
     	;
+    }
+    
+    
+    /**
+     * Creates a form to create a Oeuvres entity.
+     *
+     * @param Oeuvres $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function filtreCreateForm()
+    {
+    	
+    	$form = $this->createForm(new TempsLiturgiquesFiltreType(), null,array(
+    			'action' => $this->generateUrl('tempsliturgiques_filtrer', array('tous' => 0)),
+    			'method' => 'POST'
+    	));
+    	
+    	$form->add('submit', 'submit', array('label' => ' '));
+    	
+    	return $form;
+    	
     }
     
 }
