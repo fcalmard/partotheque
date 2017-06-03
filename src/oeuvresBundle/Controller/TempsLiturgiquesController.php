@@ -40,7 +40,13 @@ class TempsLiturgiquesController extends Controller
         	return new RedirectResponse($this->generateUrl('homepage'));
         }
         
-        $entities = $em->getRepository('oeuvresBundle:TempsLiturgiques')->ChargeListe();
+        $aFiltres= $session->get($gUserLoginLogged.'_tempsliturgiques_filtres');
+        
+        $tempsliturgique=$aFiltres['tempsliturgique'];
+        
+        $btous=$aFiltres['tous'];
+        
+        $entities = $em->getRepository('oeuvresBundle:TempsLiturgiques')->ChargeListe($aFiltres);
 
         $aEnregId=$this->listeDesIds($entities);
         
@@ -55,7 +61,9 @@ class TempsLiturgiquesController extends Controller
         
         return $this->render('oeuvresBundle:TempsLiturgiques:index.html.twig', array(
             'entities' => $entities,
-        		'filtre_form'=>$filtre_form->createView()
+        		'filtre_form'=>$filtre_form->createView(),
+        		'tempsliturgique'=>$tempsliturgique
+        		,'tous'=>$btous
         ));
     }
     public function pagineAction($idxenreg,$sens,$action)
@@ -374,15 +382,14 @@ class TempsLiturgiquesController extends Controller
         ));
     }
 
-    /**
-     * 
-     * @param bool $tous
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function filtrerAction(bool $tous)
+/**
+ * 
+ * @param Request $request
+ * @param bool $tous
+ * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+ */
+    public function filtrerAction(Request $request,bool $tous)
     {
-    	//die('FILTRER ACTION');
-    	
     	$em = $this->getDoctrine()->getManager();
     	
     	$session = $this->getRequest()->getSession();
@@ -397,7 +404,22 @@ class TempsLiturgiquesController extends Controller
     		return new RedirectResponse($this->generateUrl('homepage'));
     	}
     	
-    	$entities = $em->getRepository('oeuvresBundle:TempsLiturgiques')->ChargeListe();
+    	$post = $request->request->get('oeuvresbundle_filtre_tempsliturgiques');
+    	$stempsliturgique=$post['tempsliturgique'];
+    	$tous=isset($post['tous']) ? $post['tous'] : 0;
+    	
+    	if($stempsliturgique!='' || !$tous)
+    	{
+    		$session = new Session();
+    		
+    		$aFiltres=array('tempsliturgique'=>$stempsliturgique,'tous'=>$tous);
+    		
+
+    		$session->set($gUserLoginLogged.'_tempsliturgiques_filtres',$aFiltres);
+    		
+    	}
+    	    	
+    	$entities = $em->getRepository('oeuvresBundle:TempsLiturgiques')->ChargeListe($post);
     	
     	$aEnregId=$this->listeDesIds($entities);
     	
@@ -408,13 +430,13 @@ class TempsLiturgiquesController extends Controller
     	
     	$this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
     	
-    	//$filtre_form=$this->filtreCreateForm();     			'filtre_form'=>$filtre_form->createView()
     	$filtre_form=$this->filtreCreateForm();
     	
     	
     	return $this->render('oeuvresBundle:TempsLiturgiques:index.html.twig', array(
     			'entities' => $entities,
-    			'filtre_form'=>$filtre_form->createView()
+    			'filtre_form'=>$filtre_form->createView(),
+    			'tous'=>$tous,'tempsliturgique'=>$stempsliturgique
     	));
     	
     }

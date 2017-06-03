@@ -2,15 +2,10 @@
 
 namespace oeuvresBundle\Repository;
 
-use Doctrine\DBAL\Driver\PDOConnection;
-
-use Doctrine\DBAL\Driver\PDOSqlite\Driver;
-
 use Doctrine\ORM\EntityRepository;
 
 //use \Doctrine\DBAL\Driver\Mysqli\MysqliConnection;
 
-use Doctrine\ORM\Persisters\BasicEntityPersister;
 
 /**
  * GenresRepository
@@ -22,21 +17,35 @@ class GenresRepository extends EntityRepository
 {
 
 	
-	public function ChargeListe()
+	public function ChargeListe($aFiltres=null)
 	{
+		$btous=true;
+		$sgenre='';
+		if(isset($aFiltres) & is_array($aFiltres) & count($aFiltres)!=0)
+		{
+			$sgenre=(isset($aFiltres['genre'])) ? $aFiltres['genre'] : '';
+			$btous=(isset($aFiltres['tous'])) ? $aFiltres['tous'] : 0 ;
+			$btous=!($btous==0);
+		}
 	
-	
-		$query = $this->getEntityManager()
-		->createQuery(
-				'SELECT
+		$sSql='SELECT
 				t.id,
-				t.active,t.code,
-				
+				t.active,t.code,				
 				t.libelle,
 				t.datecreateAt
 				FROM oeuvresBundle:Genres t
-				WHERE t.active=1 order by t.libelle'
-		);
+				WHERE t.active=1 ';
+		
+		if(!$btous && $sgenre!='')
+		{
+			$s=sprintf("%s",$sgenre);
+			$sSql.=" and (t.libelle like '%$s%'";
+			$sSql.=" or t.libelle = '$sgenre')";
+		}
+		$sSql.='order by t.libelle';
+		
+		$query = $this->getEntityManager()
+		->createQuery($sSql);
 		
 		try {
 			return $query->getResult();

@@ -47,6 +47,30 @@
         		            <img alt="ajout" src="/web/css/images/add.png">
         	            </a>
                     </td>
+                    
+                                 {# FILTRES #}
+                                 {{ form_start(filtre_form) }}
+    
+                                    <td>
+                                    {{ form_label(filtre_form.typesmusique, 'Type de musique', { 'label_attr': {'class': 'filtre-label'} }) }}    				
+                        			{{ form_widget(filtre_form.typesmusique) }}
+                        			{{ form_errors(filtre_form.typesmusique) }}
+                                    </td>
+                                    <td>
+                        	
+                        	        {{ form_label(filtre_form.tous, 'Tous', { 'label_attr': {'class': 'filtre-label'} }) }}    				
+                        			{{ form_widget(filtre_form.tous) }}
+                        			{{ form_errors(filtre_form.tous) }}		
+                                    </td>
+                        			<td>
+                        			&nbsp;&nbsp;&nbsp;&nbsp;
+                        		    {{ form_widget(filtre_form.submit) }}
+                        		    </td>
+		    
+                    			    {# FILTRES #}
+					             {{ form_end(filtre_form) }}
+					             
+					             
                 </tr>
             </table>
 
@@ -59,7 +83,15 @@
 	{{ parent() }}
 
        <script type="text/javascript">
-
+               {# oeuvresbundle_filtre_typesmusiques #}
+        
+               {% if typesmusique is defined %}
+          		$("#oeuvresbundle_filtre_typesmusiques_typesmusique").val("{{typesmusique}}");
+        	{% endif %}
+           {% if tous is defined %}
+        		document.getElementById("oeuvresbundle_filtre_typesmusiques_tous").checked = {{tous}};
+        	{% endif %}
+		
 			$("#menu1").hide();
 			$("#menu2").hide();
 			$("#menu3").hide();

@@ -84,6 +84,13 @@
 
        <script type="text/javascript">
 
+       {% if tempsliturgique is defined %}
+       		$("#oeuvresbundle_filtre_tempsliturgiques_tempsliturgique").val("{{tempsliturgique}}");
+		{% endif %}
+	    {% if tous is defined %}
+			document.getElementById("oeuvresbundle_filtre_tempsliturgiques_tous").checked = {{tous}};
+		{% endif %}
+			
 			$("#menu1").hide();
 			$("#menu2").hide();
 			$("#menu3").hide();

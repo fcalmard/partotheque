@@ -59,6 +59,8 @@ $collection->add('genres_confim_delete', new Route('/{id}/confirmdelete', array(
 $collection->add('genres_pagine', new Route('/{idxenreg}/{sens}/{action}/pagine', array(
 		'_controller' => 'oeuvresBundle:Genres:pagine',
 )));
-
+$collection->add('genres_filtrer', new Route('/{tous}/filtrer', array(
+		'_controller' => 'oeuvresBundle:Genres:filtrer',
+)));
 
 return $collection;

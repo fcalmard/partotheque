@@ -9,6 +9,7 @@ use oeuvresBundle\Entity\Typesmusiques;
 use oeuvresBundle\Form\TypesmusiquesType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
+use oeuvresBundle\Form\TypesMusiquesFiltreType;
 
 /**
  * Typesmusiques controller.
@@ -37,7 +38,13 @@ class TypesmusiquesController extends Controller
     	
     	$em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('oeuvresBundle:Typesmusiques')->ChargeListe();
+    	$aFiltres= $session->get($gUserLoginLogged.'_typesmusiques_filtres');
+    	
+    	$stypesmusique=$aFiltres['typesmusique'];
+    	
+    	$btous=$aFiltres['tous'];
+    	
+        $entities = $em->getRepository('oeuvresBundle:Typesmusiques')->ChargeListe($aFiltres);
         
         $aEnregId=$this->listeDesIds($entities);
         
@@ -45,15 +52,26 @@ class TypesmusiquesController extends Controller
         $iPage=1;
         $sColDeTri="";
         $sColDeTriOrdre="";
+        /**
+         * filtreCreateForm
+         * 
+         *         		'filtre_form'   => $filtre_form->createView()
+
+         */
+      	$filtre_form=$this->filtreCreateForm();
+        //die('54');
         
         $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
                 
         return $this->render('oeuvresBundle:Typesmusiques:index.html.twig', array(
-            'entities' => $entities,
+            'entities' => $entities
+        		,'filtre_form'   => $filtre_form->createView()
+        		,'typesmusique'=>$stypesmusique
+        		,'tous'=>$btous
         ));
     }
     
-    public function filtrerAction($tous)
+    public function filtrerAction(Request $request,bool $tous)
     {
     	/**
     	 * retour à la liste filtrée
@@ -62,17 +80,46 @@ class TypesmusiquesController extends Controller
     	//die('filtrerAction  retour à la liste filtrée');
     	    	
     	$em = $this->getDoctrine()->getManager();
+    	    	
+    	$session = $this->getRequest()->getSession();
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    		
+    		
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		return new RedirectResponse($this->generateUrl('homepage'));
+    	}
     	
-    	$entities = $em->getRepository('oeuvresBundle:Typesmusiques')->ChargeListe();
+    	$post = $request->request->get('oeuvresbundle_filtre_typesmusiques');
+    	$stypesmusique=$post['typesmusique'];
+    	$tous=isset($post['tous']) ? $post['tous'] : 0;
+    	
+    	if($stypesmusique!='' || !$tous)
+    	{
+    		$session = new Session();
+    		
+    		$aFiltres=array('typesmusique'=>$stypesmusique,'tous'=>$tous);
+    		
+    		
+    		$session->set($gUserLoginLogged.'_typesmusiques_filtres',$aFiltres);
+    		
+    	}
+    	
+    	
+    	$entities = $em->getRepository('oeuvresBundle:Typesmusiques')->ChargeListe($post);
     	
     	$filtre_form=$this->filtreCreateForm();
     	
     	//var_dump($banonyme);
     	return $this->render('oeuvresBundle:Typesmusiques:index.html.twig', array(
     			'entities' => $entities,
-    			'filtre_form'   => $filtre_form->createView(),
-    			'tous'=>$tous   			
-    	));
+    			'filtre_form'   => $filtre_form->createView()
+    			,'typesmusique'=>$stypesmusique
+    			,'tous'=>$tous   			
+    		));
     }
     
     
@@ -542,5 +589,21 @@ class TypesmusiquesController extends Controller
     
     	return $bOk;
     }    
+    
+
+    private function filtreCreateForm()
+    {
+    	
+    	$form = $this->createForm(new TypesMusiquesFiltreType(), null,array(
+    			'action' => $this->generateUrl('typesmusiques_filtrer', array('tous' => 0)),
+    			'method' => 'POST'
+    	));
+    	$form->add('submit', 'submit', array('label' => ' '));
+    	
+    	return $form;
+    	
+    	
+    	
+    }
     
 }

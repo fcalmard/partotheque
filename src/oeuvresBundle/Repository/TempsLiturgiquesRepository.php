@@ -13,11 +13,17 @@ use Doctrine\ORM\EntityRepository;
 class TempsLiturgiquesRepository extends EntityRepository
 {
 	
-	public function ChargeListe()
+	public function ChargeListe($aFiltres=null)
 	{	
-		$query = $this->getEntityManager()
-		->createQuery(
-				'SELECT
+		$btous=true;
+		$scompo='';
+		if(isset($aFiltres) & is_array($aFiltres) & count($aFiltres)!=0)
+		{
+			$stempsliturgiques=(isset($aFiltres['tempsliturgique'])) ? $aFiltres['tempsliturgique'] : '';
+			$btous=(isset($aFiltres['tous'])) ? $aFiltres['tous'] : 0 ;
+			$btous=!($btous==0);
+		}
+		$sSql='SELECT
 				t.id,
 				t.active,
 				t.libelle,
@@ -26,20 +32,27 @@ class TempsLiturgiquesRepository extends EntityRepository
 				t.couleurfg,
 				t.datecreateAt
 				FROM oeuvresBundle:TempsLiturgiques t
-				WHERE t.active=1 order by t.libelle'
+				WHERE t.active=1 ';
+		
+		if(!$btous && $stempsliturgiques!='')
+		{
+			$s=sprintf("%s",$stempsliturgiques);
+			$sSql.=" and (t.libelle like '%$s%'";
+			$sSql.=" or t.libelle = '$stempsliturgiques')";		
+		}
+		
+		$sSql.=' order by t.libelle';
+		
+		$query = $this->getEntityManager()
+		->createQuery(
+				$sSql
 		);
-		
-		// $query->andWhere('o.actif = ?', array(1));
-		
-		try {
-			//return $query->getSingleResult();
 				
+		try {			
 			return $query->getResult();
 		} catch (\Doctrine\ORM\NoResultException $e) {
 			return null;
 		}
-		
-		
 	}
 	
 	public function getCouleurs($id)

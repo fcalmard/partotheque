@@ -13,20 +13,35 @@ use Doctrine\ORM\EntityRepository;
 class TypesmusiquesRepository extends EntityRepository
 {
 	
-	public function ChargeListe()
+	public function ChargeListe($aFiltres=null)
 	{
+		$btous=true;
+		$stypesmusique='';
+		if(isset($aFiltres) & is_array($aFiltres) & count($aFiltres)!=0)
+		{
+			$stypesmusique=(isset($aFiltres['typesmusique'])) ? $aFiltres['typesmusique'] : '';
+			$btous=(isset($aFiltres['tous'])) ? $aFiltres['tous'] : 0 ;
+			$btous=!($btous==0);
+		}
 		
-		
-		$query = $this->getEntityManager()
-		->createQuery(
-				'SELECT
+		$sSql='SELECT
 				t.id,
 				t.active,
 				t.libelle,
 				t.datecreateAt
-				FROM oeuvresBundle:Typesmusiques t
-				ORDER BY t.libelle'
-		);
+				FROM oeuvresBundle:Typesmusiques t WHERE t.active=1';
+		
+		if(!$btous && $stypesmusique!='')
+		{
+			$s=sprintf("%s",$stypesmusique);
+			$sSql.=" and (t.libelle like '%$s%'";
+			$sSql.=" or t.libelle = '$stypesmusique')";
+		}
+		
+		$sSql.=' ORDER BY t.libelle';
+		
+		$query = $this->getEntityManager()
+		->createQuery($sSql);
 				
 		try {				
 			return $query->getResult();

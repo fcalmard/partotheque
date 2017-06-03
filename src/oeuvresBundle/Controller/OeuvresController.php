@@ -331,6 +331,12 @@ class OeuvresController extends Controller
     			}  			 
     		}
     	}
+    	/**
+    	 * 
+    	 */
+    	$slibfonction='';
+    	$slibvoix='';
+    	
     	//var_dump($sListTpsLiturgique);
     	//var_dump($atps_litur_id);
     	//die("332 >".$sListTpsLiturgique.'<');

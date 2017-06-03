@@ -10,6 +10,8 @@ use oeuvresBundle\Form\GenresType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+use oeuvresBundle\Form\GenresFiltreType;
+
 /**
  * Genres controller.
  *
@@ -36,6 +38,9 @@ class GenresController extends Controller
     	        
     	$em = $this->getDoctrine()->getManager();
 
+    	$sgenre='';
+    	$btous='';
+    	
         $entities = $em->getRepository('oeuvresBundle:Genres')->ChargeListe();
         
         
@@ -46,13 +51,68 @@ class GenresController extends Controller
         $sColDeTri="";
         $sColDeTriOrdre="";
         
+        $form=$this->filtreCreateForm();
+        
         $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
+        
         
         return $this->render('oeuvresBundle:Genres:index.html.twig', array(
             'entities' => $entities,
+        		'filtre_form'=>$form->createView()
+        		,'genre'=>$sgenre,'tous'=>$btous
         ));
     }
     
+    public function filtrerAction(Request $request,bool $tous)
+    {
+    	/**
+    	 * retour à la liste filtrée
+    	 */
+    	//var_dump($tous);
+    	//die('filtrerAction  retour à la liste filtrée');
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$session = $this->getRequest()->getSession();
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    		
+    		
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		return new RedirectResponse($this->generateUrl('homepage'));
+    	}
+    	
+    	$post = $request->request->get('oeuvresbundle_filtre_genres');
+    	$sgenre=$post['genre'];
+    	$tous=isset($post['tous']) ? $post['tous'] : 0;
+    	
+    	if($sgenre!='' || !$tous)
+    	{
+    		$session = new Session();
+    		
+    		$aFiltres=array('genre'=>$sgenre,'tous'=>$tous);
+    		
+    		
+    		$session->set($gUserLoginLogged.'_genres_filtres',$aFiltres);
+    		
+    	}
+    	
+    	
+    	$entities = $em->getRepository('oeuvresBundle:Genres')->ChargeListe($post);
+    	
+    	$filtre_form=$this->filtreCreateForm();
+    	
+    	//var_dump($banonyme);
+    	return $this->render('oeuvresBundle:Genres:index.html.twig', array(
+    			'entities' => $entities,
+    			'filtre_form'   => $filtre_form->createView()
+    			,'genre'=>$sgenre
+    			,'tous'=>$tous
+    	));
+    }
     
     public function pagineAction($idxenreg,$sens,$action)
     {
@@ -551,5 +611,19 @@ class GenresController extends Controller
     
     	return $bOk;
     }
-    
+ 
+    private function filtreCreateForm()
+    {
+    	
+    	$form = $this->createForm(new GenresFiltreType(), null,array(
+    			'action' => $this->generateUrl('genres_filtrer', array('tous' => 0)),
+    			'method' => 'POST'
+    	));
+    	$form->add('submit', 'submit', array('label' => ' '));
+    	
+    	return $form;
+    	
+    	
+    	
+    }
 }

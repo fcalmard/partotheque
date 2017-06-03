@@ -50,7 +50,14 @@ class CompositeursController extends Controller
     	
     	$em = $this->getDoctrine()->getManager();
     	
-        $entities = $em->getRepository('oeuvresBundle:Compositeurs')->ChargeListe();
+    	
+    	$aFiltres= $session->get($gUserLoginLogged.'_compositeurs_filtres');
+	    	
+    	$compositeur=$aFiltres['compositeur'];
+	    	
+    	$btous=$aFiltres['tous'];	    	
+    	
+    	$entities = $em->getRepository('oeuvresBundle:Compositeurs')->ChargeListe($aFiltres);
 
         $filtre_form=$this->filtreCreateForm();
         
@@ -60,16 +67,6 @@ class CompositeursController extends Controller
         $iPage=1;
         $sColDeTri="";
         $sColDeTriOrdre="";
-        
-        //echo ('compositeurs 64'.$gUserLoginLogged);
-
-       // $post= $request->request->get('oeuvresbundle_filtre_compositeurs');
-        $aFiltres= $session->get($gUserLoginLogged.'_compositeurs_filtres');
-        
-        $compositeur=$aFiltres['compositeur'];
-        $btous=$aFiltres['tous'];
-        //var_dump($btous);
-        //$scompo=$session
         
         $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
         //,'formfiltres'=>$form
