@@ -58,5 +58,7 @@ $collection->add('utilisateurs_confirm_delete', new Route('/{id}/confirm_delete'
 $collection->add('utilisateurs_pagine', new Route('/{idxenreg}/{sens}/{action}/pagine', array(
 		'_controller' => 'oeuvresBundle:Utilisateurs:pagine',
 )));
-
+$collection->add('utilisateurs_filtrer', new Route('/{tous}/filtrer', array(
+		'_controller' => 'oeuvresBundle:Utilisateurs:filtrer',
+)));
 return $collection;

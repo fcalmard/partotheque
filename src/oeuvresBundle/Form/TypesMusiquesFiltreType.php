@@ -22,8 +22,13 @@ class TypesMusiquesFiltreType extends AbstractType
     	
     	->add('typesmusique','text',array('label'=>'Type de musique','required'=>false))
     	
-    	->add('tous','checkbox',array('required'=>false));
-    	
+    	->add('tous', 'choice', array('label'=>'Tous',
+    			'empty_value'=>null,
+    			'choices'   => array(0=>'Selection',1 => 'Tous', 2 => 'Inactifs'),
+    			'required'  => false,
+    	))
+    	;
+    			
     }
     
     public function configure()

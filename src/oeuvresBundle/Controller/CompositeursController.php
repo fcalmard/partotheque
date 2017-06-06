@@ -52,9 +52,9 @@ class CompositeursController extends Controller
     	
     	
     	$aFiltres= $session->get($gUserLoginLogged.'_compositeurs_filtres');
-	    	
+    	//var_dump($aFiltres);
     	$compositeur=$aFiltres['compositeur'];
-	    	
+	    //echo "<br/>$compositeur";
     	$btous=$aFiltres['tous'];	    	
     	
     	$entities = $em->getRepository('oeuvresBundle:Compositeurs')->ChargeListe($aFiltres);
@@ -69,7 +69,6 @@ class CompositeursController extends Controller
         $sColDeTriOrdre="";
         
         $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
-        //,'formfiltres'=>$form
         return $this->render('oeuvresBundle:Compositeurs:index.html.twig', array(
             'entities' => $entities	,'filtre_form'   => $filtre_form->createView(),
         		'compositeur'=>$compositeur
@@ -86,7 +85,6 @@ class CompositeursController extends Controller
     	
     	$gUserLoginLogged="";
     	$session = $this->getRequest()->getSession();
-    	//var_dump($session);
     	
     	if($session)
     	{
@@ -106,10 +104,6 @@ class CompositeursController extends Controller
     		}
     	}
     	
-    	
-    	//var_dump($tous);
-    	//die('filtrerAction  retour à la liste filtrée');
-    	
     	$compositeur='';
     	
     	$em = $this->getDoctrine()->getManager();
@@ -117,8 +111,6 @@ class CompositeursController extends Controller
     	$post = $request->request->get('oeuvresbundle_filtre_compositeurs');
     	
     	$compositeur=$post['compositeur'];
-    	//die($compositeur);
-    	
     	
     	$tous=isset($post['tous']) ? $post['tous'] : 0;
     	
@@ -127,9 +119,6 @@ class CompositeursController extends Controller
     		$session = new Session();
     		
     		$aFiltres=array('compositeur'=>$compositeur,'tous'=>$tous);
-    		
-    		//var_dump($aFiltres);
-    		//$session = new Session();
     		
     		$session->set($gUserLoginLogged.'_compositeurs_filtres',$aFiltres);
     		

@@ -3,17 +3,14 @@
 {% block body -%}
 	<div class="titrelisteetform">
 
-    <table>
-    	<tr>
-    		<td>
-        		<h1>Liste des Voix</h1>
-    		</td>
-    		
-    	</tr>	
-    </table>
-
-	
-				
+        <table>
+        	<tr>
+        		<td>
+            		<h1>Liste des Tessiture de Voix</h1>
+        		</td>
+        		
+        	</tr>	
+        </table>
 				
 	</div>
 
@@ -126,13 +123,34 @@
 		</div>
 		<div class="finlisteetform">
 
-	        <ul>
-	        <li>
+            <table>
+            <tr>
+            <td>
 	            <a href="{{ path('voix_new') }}">
 			            <img alt="ajout" src="/web/css/images/add.png">
 	            </a>
-	        </li>
-	    	</ul>
+            </td>
+            {# FILTRES #}
+             {{ form_start(filtre_form) }}
+            <td>
+            {{ form_label(filtre_form.voix, 'Tessiture', { 'label_attr': {'class': 'filtre-label'} }) }}    				
+			{{ form_widget(filtre_form.voix) }}
+			{{ form_errors(filtre_form.voix) }}
+            </td>
+            <td>
+	
+	        {{ form_label(filtre_form.tous, 'Tous', { 'label_attr': {'class': 'filtre-label'} }) }}    				
+			{{ form_widget(filtre_form.tous) }}
+			{{ form_errors(filtre_form.tous) }}		
+            </td>
+			<td>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+		    {{ form_widget(filtre_form.submit) }}
+		    </td>
+		    {{ form_end(filtre_form) }}
+            </tr>
+    		</table>
+
     	</div>
     {% endblock %}
     
@@ -141,6 +159,21 @@
 	{{ parent() }}
 
        <script type="text/javascript">
+
+            {% if voix is defined %}
+            
+            $("#oeuvresbundle_filtre_voix_voix").val("{{voix}}");
+            
+            {% endif %}
+            
+            {% if tous is defined %}
+            var obj = document.getElementById("oeuvresbundle_filtre_voix_tous");
+            if(obj)
+               {
+            obj.value="{{tous}}";
+            }
+            {% endif %}
+          
 
 			$("#menu1").hide();
 			$("#menu2").hide();

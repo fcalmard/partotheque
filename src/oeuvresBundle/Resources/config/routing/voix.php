@@ -58,5 +58,7 @@ $collection->add('voix_confirm_action_delete', new Route('/{id}/confirm_delete',
 $collection->add('voix_pagine', new Route('/{idxenreg}/{sens}/{action}/pagine', array(
 		'_controller' => 'oeuvresBundle:Voix:pagine',
 )));
-
+$collection->add('voix_filtrer', new Route('/{tous}/filtrer', array(
+		'_controller' => 'oeuvresBundle:Voix:filtrer',
+)));
 return $collection;

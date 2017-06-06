@@ -85,12 +85,10 @@
        <script type="text/javascript">
                {# oeuvresbundle_filtre_typesmusiques #}
         
-               {% if typesmusique is defined %}
+            {% if typesmusique is defined %}
           		$("#oeuvresbundle_filtre_typesmusiques_typesmusique").val("{{typesmusique}}");
         	{% endif %}
-           {% if tous is defined %}
-        		document.getElementById("oeuvresbundle_filtre_typesmusiques_tous").checked = {{tous}};
-        	{% endif %}
+
 		
 			$("#menu1").hide();
 			$("#menu2").hide();

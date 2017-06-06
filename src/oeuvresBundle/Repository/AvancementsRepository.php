@@ -11,18 +11,43 @@ namespace oeuvresBundle\Repository;
 class AvancementsRepository extends \Doctrine\ORM\EntityRepository
 {
 	
-		public function ChargeListe()
+	public function ChargeListe($aFiltres=null)
 		{
 	
-			$query = $this->getEntityManager()
-			->createQuery(
-					'SELECT
+			$btous=true;
+			$savancement='';
+			if(isset($aFiltres) & is_array($aFiltres) & count($aFiltres)!=0)
+			{
+				$savancement=(isset($aFiltres['avancement'])) ? $aFiltres['avancement'] : '';
+				$btous=(isset($aFiltres['tous'])) ? $aFiltres['tous'] : 0 ;
+			}
+			
+			$sSql='SELECT
 					t.id,
 					t.active,
 					t.libelle,
 					t.datecreateAt
-					FROM oeuvresBundle:Avancements t order by t.libelle'
-			);
+					FROM oeuvresBundle:Avancements t ';
+			
+			$sSql.=' where ';
+			if($btous=='2')
+			{
+				$sSql.='t.active=0';
+			}
+			else{
+				$sSql.='t.active=1';
+				$btous=($btous=='1');
+				if(!$btous && $savancement!='')
+				{
+					$s=sprintf("%s",$savancement);
+					$sSql.=" and (t.libelle like '%$s%'";
+					$sSql.=" or t.libelle = '$savancement')";
+				}
+			}
+			$sSql.='order by t.libelle';
+			
+			$query = $this->getEntityManager()
+			->createQuery($sSql);
 			
 			try {
 				return $query->getResult();

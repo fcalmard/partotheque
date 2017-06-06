@@ -112,12 +112,18 @@
 		<script type="text/javascript">
 
 	       {% if compositeur is defined %}
-	       $("#oeuvresbundle_filtre_compositeurs_compositeur").val("{{compositeur}}");
+		       
+	       		$("#oeuvresbundle_filtre_compositeurs_compositeur").val("{{compositeur}}");
 			
 			{% endif %}
-		       {% if tous is defined %}
-				document.getElementById("oeuvresbundle_filtre_compositeurs_tous").checked = {{tous}};
-				{% endif %}
+
+	        {% if tous is defined %}
+	            var obj = document.getElementById("oeuvresbundle_filtre_compositeurs_tous");
+	            if(obj)
+	                {
+	            	obj.value="{{tous}}";
+	                }
+	        {% endif %}
 				
 			$("#menu1").hide();
 			$("#menu2").hide();

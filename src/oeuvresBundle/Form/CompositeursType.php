@@ -19,17 +19,12 @@ class CompositeursType extends AbstractType
         	->add('nomsec','text',array('required'=>false,'label_attr' => array('class' => 'clsLabelEntity')))
         	->add('prenom','text',array('required'=>false,'label_attr' => array('class' => 'clsLabelEntity')))
         	->add('nationalite','text',array('required'=>false,'label_attr' => array('class' => 'clsLabelEntity')))
-/*
-            ->add('datenaiss', 'date', array(
-            		'label' => 'Né le',
-            		'widget' => 'single_text',
-            		'input' => 'datetime',
-            		'format' => 'dd/MM/yyyy'),array('required'=>false),array('label_attr' => array('class' => 'clsLabelEntity')))
-            		       */     
             ->add('datenaiss','text',array('required'=>false,'label_attr' => array('class' => 'clsLabelEntity')))
             ->add('datedeces','text',array('required'=>false,'label_attr' => array('class' => 'clsLabelEntity')))
             ->add('historique','textarea',array('label'=>'Historique','required'=>false,'label_attr' => array('class' => 'clsLabelEntity')))
+            
             ->add('active','checkbox',array('required'=>false,'label_attr' => array('class' => 'clsLabelEntity')))
+            
             ->add('datecreateAt','text',array('disabled'=>true,'required'=>false,'label_attr' => array('class' => 'clsLabelEntity')))
         ;
     }

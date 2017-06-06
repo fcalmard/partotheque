@@ -12,7 +12,7 @@ use oeuvresBundle\Repository\SouscategvoixRepository;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
+use oeuvresBundle\Form\VoixFiltreType;
 /**
  * Voix controller.
  *
@@ -40,8 +40,11 @@ class VoixController extends Controller
         	return new RedirectResponse($this->generateUrl('homepage'));
         }
         
+        $aFiltres= $session->get($gUserLoginLogged.'_voix_filtres');
+        $voix=$aFiltres['voix'];
+        $btous=$aFiltres['tous'];
         
-        $entities = $em->getRepository('oeuvresBundle:Voix')->ChargeListe();
+        $entities = $em->getRepository('oeuvresBundle:Voix')->ChargeListe($aFiltres);
 
         
         $aEnregId=$this->listeDesIds($entities);
@@ -50,13 +53,81 @@ class VoixController extends Controller
         $iPage=1;
         $sColDeTri="";
         $sColDeTriOrdre="";
+        $form=$this->filtreCreateForm();
         
         $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
                 
         return $this->render('oeuvresBundle:Voix:index.html.twig', array(
             'entities' => $entities,
+        		'filtre_form'=>$form->createView(),
+        		'voix'=>$voix,'tous'=>$btous
         ));
     }
+
+    public function filtrerAction(Request $request,$tous=1)
+    {
+    	/**
+    	 * retour à la liste filtrée
+    	 */
+    	
+    	$gUserLoginLogged="";
+    	$session = $this->getRequest()->getSession();
+    	
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		try {
+    			$redir= new RedirectResponse($this->generateUrl('homepage'));
+    			
+    			return $redir;
+    			
+    		}catch (\ErrorException $e)
+    		{
+    			die('compositeurs 30 >'.$gUserLoginLogged.'<');
+    			
+    		}
+    	}
+    	
+    	$compositeur='';
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$post = $request->request->get('oeuvresbundle_filtre_voix');
+    	
+    	$voix=$post['voix'];
+    	
+    	$tous=isset($post['tous']) ? $post['tous'] : 0;
+    	
+    	if($compositeur!='' || !$tous)
+    	{
+    		$session = new Session();
+    		
+    		$aFiltres=array('voix'=>$voix,'tous'=>$tous);
+    		
+    		$session->set($gUserLoginLogged.'_voix_filtres',$aFiltres);
+    		
+    	}
+    	$entities = $em->getRepository('oeuvresBundle:Voix')->ChargeListe($post);
+    	
+    	$filtre_form=$this->filtreCreateForm();
+    	
+    	
+    	/**
+    	 * Recuperer valeur filtres
+    	 */
+    	
+    	return $this->render('oeuvresBundle:Voix:index.html.twig', array(
+    			'entities' => $entities,
+    			'filtre_form'   => $filtre_form->createView(),
+    			'voix'=>$voix,
+    			'tous'=>$tous
+    			
+    	));
+    }
+    
     
     public function pagineAction($idxenreg,$sens,$action)
     {
@@ -552,7 +623,20 @@ class VoixController extends Controller
     	return $bOk;
     }
     
-    
+    private function filtreCreateForm()
+    {
+    	
+    	$form = $this->createForm(new VoixFiltreType(), null,array(
+    			'action' => $this->generateUrl('voix_filtrer', array('tous' => 0)),
+    			'method' => 'POST'
+    	));
+    	$form->add('submit', 'submit', array('label' => ' '));
+    	
+    	return $form;
+    	
+    	
+    	
+    }
 
     
 }

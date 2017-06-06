@@ -16,12 +16,11 @@ class TempsLiturgiquesRepository extends EntityRepository
 	public function ChargeListe($aFiltres=null)
 	{	
 		$btous=true;
-		$scompo='';
+		$stempsliturgique='';
 		if(isset($aFiltres) & is_array($aFiltres) & count($aFiltres)!=0)
 		{
-			$stempsliturgiques=(isset($aFiltres['tempsliturgique'])) ? $aFiltres['tempsliturgique'] : '';
+			$stempsliturgique=(isset($aFiltres['tempsliturgique'])) ? $aFiltres['tempsliturgique'] : '';
 			$btous=(isset($aFiltres['tous'])) ? $aFiltres['tous'] : 0 ;
-			$btous=!($btous==0);
 		}
 		$sSql='SELECT
 				t.id,
@@ -31,14 +30,31 @@ class TempsLiturgiquesRepository extends EntityRepository
 				t.couleur,
 				t.couleurfg,
 				t.datecreateAt
-				FROM oeuvresBundle:TempsLiturgiques t
-				WHERE t.active=1 ';
+				FROM oeuvresBundle:TempsLiturgiques t';
 		
-		if(!$btous && $stempsliturgiques!='')
+		$sSql.=' where ';
+		if($btous=='2')
 		{
-			$s=sprintf("%s",$stempsliturgiques);
+			$sSql.='t.active=0';
+			
+		}
+		else{
+			$sSql.='t.active=1';
+			$btous=($btous=='1');
+			if(!$btous && $stempsliturgique!='')
+			{
+				$s=sprintf("%s",$stempsliturgique);
+				
+				$sSql.=" and (t.libelle like '%$s%'";
+				$sSql.=" or t.libelle = '$stempsliturgique')";
+			}
+		}
+				
+		if(!$btous && $stempsliturgique!='')
+		{
+			$s=sprintf("%s",$stempsliturgique);
 			$sSql.=" and (t.libelle like '%$s%'";
-			$sSql.=" or t.libelle = '$stempsliturgiques')";		
+			$sSql.=" or t.libelle = '$stempsliturgique')";		
 		}
 		
 		$sSql.=' order by t.libelle';

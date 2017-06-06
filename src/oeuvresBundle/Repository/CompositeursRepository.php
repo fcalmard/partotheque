@@ -27,13 +27,8 @@ class CompositeursRepository extends EntityRepository
 		{
 			$scompo=(isset($aFiltres['compositeur'])) ? $aFiltres['compositeur'] : '';
 			$btous=(isset($aFiltres['tous'])) ? $aFiltres['tous'] : 0 ;
-			$btous=!($btous==0);
-			//echo ('filtres présents');
 		}
-		/**
-				SELECT * FROM `Compositeurs` WHERE `nom` LIKE '%RIO%' ORDER BY `nom` DESC 		 * 
-		 * @var string $sSql
-		 */
+
 		$sSql='SELECT
 					t.id,
 					t.active,
@@ -44,20 +39,29 @@ class CompositeursRepository extends EntityRepository
 					t.datenaiss,
 					t.datedeces,
 					t.datecreateAt
-					FROM oeuvresBundle:Compositeurs t
-					WHERE t.active=1';
-		
+					FROM oeuvresBundle:Compositeurs t ';
+		$sSql.=' where ';
+		if($btous=='2')
+		{
+			$sSql.='t.active=0';
+			
+		}
+		else{
+			$sSql.='t.active=1';
+			$btous=($btous=='1');
 			if(!$btous && $scompo!='')
 			{
 				$s=sprintf("%s",$scompo);
-					
+				
 				$sSql.=" and (t.nom like '%$s%'";
 				$sSql.=" or t.nom = '$scompo')";
-				
 			}
-			$sSql.=' order by t.nom asc,t.nomsec asc,t.prenom asc';
+		}
+		
+		
+		$sSql.=' order by t.nom asc,t.nomsec asc,t.prenom asc';
 
-			//echo $sSql;
+		//echo "<br/>$sSql";
 		
 			$query = $this->getEntityManager()
 				->createQuery($sSql);

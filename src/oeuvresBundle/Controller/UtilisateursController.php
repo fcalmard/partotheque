@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use oeuvresBundle\Entity\Utilisateurs;
 use oeuvresBundle\Form\UtilisateursType;
+use oeuvresBundle\Form\UtilisateursFiltreType;
+
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -38,7 +40,11 @@ class UtilisateursController extends Controller
     	    	
     	$em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('oeuvresBundle:Utilisateurs')->ChargeListe();
+    	$aFiltres= $session->get($gUserLoginLogged.'_utilisateurs_filtres');
+    	$utilisateur=isset($aFiltres['utilisateur']) ? $aFiltres['utilisateur'] : '';
+    	$btous=isset($aFiltres['tous']) ? $aFiltres['tous'] : 1;
+    	
+        $entities = $em->getRepository('oeuvresBundle:Utilisateurs')->ChargeListe($aFiltres);
 
         $aEnregId=$this->listeDesIds($entities);
         
@@ -49,13 +55,72 @@ class UtilisateursController extends Controller
         
         $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
 
+        $filtre_form=$this->filtreCreateForm();
         
         return $this->render('oeuvresBundle:Utilisateurs:index.html.twig', array(
             'entities' => $entities,
+        		'filtre_form'=>$filtre_form->createView(),
+        		'utilisateur'=>$utilisateur,
+        		'tous'=>$btous
         ));
     }
     
-    
+    public function filtrerAction(Request $request,$tous=1)
+    {
+    	/**
+    	 * retour à la liste filtrée
+    	 */
+    	
+    	$gUserLoginLogged="";
+    	$session = $this->getRequest()->getSession();
+    	
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		try {
+    			$redir= new RedirectResponse($this->generateUrl('homepage'));
+    			
+    			return $redir;
+    			
+    		}catch (\ErrorException $e)
+    		{
+    			die('compositeurs 30 >'.$gUserLoginLogged.'<');
+    			
+    		}
+    	}
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$post = $request->request->get('oeuvresbundle_filtre_utilisateurs');
+    	
+    	$utilisateur=$post['utilisateur'];
+    	
+    	$tous=isset($post['tous']) ? $post['tous'] : 0;
+    	
+    	if($utilisateur!='' || !$tous)
+    	{
+    		$session = new Session();
+    		
+    		$aFiltres=array('utilisateur'=>$utilisateur,'tous'=>$tous);
+    		
+    		$session->set($gUserLoginLogged.'_utilisateurs_filtres',$aFiltres);
+    		
+    	}
+    	$entities = $em->getRepository('oeuvresBundle:Utilisateurs')->ChargeListe($post);
+    	
+    	$filtre_form=$this->filtreCreateForm();
+    	
+    	return $this->render('oeuvresBundle:Utilisateurs:index.html.twig', array(
+    			'entities' => $entities,
+    			'filtre_form'   => $filtre_form->createView(),
+    			'utilisateur'=>$utilisateur,
+    			'tous'=>$tous
+    			
+    	));
+    }
     
     public function pagineAction($idxenreg,$sens,$action)
     {
@@ -457,4 +522,17 @@ class UtilisateursController extends Controller
 	
 		return $bOk;
 	}
+	
+	private function filtreCreateForm()
+	{
+		
+		$form = $this->createForm(new UtilisateursFiltreType(), null,array(
+				'action' => $this->generateUrl('utilisateurs_filtrer', array('tous' => 0)),
+				'method' => 'POST'
+		));
+		$form->add('submit', 'submit', array('label' => ' '));
+		
+		return $form;
+	}
+	
 }

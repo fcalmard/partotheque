@@ -37,12 +37,14 @@ class GenresController extends Controller
     	}
     	        
     	$em = $this->getDoctrine()->getManager();
-
-    	$sgenre='';
-    	$btous='';
+  	
+    	$aFiltres= $session->get($gUserLoginLogged.'_genres_filtres');
     	
-        $entities = $em->getRepository('oeuvresBundle:Genres')->ChargeListe();
-        
+    	$sgenre=$aFiltres['genre'];
+    	
+    	$btous=$aFiltres['tous'];
+
+    	$entities = $em->getRepository('oeuvresBundle:Genres')->ChargeListe($aFiltres);
         
         $aEnregId=$this->listeDesIds($entities);
         
@@ -68,8 +70,6 @@ class GenresController extends Controller
     	/**
     	 * retour à la liste filtrée
     	 */
-    	//var_dump($tous);
-    	//die('filtrerAction  retour à la liste filtrée');
     	
     	$em = $this->getDoctrine()->getManager();
     	
@@ -88,24 +88,15 @@ class GenresController extends Controller
     	$post = $request->request->get('oeuvresbundle_filtre_genres');
     	$sgenre=$post['genre'];
     	$tous=isset($post['tous']) ? $post['tous'] : 0;
-    	
-    	if($sgenre!='' || !$tous)
-    	{
-    		$session = new Session();
-    		
-    		$aFiltres=array('genre'=>$sgenre,'tous'=>$tous);
-    		
-    		
-    		$session->set($gUserLoginLogged.'_genres_filtres',$aFiltres);
-    		
-    	}
-    	
+
+    	$session = new Session();
+    	$aFiltres=array('genre'=>$sgenre,'tous'=>$tous);
+    	$session->set($gUserLoginLogged.'_genres_filtres',$aFiltres);
     	
     	$entities = $em->getRepository('oeuvresBundle:Genres')->ChargeListe($post);
     	
     	$filtre_form=$this->filtreCreateForm();
     	
-    	//var_dump($banonyme);
     	return $this->render('oeuvresBundle:Genres:index.html.twig', array(
     			'entities' => $entities,
     			'filtre_form'   => $filtre_form->createView()
@@ -616,7 +607,7 @@ class GenresController extends Controller
     {
     	
     	$form = $this->createForm(new GenresFiltreType(), null,array(
-    			'action' => $this->generateUrl('genres_filtrer', array('tous' => 0)),
+    			'action' => $this->generateUrl('genres_filtrer', array('tous' => 1)),
     			'method' => 'POST'
     	));
     	$form->add('submit', 'submit', array('label' => ' '));

@@ -21,7 +21,6 @@ class TypesmusiquesRepository extends EntityRepository
 		{
 			$stypesmusique=(isset($aFiltres['typesmusique'])) ? $aFiltres['typesmusique'] : '';
 			$btous=(isset($aFiltres['tous'])) ? $aFiltres['tous'] : 0 ;
-			$btous=!($btous==0);
 		}
 		
 		$sSql='SELECT
@@ -29,16 +28,28 @@ class TypesmusiquesRepository extends EntityRepository
 				t.active,
 				t.libelle,
 				t.datecreateAt
-				FROM oeuvresBundle:Typesmusiques t WHERE t.active=1';
+				FROM oeuvresBundle:Typesmusiques t ';
 		
-		if(!$btous && $stypesmusique!='')
+		$sSql.=' where ';
+		if($btous=='2')
 		{
-			$s=sprintf("%s",$stypesmusique);
-			$sSql.=" and (t.libelle like '%$s%'";
-			$sSql.=" or t.libelle = '$stypesmusique')";
+			$sSql.='t.active=0';
+			
+		}
+		else{
+			$sSql.='t.active=1';
+			$btous=($btous=='1');
+			if(!$btous && $stypesmusique!='')
+			{
+				$s=sprintf("%s",$stypesmusique);
+				
+				$sSql.=" and (t.libelle like '%$s%'";
+				$sSql.=" or t.libelle = '$stypesmusique')";
+			}
 		}
 		
 		$sSql.=' ORDER BY t.libelle';
+		
 		
 		$query = $this->getEntityManager()
 		->createQuery($sSql);

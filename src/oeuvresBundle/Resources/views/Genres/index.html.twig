@@ -82,6 +82,20 @@
 
        <script type="text/javascript">
 
+
+        {% if genre is defined %}
+			$("#oeuvresbundle_filtre_genres_genre").val("{{genre}}");
+        {% endif %}
+
+        {% if tous is defined %}
+        {{tous}}
+            var obj = document.getElementById("oeuvresbundle_filtre_genres_tous");
+            if(obj)
+                {
+            	obj.value="{{tous}}";
+                }
+        {% endif %}
+		
 			$("#menu1").hide();
 			$("#menu2").hide();
 			$("#menu3").hide();

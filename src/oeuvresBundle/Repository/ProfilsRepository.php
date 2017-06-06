@@ -36,4 +36,37 @@ class ProfilsRepository extends EntityRepository
 		}
 		
 	}
+	/**
+	 *
+	 * @param string $sCode
+	 * @return number
+	 */
+	public function rechercheProfil($id)
+	{
+		
+		$sql="SELECT
+				t.id,t.libelleProfil from oeuvresBundle:Profils t
+				WHERE t.id = ".$id;
+		
+		$query = $this->getEntityManager()
+		->createQuery(
+				$sql
+				);
+		$s='profil inconnu';
+		try {
+			$aIds=$query->getResult();
+			if(is_array($aIds) && count($aIds)>0)
+			{
+				foreach ($aIds as $kid=>$opro)
+				{
+					$s=$opro['libelleProfil'];
+				}
+			}
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			$s='pb';
+		}
+		
+		return $s;
+	}
+
 }

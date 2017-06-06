@@ -57,5 +57,7 @@ $collection->add('avancements_confirm_action_delete', new Route('/{id}/confirm_d
 $collection->add('avancements_pagine', new Route('/{idxenreg}/{sens}/{action}/pagine', array(
 		'_controller' => 'oeuvresBundle:Avancements:pagine',
 )));
-
+$collection->add('avancements_filtrer', new Route('/{tous}/filtrer', array(
+		'_controller' => 'oeuvresBundle:Avancements:filtrer',
+)));
 return $collection;

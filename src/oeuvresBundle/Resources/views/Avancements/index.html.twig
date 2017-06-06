@@ -38,13 +38,37 @@
     	</div>
 		<div class="finlisteetform">
 
-	        <ul>
-	        <li>
-	            <a href="{{ path('avancements_new') }}">
-			            <img alt="ajout" src="/web/css/images/add.png">
-	            </a>
-	        </li>
-	    	</ul>
+                <table>
+                <tr>
+                    <td>
+        	            <a href="{{ path('avancements_new') }}">
+        			            <img alt="ajout" src="/web/css/images/add.png">
+        	            </a>                
+                    </td>
+                    <td>
+                    {# FILTRES #}
+                     {{ form_start(filtre_form) }}
+                    <td>
+                    {{ form_label(filtre_form.avancement, 'Avancement', { 'label_attr': {'class': 'filtre-label'} }) }}    				
+        			{{ form_widget(filtre_form.avancement) }}
+        			{{ form_errors(filtre_form.avancement) }}
+                    </td>
+                    <td>
+        	
+        	        {{ form_label(filtre_form.tous, 'Tous', { 'label_attr': {'class': 'filtre-label'} }) }}    				
+        			{{ form_widget(filtre_form.tous) }}
+        			{{ form_errors(filtre_form.tous) }}		
+                    </td>
+        			<td>
+        			&nbsp;&nbsp;&nbsp;&nbsp;
+        		    {{ form_widget(filtre_form.submit) }}
+        		    </td>
+        		    {{ form_end(filtre_form) }}
+		    
+                    </td>
+                </tr>
+                </table>
+
     	</div>
     
     {% endblock %}
@@ -55,6 +79,22 @@
 
        <script type="text/javascript">
 
+
+       {% if avancement is defined %}
+       
+       		$("#oeuvresbundle_filtre_avancements_avancement").val("{{avancement}}");
+       
+       {% endif %}
+       
+       {% if tous is defined %}
+       		var obj = document.getElementById("oeuvresbundle_filtre_avancements_tous");
+           	if(obj)
+            {
+           		obj.value="{{tous}}";
+           	}
+       {% endif %}
+
+       
 			$("#menu1").hide();
 			$("#menu2").hide();
 			$("#menu3").hide();

@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class TempsLiturgiquesFiltreType extends AbstractType
+class VoixFiltreType extends AbstractType
 {
 	
 	public function __construct()
@@ -20,7 +20,8 @@ class TempsLiturgiquesFiltreType extends AbstractType
     {
     	$builder 	 
     	
-    	->add('tempsliturgique','text',array('label'=>'Temps liturgique','required'=>false))
+    	->add('voix','text',array('label'=>'Tessiture','required'=>false))
+    	
     	->add('tous', 'choice', array('label'=>'Tous',
     			'empty_value'=>null,
     			'choices'   => array(0=>'Selection',1 => 'Tous', 2 => 'Inactifs'),
@@ -47,6 +48,7 @@ class TempsLiturgiquesFiltreType extends AbstractType
      */
     public function getName()
     {
-        return 'oeuvresbundle_filtre_tempsliturgiques';
+        return 'oeuvresbundle_filtre_voix';
     }
+    
 }

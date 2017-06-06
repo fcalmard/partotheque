@@ -4,7 +4,6 @@ namespace oeuvresBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use oeuvresBundle\Repository\ProfilsRepository;
-use oeuvresBundle\Repository\MenusRepository;
 
 /**
  * UtilisateursRepository
@@ -15,11 +14,18 @@ use oeuvresBundle\Repository\MenusRepository;
 class UtilisateursRepository extends EntityRepository
 {
 	
-	public function ChargeListe()
+	public function ChargeListe($aFiltres=null)
 	{
-		$query = $this->getEntityManager()
-		->createQuery(
-				"SELECT
+		
+		$btous=true;
+		$suser='';
+		if(isset($aFiltres) & is_array($aFiltres) & count($aFiltres)!=0)
+		{
+			$suser=(isset($aFiltres['utilisateur'])) ? $aFiltres['utilisateur'] : '';
+			$btous=(isset($aFiltres['tous'])) ? $aFiltres['tous'] : 0 ;
+		}
+		/*
+		$sSql="SELECT
 				t.id,
 				t.Login,
 				t.passwd,
@@ -30,14 +36,84 @@ class UtilisateursRepository extends EntityRepository
 				p.libelleProfil,
 				t.datecreateAt
 				FROM oeuvresBundle:Utilisateurs t
-				LEFT JOIN oeuvresBundle:Profils p WHERE p.id=t.Profils_id"
-		);
-		//WHERE t.actif=1 and p.actif=1
+				LEFT JOIN oeuvresBundle:Profils p ";
+				*/
+		
+		$sSql="SELECT
+				t.id,
+				t.Login,
+				t.passwd,
+				concat(t.prenom,' ',t.nom) as utilisateur,
+				t.email,
+				t.actif,
+				t.idPays,
+				t.Profils_id,
+				t.datecreateAt
+				FROM oeuvresBundle:Utilisateurs t";
+
+		$sSql.=' where ';
+		
+		if($btous=='2')
+		{
+			$sSql.='t.actif=0';
+		}
+		else{
+			$sSql.='t.actif=1';
+			$btous=($btous=='1');
+			
+			if(!$btous && $suser!='')
+			{
+				$s=sprintf("%s",$suser);
+				$sSql.=" and (t.nom like '%$s%'";
+				$sSql.=" or t.nom = '$suser')";
+			}
+		}
+		
+		
+		$em=$this->getEntityManager();
+		
+		$aListeUsers=array();
+		
 		try {
+			$query= $this->getEntityManager()
+			->createQuery($sSql);
+			
+			$aUsers=$query->getArrayResult();
+			
+			foreach ($aUsers as $kuser=>$aUser)
+			{
+				$idpro=$aUser['Profils_id'];
+				$slibpro=$em->getRepository('oeuvresBundle:Profils')->rechercheProfil($idpro);
+				
+				$oUser=array("id"=>$aUser['id']
+						,"Login"=>$aUser['Login']
+						,"passwd"=>$aUser['passwd']
+						,"utilisateur"=>$aUser['utilisateur']
+						,"email"=>$aUser['email']
+						,"actif"=>$aUser['actif']
+						,"idPays"=>$aUser['idPays']
+						,"libelleProfil"=>$slibpro
+						,"datecreateAt"=>$aUser['datecreateAt']
+						
+				);
+				$aListeUsers[]=$oUser;
+			}
+			
+			return $aListeUsers;
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			return null;
+		}
+
+		
+		
+		$query = $this->getEntityManager()
+		->createQuery($sSql);
+		try {
+			
 			return $query->getResult();
 		} catch (\Doctrine\ORM\NoResultException $e) {
 			return null;
-		}		
+		}
 		
 	}
 

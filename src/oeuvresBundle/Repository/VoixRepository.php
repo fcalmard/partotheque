@@ -21,40 +21,50 @@ use Doctrine\ORM\Persisters\BasicEntityPersister;
 class VoixRepository extends EntityRepository
 {
 
-	public function ChargeListe()
+	public function ChargeListe($aFiltres=null)
 	{
 		
 		$aArbre=array();
 		
+		$btous=true;
+		$svoix='';
+		if(isset($aFiltres) & is_array($aFiltres) & count($aFiltres)!=0)
+		{
+			$svoix=(isset($aFiltres['voix'])) ? $aFiltres['voix'] : '';
+			$btous=(isset($aFiltres['tous'])) ? $aFiltres['tous'] : 0 ;
+		}
+		
+		$sSql='SELECT
+				t.id,
+				t.active,
+				t.libelle,
+				t.datecreateAt
+				FROM oeuvresBundle:Voix t ';
+		
+		$sSql.=' where ';
+		if($btous=='2')
+		{
+			$sSql.='t.active=0';
+		}
+		else{
+			$sSql.='t.active=1';
+			$btous=($btous=='1');
+			if(!$btous && $svoix!='')
+			{
+				$s=sprintf("%s",$svoix);
+				$sSql.=" and (t.libelle like '%$s%'";
+				$sSql.=" or t.libelle = '$svoix')";
+			}
+		}
+		$sSql.='order by t.libelle';
 		
 		$query = $this->getEntityManager()
-		->createQuery(
-				'SELECT
-				t.id,
-				t.active,
-				t.libelle,
-				t.datecreateAt
-				FROM oeuvresBundle:Voix t
-				order by t.libelle'
-		);
-		/*
-		$query = $this->getEntityManager()
-		->createQuery(
-				'SELECT
-				t.id,
-				t.active,
-				t.libelle,
-				v.id as idsouscat,
-				v.voix_id,
-				v.active as sscatactive,
-				v.libelle as libsouscateg,
-				v.datecreateAt as datcsouscateg,
-				t.datecreateAt
-				FROM oeuvresBundle:Voix t
-				 LEFT JOIN oeuvresBundle:Souscategvoix v WHERE v.voix_id=t.id
-				  order by t.libelle,v.libelle'
-		);		
-		*/
+		
+		->createQuery($sSql);
+		
+		//echo "<br/>$sSql";
+		
+
 		try {
 				
 			$a=$query->getArrayResult();

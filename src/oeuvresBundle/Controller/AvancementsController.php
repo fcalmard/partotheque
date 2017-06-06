@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use oeuvresBundle\Entity\Avancements;
 use oeuvresBundle\Form\AvancementsType;
+use oeuvresBundle\Form\AvancementsFiltreType;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -41,9 +42,12 @@ class AvancementsController extends Controller
         $entities = $em->getRepository('oeuvresBundle:Avancements')->findAll();
         $em = $this->getDoctrine()->getManager();
         
-        //$entities = $em->getRepository('oeuvresBundle:Typesmusiques')->findAll();
-        $entities = $em->getRepository('oeuvresBundle:Avancements')->ChargeListe();
-               
+        $aFiltres= $session->get($gUserLoginLogged.'_avancements_filtres');
+        $savancement=isset($aFiltres['avancement']) ? $aFiltres['avancement'] : '';
+        $btous=isset($aFiltres['tous']) ? $aFiltres['tous'] : 1;
+       	
+        $entities = $em->getRepository('oeuvresBundle:Avancements')->ChargeListe($aFiltres);
+
         $aEnregId=$this->listeDesIds($entities);
         
         $iEnreg=1;
@@ -51,12 +55,76 @@ class AvancementsController extends Controller
         $sColDeTri="";
         $sColDeTriOrdre="";
         
+        $form=$this->filtreCreateForm();
+        
         $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
         
         return $this->render('oeuvresBundle:Avancements:index.html.twig', array(
             'entities' => $entities,
+        		'filtre_form'=>$form->createView(),
+        		'avancement'=>$savancement,
+        		'tous'=>$btous
+        		
         ));
     }
+    
+    public function filtrerAction(Request $request,$tous=1)
+    {
+    	/**
+    	 * retour à la liste filtrée
+    	 */
+    	
+    	$gUserLoginLogged="";
+    	$session = $this->getRequest()->getSession();
+    	
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		try {
+    			$redir= new RedirectResponse($this->generateUrl('homepage'));
+    			
+    			return $redir;
+    			
+    		}catch (\ErrorException $e)
+    		{
+    			die('compositeurs 30 >'.$gUserLoginLogged.'<');
+    			
+    		}
+    	}
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$post = $request->request->get('oeuvresbundle_filtre_avancements');
+    	
+    	$avancement=$post['avancement'];
+    	
+    	$tous=isset($post['tous']) ? $post['tous'] : 0;
+    	
+    	if($avancement!='' || !$tous)
+    	{
+    		$session = new Session();
+    		
+    		$aFiltres=array('avancement'=>$avancement,'tous'=>$tous);
+    		
+    		$session->set($gUserLoginLogged.'_avancements_filtres',$aFiltres);
+    		
+    	}
+    	$entities = $em->getRepository('oeuvresBundle:Avancements')->ChargeListe($post);
+    	
+    	$filtre_form=$this->filtreCreateForm();
+    	
+    	return $this->render('oeuvresBundle:Avancements:index.html.twig', array(
+    			'entities' => $entities,
+    			'filtre_form'   => $filtre_form->createView(),
+    			'avancement'=>$avancement,
+    			'tous'=>$tous
+    			
+    	));
+    }
+    
     
     public function pagineAction($idxenreg,$sens,$action)
     {
@@ -546,4 +614,17 @@ class AvancementsController extends Controller
     	return $bOk;
     }    
         
+    private function filtreCreateForm()
+    {
+    	
+    	$form = $this->createForm(new AvancementsFiltreType(), null,array(
+    			'action' => $this->generateUrl('avancements_filtrer', array('tous' => 0)),
+    			'method' => 'POST'
+    	));
+    	$form->add('submit', 'submit', array('label' => ' '));
+    	
+    	return $form;
+    }
+    	
+    	
 }

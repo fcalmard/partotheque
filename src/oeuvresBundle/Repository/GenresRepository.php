@@ -25,7 +25,6 @@ class GenresRepository extends EntityRepository
 		{
 			$sgenre=(isset($aFiltres['genre'])) ? $aFiltres['genre'] : '';
 			$btous=(isset($aFiltres['tous'])) ? $aFiltres['tous'] : 0 ;
-			$btous=!($btous==0);
 		}
 	
 		$sSql='SELECT
@@ -34,14 +33,24 @@ class GenresRepository extends EntityRepository
 				t.libelle,
 				t.datecreateAt
 				FROM oeuvresBundle:Genres t
-				WHERE t.active=1 ';
-		
-		if(!$btous && $sgenre!='')
+				WHERE ';
+
+		if($btous=='2')
 		{
-			$s=sprintf("%s",$sgenre);
-			$sSql.=" and (t.libelle like '%$s%'";
-			$sSql.=" or t.libelle = '$sgenre')";
+			$sSql.='t.active=0';
+			
 		}
+		else{
+			$sSql.='t.active=1';
+			$btous=($btous=='1');
+			if(!$btous && $sgenre!='')
+			{
+				$s=sprintf("%s",$sgenre);
+				$sSql.=" and (t.libelle like '%$s%'";
+				$sSql.=" or t.libelle = '$sgenre')";
+			}
+		}
+
 		$sSql.='order by t.libelle';
 		
 		$query = $this->getEntityManager()

@@ -160,6 +160,13 @@
 			</table>
 	
 	</div>
+	<!-- 
+		       var obj = document.getElementById("oeuvresbundle_compositeurs_active")
+	       if(obj)
+		       {
+				obj.checked = true;;
+		       }
+	 -->
 	{% endif %}
 {% endblock %}
 {% block javascripts %}
@@ -169,11 +176,7 @@
        <script type="text/javascript">
        
        		
-	       var obj = document.getElementById("oeuvresbundle_compositeurs_active")
-	       if(obj)
-		       {
-				obj.checked = true;;
-		       }
+
 	   	
 	       {% if id is not defined %}
 			$("#compositeurs_divdefildansenreg").hide();
