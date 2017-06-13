@@ -3,7 +3,7 @@
 namespace oeuvresBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use oeuvresBundle\Repository\ProfilsRepository;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * UtilisateursRepository
@@ -204,5 +204,97 @@ class UtilisateursRepository extends EntityRepository
 		
 		return $b;
 		
+	}
+	
+
+	/**
+	 * 
+	 * @param string $slogin
+	 * @return boolean
+	 */
+	public function initProfil(string $slogin)
+	{
+		$b=false;
+		if($slogin!='')
+		{
+			
+			$session = new Session();
+			
+			$tous=1;
+			/*
+			 * utilisateurs
+			 */
+			
+			/*
+			 * compositeur
+			 */
+			$aFiltresTest= $session->get($slogin.'_compositeurs_filtres');
+			if(is_null($aFiltresTest))
+			{
+				$aFiltres=array('compositeur'=>'','tous'=>$tous);
+				$session->set($slogin.'_compositeurs_filtres',$aFiltres);
+			}
+			/*
+			 * tempsliturgique
+			 */
+			$aFiltresTest= $session->get($slogin.'_tempsliturgiques_filtres');
+			if(is_null($aFiltresTest))
+			{
+				$aFiltres=array('tempsliturgique'=>'','tous'=>$tous);
+				$session->set($slogin.'_tempsliturgiques_filtres',$aFiltres);
+			}
+			/*
+			 * type de musique
+			 */
+			$aFiltresTest= $session->get($slogin.'_typesmusiques_filtres');
+			if(is_null($aFiltresTest))
+			{
+				$aFiltres=array('typesmusique'=>'','tous'=>$tous);
+				$session->set($slogin.'_typesmusiques_filtres',$aFiltres);
+			}
+			/*
+			 * genres
+			 */
+			$aFiltresTest= $session->get($slogin.'_genres_filtres');
+			if(is_null($aFiltresTest))
+			{
+				$aFiltres=array('genre'=>'','tous'=>$tous);
+				$session->set($slogin.'_genres_filtres',$aFiltres);
+			}
+			/*
+			 * voix
+			 */		
+			$aFiltresTest= $session->get($slogin.'_voix_filtres');
+			if(is_null($aFiltresTest))
+			{
+				$aFiltres=array('voix'=>'','tous'=>$tous);
+				$session->set($slogin.'_voix_filtres',$aFiltres);
+			}
+			
+			/*
+			 * avancements CHANGE
+			 */
+			
+			/*
+			 * accompagnements
+			 */
+			
+			 /*
+			 * menus
+			 */
+			
+			/*
+			 * instruments
+			 */
+			
+			/*
+			 * profils
+			 */
+			
+			$b=true;
+			
+		}
+		return $b;
+	
 	}
 }

@@ -50,27 +50,27 @@
 			            <img alt="ajout" src="/web/css/images/add.png">
 	            </a>
     			</td>
-    			                                 {# FILTRES #}
-                                 {{ form_start(filtre_form) }}
-    
-                                    <td>
-                                    {{ form_label(filtre_form.genre, 'Genre', { 'label_attr': {'class': 'filtre-label'} }) }}    				
-                        			{{ form_widget(filtre_form.genre) }}
-                        			{{ form_errors(filtre_form.genre) }}
-                                    </td>
-                                    <td>
-                        	
-                        	        {{ form_label(filtre_form.tous, 'Tous', { 'label_attr': {'class': 'filtre-label'} }) }}    				
-                        			{{ form_widget(filtre_form.tous) }}
-                        			{{ form_errors(filtre_form.tous) }}		
-                                    </td>
-                        			<td>
-                        			&nbsp;&nbsp;&nbsp;&nbsp;
-                        		    {{ form_widget(filtre_form.submit) }}
-                        		    </td>
-		    
-                    			    {# FILTRES #}
-					             {{ form_end(filtre_form) }}
+    			 {# FILTRES #}
+                     {{ form_start(filtre_form) }}
+
+                        <td>
+                        {{ form_label(filtre_form.genre, 'Genre', { 'label_attr': {'class': 'filtre-label'} }) }}    				
+            			{{ form_widget(filtre_form.genre) }}
+            			{{ form_errors(filtre_form.genre) }}
+                        </td>
+                        <td>
+            	
+            	        {{ form_label(filtre_form.tous, 'Tous', { 'label_attr': {'class': 'filtre-label'} }) }}    				
+            			{{ form_widget(filtre_form.tous) }}
+            			{{ form_errors(filtre_form.tous) }}		
+                        </td>
+            			<td>
+            			&nbsp;&nbsp;&nbsp;&nbsp;
+            		    {{ form_widget(filtre_form.submit) }}
+            		    </td>
+
+        			    {# FILTRES #}
+		             {{ form_end(filtre_form) }}
     		</tr>
     	</table>
     </div>
@@ -82,13 +82,18 @@
 
        <script type="text/javascript">
 
-
+   		var objtous = document.getElementById("oeuvresbundle_filtre_genres_tous");
+		$( "#oeuvresbundle_filtre_genres_genre" ).change(function() {
+            if(objtous)
+            {
+        	objtous.value="0";
+            }
+		});
         {% if genre is defined %}
 			$("#oeuvresbundle_filtre_genres_genre").val("{{genre}}");
         {% endif %}
 
         {% if tous is defined %}
-        {{tous}}
             var obj = document.getElementById("oeuvresbundle_filtre_genres_tous");
             if(obj)
                 {

@@ -2,8 +2,6 @@
 
 namespace oeuvresBundle\Controller;
 
-use oeuvresBundle\Repository\FonctionsRepository;
-
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +10,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 use oeuvresBundle\Entity\Fonctions;
 use oeuvresBundle\Form\FonctionsType;
-
+use oeuvresBundle\Form\FonctionsFiltreType;
 
 /**
  * Fonctions controller.
@@ -41,7 +39,13 @@ class FonctionsController extends Controller
     	    	
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('oeuvresBundle:Fonctions')->ChargeListe();
+        $aFiltres= $session->get($gUserLoginLogged.'_fonctions_filtres');
+        
+        $sfonction=$aFiltres['fonction'];
+        
+        $btous=$aFiltres['tous'];
+        
+        $entities = $em->getRepository('oeuvresBundle:Fonctions')->ChargeListe($aFiltres);
 
         $aEnregId=$this->listeDesIds($entities);
         
@@ -50,11 +54,58 @@ class FonctionsController extends Controller
         $sColDeTri="";
         $sColDeTriOrdre="";
         
+
+        
+        $filtre_form=$this->filtreCreateForm();
+        
         $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
         
         return $this->render('oeuvresBundle:Fonctions:index.html.twig', array(
             'entities' => $entities,
+        		'filtre_form'   => $filtre_form->createView()
+        		,'fonction'=>$sfonction
+        		,'tous'=>$btous
         ));
+    }
+    
+    public function filtrerAction(Request $request,bool $tous)
+    {
+    	/**
+    	 * retour à la liste filtrée
+    	 */
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$session = $this->getRequest()->getSession();
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    		
+    		
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		return new RedirectResponse($this->generateUrl('homepage'));
+    	}
+    	
+    	$post = $request->request->get('oeuvresbundle_filtre_fonctions');
+    	$sfonction=$post['fonction'];
+    	$tous=isset($post['tous']) ? $post['tous'] : 0;
+    	
+    	$session = new Session();
+    	$aFiltres=array('fonction'=>$sfonction,'tous'=>$tous);
+    	$session->set($gUserLoginLogged.'_fonctions_filtres',$aFiltres);
+    	
+    	$entities = $em->getRepository('oeuvresBundle:Fonctions')->ChargeListe($post);
+    	
+    	$filtre_form=$this->filtreCreateForm();
+    	
+    	return $this->render('oeuvresBundle:Fonctions:index.html.twig', array(
+    			'entities' => $entities,
+    			'filtre_form'   => $filtre_form->createView()
+    			,'fonction'=>$sfonction
+    			,'tous'=>$tous
+    	));
     }
     
     public function tblEnregSauveSession($aEnregId,$iEnreg,$iPage,$sColDeTri,$sColDeTriOrdre,$gUserLoginLogged)
@@ -232,10 +283,7 @@ class FonctionsController extends Controller
     public function newAction()
     {
         $entity = new Fonctions();
-        $form   = $this->createCreateForm($entity);
-
-        
-        
+        $form   = $this->createCreateForm($entity);   
         return $this->render('oeuvresBundle:Fonctions:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
@@ -253,24 +301,33 @@ class FonctionsController extends Controller
     	if($session)
     	{
     		$gUserLoginLogged=$session->get('gUserLoginLogged');
-    		 
-    		 
     	}
     	if($gUserLoginLogged=='')
     	{
     		return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'fonctions','id'=>$id)));
-    		//return new RedirectResponse($this->generateUrl('homepage'));
     	}
     	    	
         $em = $this->getDoctrine()->getManager();
-
         $entity = $em->getRepository('oeuvresBundle:Fonctions')->find($id);
         
         if (!$entity) {
         	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'fonctions','id'=>$id)));
-            //throw $this->createNotFoundException('Unable to find Fonctions entity.');
         }
-//
+        
+        $slib_tpslitur='';
+        $id_tpslitur=$entity->getIdTpslitur();
+        $id_tpslitur=(is_null($id_tpslitur)) ? 0 : $id_tpslitur;
+        
+        if($id_tpslitur!=0)
+        {
+        	$entitytps= $em->getRepository('oeuvresBundle:TempsLiturgiques')->find($id_tpslitur);
+        	if (!$entitytps) {
+        		return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'TempsLiturgiques','id'=>$id)));
+        	}
+        	$slib_tpslitur=$entitytps->getLibelle();
+        }
+        
+        
         $entities = $em->getRepository('oeuvresBundle:Fonctions')->ChargeListeIds( );
         
         $aEnregId=$this->listeDesIds($entities);
@@ -284,6 +341,7 @@ class FonctionsController extends Controller
                 
         return $this->render('oeuvresBundle:Fonctions:show.html.twig', array(
             'entity'      => $entity,
+        	'libtpslitur'=>$slib_tpslitur
         ));
     }
 
@@ -296,16 +354,18 @@ class FonctionsController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('oeuvresBundle:Fonctions')->find($id);
-
+       
         if (!$entity) {
         	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'fonctions','id'=>$id)));
             //throw $this->createNotFoundException('Unable to find Fonctions entity.');
         }
-
+        $id_tpslitur=$entity->getIdTpslitur();
+        
         $editForm = $this->createEditForm($entity);     
         
         return $this->render('oeuvresBundle:Fonctions:edit.html.twig', array(
             'entity'      => $entity,
+        		'id_tpslitur'=>$id_tpslitur,
         	'edit_form'   => $editForm->createView(),
         ));
     }
@@ -447,20 +507,11 @@ class FonctionsController extends Controller
     
     	$aSessionTblEnreg=$session->get($gUserLoginLogged.'_fonctions_tblenreg');
     
-    	var_dump($aSessionTblEnreg);
-    
     	$nbenreg=0;
     
     	$nbenreg=$aSessionTblEnreg['nbenreg'];
     
-    	//echo ("<br/>NB ENREG=".$nbenreg);
-    	//echo ("<br/>IDXENREG=".$idxenreg);
-    
     	$aEnregId=$aSessionTblEnreg['tblenreg'];
-    
-    	//    	$aSessionTblEnreg['tblenreg']=array('tblenreg'=>$aEnregId);
-    
-    	//var_dump($aEnregId);//['tblenreg']
     
     	$aTblIds=array();
     	foreach ($aEnregId as $iAe=>$aE)
@@ -470,42 +521,27 @@ class FonctionsController extends Controller
     
     	$this->tblEnregSauveSession($aEnregId, $idxenreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
     
-    
-    	//die("///325");
-    
     	if($idxenreg>0 && $idxenreg<$nbenreg+1)
     	{
-    		//$id=$aE[$idxenreg-1];
-    		//echo "<br/> 329 >$sens<br/>";
-    		 
     		if($sens=='prec')
     		{
     			if($idxenreg >1)
     			{
     				$idxenreg--;
     				$id=$aTblIds[$idxenreg];
-    					
     			}
-    
     		}
     		if($sens=='suiv')
     		{
     			if($idxenreg<$nbenreg)
     			{
     				$id=$aTblIds[$idxenreg];
-    					
-    				//echo "<br/> avant de passer au suivant $idxenreg $nbenreg ID:$id<br/>";
     				$idxenreg++;
     				$id=$aTblIds[$idxenreg];
-    				//echo "<br/> on passe au suivant $idxenreg $nbenreg ID:$id<br/>";
-    					
     			}
-    			//echo ("<br/>372 $id");
     		}
-    		 
-    		 
-    		 
     		$aEnregTri=$aSessionTblEnreg['trifonctions'];
+    		
     		foreach ($aEnregTri as $ket=>$aEnregTriPar)
     		{
     			//echo "<br/>A ENREGTRI PAR <br/>";
@@ -550,6 +586,25 @@ class FonctionsController extends Controller
     
     }    
     
+    private function filtreCreateForm()
+    {
+    	
+    	$form = $this->createForm(new FonctionsFiltreType(), null,array(
+    			'action' => $this->generateUrl('fonctions_filtrer', array('tous' => 1)),
+    			'method' => 'POST'
+    	));
+    	$form->add('submit', 'submit', array('label' => ' '));
+    	
+    	return $form;
+    	
+    	
+    	
+    }
+    
+    public function f()
+    {
+    	//
+    }
     /**
      * 
      * @param integer $id

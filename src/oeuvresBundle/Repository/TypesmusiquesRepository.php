@@ -50,6 +50,7 @@ class TypesmusiquesRepository extends EntityRepository
 		
 		$sSql.=' ORDER BY t.libelle';
 		
+		//echo "<br/>$sSql";
 		
 		$query = $this->getEntityManager()
 		->createQuery($sSql);

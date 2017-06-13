@@ -2,21 +2,10 @@
 
 namespace oeuvresBundle\Entity;
 
-use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\ORM\Mapping as ORM;
 
-use Doctrine\ORM\Persisters\ManyToManyPersister;
-//Doctrine\ORM\PersistentCollection implements Doctrine\Common\Collections\Collection
-use Doctrine\ORM\PersistentCollection;
 
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntityValidator;
-
-use oeuvresBundle\Repository\MenusRepository;
-use oeuvresBundle\Repository\UtilisateursRepository;
-
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Logins

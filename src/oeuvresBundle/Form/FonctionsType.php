@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use oeuvresBundle\Repository\FonctionsRepository;
 use oeuvresBundle\Repository\ProfilsRepository;
+use oeuvresBundle\Repository\TempsLiturgiquesRepository;
 
 class FonctionsType extends AbstractType
 {
@@ -23,7 +24,25 @@ class FonctionsType extends AbstractType
             ->add('libelle','text',array('required'=>true))
 
             ->add('active','checkbox',array('required'=>false))
-                                    
+            
+            ->add('id_tpslitur','entity',array(
+            		'property'=>'libelle',
+            		'label'=>'Temps liturgique',
+            		'multiple'    => false,
+            		'empty_value' => 'Selectionnez un Temps liturgique',
+            		'empty_data'  => null,
+            		'query_builder' => function (TempsLiturgiquesRepository $er) {
+            		return $er->createQueryBuilder('t')
+            		->where('t.active=1')
+            		->orderBy('t.libelle', 'ASC')
+            		;
+            		},
+            		
+            		'required'=>false,
+            		
+            		'class'=>'oeuvresBundle:TempsLiturgiques'
+            				)
+            )
 
         ;
     }

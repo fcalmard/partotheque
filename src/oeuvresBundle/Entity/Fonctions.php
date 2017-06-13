@@ -47,8 +47,15 @@ class Fonctions
      *
      * @ORM\Column(name="libelle", type="string", length=255, unique=true)
      */
-    private $libelle;    
-     
+    private $libelle;
+    
+    /**
+     * @var integer $id_tpslitur
+     * @ORM\OneToOne(targetEntity="oeuvresBundle\Entity\TempsLiturgiques")
+     * @ORM\Column(name="id_tpslitur", type="integer", nullable=true)
+     */
+    private $id_tpslitur;
+    
     /**
      * @var \DateTime
      *
@@ -104,7 +111,20 @@ class Fonctions
     	$this->libelle=$l;
     	return $this;
     }    
-       
+    /**
+     * 
+     * @return integer
+     */
+    public function getIdTpslitur()
+    {
+    	$id=$this->id_tpslitur;    	
+    	return $this->id_tpslitur;
+    }
+    public function setIdTpslitur($id)
+    {
+    	$this->id_tpslitur=$id;
+    	return $this;
+    }
     /**
      *
      */
@@ -159,7 +179,7 @@ class Fonctions
     {
         $this->datecreateAt = new \DateTime('now');
         $this->active=1;
-            
+        
     }
     
     

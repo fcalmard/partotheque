@@ -40,8 +40,7 @@ class TempsLiturgiques
      *
      * @ORM\Column(name="libelle", type="string", length=255, unique=true)
      */
-    private $libelle;    
-     
+    private $libelle;     
     /**
      * @var string
      *

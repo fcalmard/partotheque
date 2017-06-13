@@ -40,9 +40,7 @@ class GenresType extends AbstractType
              
             'class'=>'oeuvresBundle:Typesmusiques'
             )
-            )            
-            //->add('datecreateAt')
-            //->add('Oeuvres')
+            )
         ;
     }
     

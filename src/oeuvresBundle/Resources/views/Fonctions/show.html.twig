@@ -9,35 +9,29 @@
 
 	</div>
     <div class="listeetform">
-
 		<div class="showform">
-			
 		    <table class="record_properties">
 		        <tbody>
-
 		            <tr>
-		                <th>Code</th>
+		                <th class="thw200" >Code</th>
 		                <td>{{ entity.code }}</td>
 		            </tr>
 		            <tr>
-		                <th>Libelle</th>
+		                <th class="thw200" >Libelle</th>
 		                <td>{{ entity.libelle }}</td>
 		            </tr>
-
-
 		            <tr>
-		                <th>Saisie le </th>
+		                <th class="thw200" >Temps liturgique</th>
+		                <td>{{ libtpslitur }}</td>
+		            </tr>
+		            <tr>
+		                <th class="thw200" >Saisie le </th>
 		                <td>{{ entity.datecreateAt|date('d/m/Y') }}</td>
 		            </tr>
 		            <tr>
-		                <th>Activé</th>
+		                <th class="thw200" >Activé</th>
 		                <td>{{ entity.active==1 ? "O" : "N"}}</td>
 		            </tr>
-
-
-
-
-
 		        </tbody>
 		    </table>
 		</div>

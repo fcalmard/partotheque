@@ -52,14 +52,8 @@ class TypesmusiquesController extends Controller
         $iPage=1;
         $sColDeTri="";
         $sColDeTriOrdre="";
-        /**
-         * filtreCreateForm
-         * 
-         *         		'filtre_form'   => $filtre_form->createView()
 
-         */
       	$filtre_form=$this->filtreCreateForm();
-        //die('54');
         
         $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
                 
@@ -93,20 +87,18 @@ class TypesmusiquesController extends Controller
     		return new RedirectResponse($this->generateUrl('homepage'));
     	}
     	
-    	$post = $request->request->get('oeuvresbundle_filtre_typesmusiques');
+    	$post= $request->request->get('oeuvresbundle_filtre_typesmusiques');
     	$stypesmusique=$post['typesmusique'];
     	$tous=isset($post['tous']) ? $post['tous'] : 0;
     	
-    	if($stypesmusique!='' || !$tous)
-    	{
-    		$session = new Session();
-    		
-    		$aFiltres=array('typesmusique'=>$stypesmusique,'tous'=>$tous);
-    		
-    		
-    		$session->set($gUserLoginLogged.'_typesmusiques_filtres',$aFiltres);
-    		
-    	}
+    	var_dump($post);
+
+    	$session = new Session();
+    	
+    	$aFiltres=array('typesmusique'=>$stypesmusique,'tous'=>$tous);
+    	
+    	
+    	$session->set($gUserLoginLogged.'_typesmusiques_filtres',$aFiltres);
     	
     	
     	$entities = $em->getRepository('oeuvresBundle:Typesmusiques')->ChargeListe($post);

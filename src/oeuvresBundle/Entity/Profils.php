@@ -170,11 +170,29 @@ class Profils
 	}
 
 	/**
-	 * 
+	 * menus 
 	 */
 	public function getMenus()
 	{
 		return $this->Menus;
+	}
+	/**
+	 * 
+	 * @return \Doctrine\Common\Collections\ArrayCollection[]
+	 */
+	public function getMenusActif()
+	{
+		$am=$this->Menus;
+		$a=array();
+		foreach ($am as $m)
+		{
+			$b=$m->getActif();
+			if($b)
+			{
+				$a[]=$m;
+			}
+		}
+		return $a;
 	}
 	
 	/**

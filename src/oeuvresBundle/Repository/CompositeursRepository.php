@@ -175,11 +175,12 @@ class CompositeursRepository extends EntityRepository
 		$sNomCompositeur='';
 		
 		
+		$conn=$this->getEntityManager()->getConnection();
+		
 		$sql="SELECT
-				t.id,t.libelle from oeuvresBundle:Fonctions t
+				t.id,t.nom from oeuvresBundle:Compositeurs t
 				WHERE t.id = ".$id;
 		
-	
 		$query = $this->getEntityManager()
 		->createQuery(
 				$sql
@@ -192,14 +193,12 @@ class CompositeursRepository extends EntityRepository
 			{
 				foreach ($aIds as $kid=>$ocompo)
 				{
-					$sNomCompositeur=$ocompo['libelle'];
+					$sNomCompositeur=$ocompo['nom'];
 				}
 			}
 		} catch (\Doctrine\ORM\NoResultException $e) {
 			$sNomCompositeur='';
 		}
-		
-		//die('resultat recherche '.$sNomCompositeur);
 		
 		return  $sNomCompositeur;
 	}
@@ -269,8 +268,5 @@ class CompositeursRepository extends EntityRepository
 		}
 		
 	}
-	
-
-	
 	
 }

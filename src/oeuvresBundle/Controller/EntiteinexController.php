@@ -17,7 +17,6 @@ class EntiteinexController extends Controller
 	 */
 	public function indexAction()
     {
-    	//die('EntiteinexController indexAction ');
     	$gUserLoginLogged="";
     	$session = $this->getRequest()->getSession();
     	if($session)
@@ -27,23 +26,7 @@ class EntiteinexController extends Controller
     	if($gUserLoginLogged=='')
     	{
     		return new RedirectResponse($this->generateUrl('homepage'));
-    	}
-		    	//echo "<br/>".$gUserLoginLogged;
-		    	//die("DEFAULT INDEX ACTION");
-		    	
-		//$this->getRequest()->getc
-		
-		    	/**
-		    	 * 
-		    	 * @var ContextListener $context
-		    	 */
-		    	//$cl=new ContextListener($this->container);
-		    	//var_dump($cl);
-    	
-    		//$context["legendetessitures"] = "legendetessitures from DefaultController";
-	    	//var_dump($context);
-	    	//die("DEFAULT INDEX ACTION");
-    	
+    	}  	
     	return $this->render('oeuvresBundle:Entiteinex:index.html.twig');
 	}
     /**

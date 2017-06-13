@@ -11,6 +11,7 @@
 		    <table class="records_list table table-striped">
 		        <thead>
 		            <tr>
+		                <th>Temps Liturgique</th>
 		                <th>Code</th>
 		                <th>Libelle Fonction</th>
 		                <th>Activée</th>
@@ -20,18 +21,45 @@
 	        <tbody>
 	        {% for entity in entities %}
 	            <tr>
-	                <td><a href="{{ path('fonctions_show', { 'id': entity.id }) }}">{{ entity.code }}</a></td>
+	            	
+	            	<td>
+    	                {% if entity.lib_tpslitur %}
+    	                    {% if entity.id!=0 %}
+    		                <a href="{{ path('tempsliturgiques_show', { 'id': entity.id }) }}">{{ entity.lib_tpslitur }}</a>
+	    	                {% else %}
+	    	                    {{ entity.lib_tpslitur }}
+	    	                {% endif %}
+    	                {% endif %}
+	            	</td>
+	            	
+	                <td>
+    	                {% if entity.lib_tpslitur %}
+    	                	&nbsp;
+    	                {% else %}
+    		                <a href="{{ path('fonctions_show', { 'id': entity.id }) }}">{{ entity.code }}</a>
+    	                {% endif %}
+	                </td>
 	                <td>{{ entity.libelle }}</td>
    
-<td>{{ entity.active==1 ? "O" : "N"}}</td>
+					<td>{{ entity.active==1 ? "O" : "N"}}</td>
 	                	                
 	                <td>
 	                <ul>
 	
 	                    <li>
-	                        <a href="{{ path('fonctions_edit', { 'id': entity.id }) }}">
-	                        	<img alt="Modification" src="/web/css/images/edit.png">
-	                        </a>
+    	                    {% if entity.lib_tpslitur %}
+        	                    {% if entity.id!=0 %}
+        	                        <a href="{{ path('tempsliturgiques_edit', { 'id': entity.id }) }}">
+        	                        	<img alt="Modification" src="/web/css/images/edit.png">
+        	                        </a>        	                    
+        	                    {% else %}
+        	                    	&nbsp;
+        	                    {% endif %}
+        	                {% else %}
+    	                        <a href="{{ path('fonctions_edit', { 'id': entity.id }) }}">
+    	                        	<img alt="Modification" src="/web/css/images/edit.png">
+    	                        </a>
+    	                    {% endif %}	                    
 	                    </li>
 	                </ul>
 	                </td>
@@ -42,15 +70,39 @@
 	</div>
 	
 	<div class="finlisteetform">
+  	
+		<table>
+    		<tr>
+    			<td>
+	            <a href="{{ path('fonctions_new') }}">
+			            <img alt="ajout" src="/web/css/images/add.png">
+	            </a>
+    			</td>
+    			{# FILTRES #}
+             {{ form_start(filtre_form) }}
 
-        <ul>
-        <li>
-            <a href="{{ path('fonctions_new') }}">
-		            <img alt="ajout" src="/web/css/images/add.png">
-            </a>
-        </li>
-	    </ul>
-  		</div>
+                <td>
+                {{ form_label(filtre_form.fonction, 'Fonction', { 'label_attr': {'class': 'filtre-label'} }) }}    				
+    			{{ form_widget(filtre_form.fonction) }}
+    			{{ form_errors(filtre_form.fonction) }}
+                </td>
+                <td>
+    	
+    	        {{ form_label(filtre_form.tous, 'Tous', { 'label_attr': {'class': 'filtre-label'} }) }}    				
+    			{{ form_widget(filtre_form.tous) }}
+    			{{ form_errors(filtre_form.tous) }}		
+                </td>
+    			<td>
+    			&nbsp;&nbsp;&nbsp;&nbsp;
+    		    {{ form_widget(filtre_form.submit) }}
+    		    </td>
+
+			    {# FILTRES #}
+             {{ form_end(filtre_form) }}
+    		</tr>
+    	</table>
+    	  	
+  	</div>
     {% endblock %}
     
 {% block javascripts %}
@@ -59,6 +111,26 @@
 
        <script type="text/javascript">
 
+   	var objtous = document.getElementById("oeuvresbundle_filtre_fonctions_tous");
+
+		$( "#oeuvresbundle_filtre_fonctions_fonction" ).change(function() {
+            if(objtous)
+            {
+        	objtous.value="0";
+            }
+		});
+       {% if fonction is defined %}
+		$("#oeuvresbundle_filtre_fonctions_fonction").val("{{fonction}}");
+       {% endif %}
+
+   {% if tous is defined %}
+       var obj = document.getElementById("oeuvresbundle_filtre_fonctions_tous");
+       if(obj)
+           {
+       	obj.value="{{tous}}";
+           }
+   {% endif %}
+   
 			$("#menu1").hide();
 			$("#menu2").hide();
 			$("#menu3").hide();

@@ -58,5 +58,7 @@ $collection->add('fonctions_confim_delete', new Route('/{id}/confirmdelete', arr
 $collection->add('fonctions_pagine', new Route('/{idxenreg}/{sens}/{action}/pagine', array(
 		'_controller' => 'oeuvresBundle:Fonctions:pagine',
 )));
-
+$collection->add('fonctions_filtrer', new Route('/{tous}/filtrer', array(
+		'_controller' => 'oeuvresBundle:Fonctions:filtrer',
+)));
 return $collection;

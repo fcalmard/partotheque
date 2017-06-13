@@ -2,23 +2,8 @@
 
 namespace oeuvresBundle\Controller;
 
-use oeuvresBundle\Repository\UtilisateursRepository;
 
-use Symfony\Bundle\TwigBundle\DependencyInjection\Compiler\ExceptionListenerPass;
 
-use oeuvresBundle\Services\emailServiceClass;
-use oeuvresBundle\Services\mailerServiceClass;
-use oeuvresBundle\Services\messageServiceClass;
-/*
-use Twig_Loader_String;
-
-use \Twig_LoaderInterface;
-use \Twig_Error;
-use \Twig_Extensions_Extension_Text;
-use \Twig_Loader_Filesystem;
-use \Twig_Environment;
-use Twig_Loader_Chain;
-*/
 use Symfony\Component\HttpFoundation\Session\Session;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -28,11 +13,7 @@ use oeuvresBundle\Entity\Logins;
 use oeuvresBundle\Form\LoginsType;
 use oeuvresBundle\Form\LoginAskNewMdpType;
 
-//use \Swift_Mailer;
-//use \Swift_MailTransport;
 
-//use Symfony\Component\Templating\EngineInterface;
-//use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Logins controller.
  *
@@ -295,7 +276,9 @@ class LoginsController extends Controller
 	        			
 	        			$profilencours=$entityProfils->getCodeProfil();
 	        			
-	        			$aMenusProfil=$entityProfils->getMenus();
+	        			$aMenusProfil=$entityProfils->getMenusActif();
+	        			
+	        			//die('282');
 	        			
 	        			foreach ($aMenusProfil as $kmenu=>$oMenu)
 	        			{
@@ -378,13 +361,14 @@ class LoginsController extends Controller
         				
         				}	        				
 	        				
-
+        				$bOk= $em->getRepository('oeuvresBundle:Utilisateurs')->initProfil($login);
+        				
+        				$bok=false;
+        				
 	        			$session->set('CodeProfilEnCours', $profilencours);
 	        			
 	        			$session->set('aMenusProfil_'.$profilencours, $aMenusProfilSession);
 	        			
-	        			
-	        			//
 	        			//die("<br/> fin liste menu");
 	        			
 	        		}
@@ -495,63 +479,8 @@ class LoginsController extends Controller
         {
         	$container=$this->container;
         }
-        
-		        	/*
-		        	// returns the first mailer
-		        	$bOK=true;
-		        	
-		        	//$oTrans=new Swift_MailTransport();
-		        	//$oSwift= new Swift_Mailer($oTrans);
-		        	
-		        	//$oCont=new ContainerInterface();
-		        	
-		        	//$oEngine=new ();
-		        	        	        	// var_dump($oEngine);
-		        	echo "<br/>195";
-			        	//$oEngine= new EngineInterface(new Swift_Transport_SendmailTransport($buf, $dispatcher));
-			        	
-			        	//$oEngine= new EngineInterface(new Swift_TransportException($e));
-			        	 
-			        	//$emailservice=new emailServiceClass($container);
-			        	     //$oSwift
-		        	//$emailservice=new emailServiceClass($container);//,EngineInterface);
-		        	
-		        	
-		        	//$emailservice=new emailServiceClass($container);
-		        	//$oSwift
-		        	$emailservice=new messageServiceClass();
-		        	     
-		        	//var_dump($emailservice); "Francois"
-		        	 
-		        	//$bOK=$emailservice->sendEmail();
-		        	
-		        	if($bOK)
-		        	{
-		        		echo "<br/>OK";
-		        		
-		        	}
-		        	echo "<br/>259 ";
-		        	 
-		        	//$container->get('swiftmailer.mailer.first_mailer');
-		        }
-		
-		        
-		        /*
-		       try {
-			       	$bOk=$mailerService->sendEmail($to,$object,$texte);
-			       	if($bOk)
-			       	{
-			       		echo "<br/>message envoyé à ".$to;
-			       	}
-		       } catch (Exception $e) {
-		       	die($e->getMessage());
-		       }
-		
-				*/
-        
        
-       
-         //die('<br/>LoginsController FIN ');
+         //die('<br/>LoginsController FIN newAction');
        
         return $this->render('oeuvresBundle:Logins:new.html.twig', array(
             'entity' => $entity,

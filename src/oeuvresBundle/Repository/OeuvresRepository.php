@@ -934,7 +934,7 @@ LIMIT 0 , 30
 					$buffer = fgets($handle);
 					$cpt++;
 					
-					//echo "<br/>".$cpt;//." >".$buffer;
+					//echo "<br/>937 cpt=".$cpt." >".$buffer;
 					/**
 					 * on transforme la ligne en tableau
 					 * 
@@ -949,7 +949,7 @@ LIMIT 0 , 30
 					//var_dump($sDossierFin);
 					$aLigne=explode(chr(9), $buffer);
 					
-					//var_dump(count($aLigne));
+					//var_dump($aLigne);
 					
 					$baTraiter=0;
 					$iDossierencours=0;
@@ -969,8 +969,8 @@ LIMIT 0 , 30
 						$binf=false;
 					}
 					
-					//echo '<br/>735 dossier en cours ='.$iDossierencours.' debut= '.$sDossierDebut.' fin='.$sDossierFin.'<';
-					
+					//echo "<br/>972 dossier en cours =".$iDossierencours.' debut= '.$sDossierDebut.' fin='.$sDossierFin.'<';
+					$strace= ($binf) ? "INFERIEUR " : "SUPERIEUR OU EGAL";
 					if($sDossierFin!='' && is_numeric($sDossierFin))
 					{
 						$bsup=($iDossierencours>$sDossierFin);
@@ -978,8 +978,7 @@ LIMIT 0 , 30
 					}else {
 						$bsup=false;
 					}
-					
-
+					$strace= ($bsup) ? "SUPERIEUR " : "INFERIEUR OU EGAL";
 					if($binf)
 					{
 						$baTraiter=0;
@@ -990,11 +989,11 @@ LIMIT 0 , 30
 							$baTraiter=0;
 						}
 					}
-
+					//echo "<br/>995 cpt=".$cpt.' batraiter='.$baTraiter;					
 					if($baTraiter==1)
 					{
 					
-						//echo "<br/>".$cpt." >".$buffer;
+						//echo "<br/>997".$cpt." >".$buffer;
 						$icptfichier++;
 						//$icptOeuvre
 						//echo "<br/>773 \$icptfichier=".$icptfichier;
@@ -1021,37 +1020,26 @@ LIMIT 0 , 30
 									break;
 								case 11://instruments COLK
 									$aColMultOrche=null;
-
 									//echo '<br/> 789 ****** COLONNEK >'.$vcol.'<';
-									
 									$sOrchestrations='';
-
 									$vcol=$this->epure($vcol);							
-
 									$iposorc=0;
 									if($vcol!='')
 									{
 										$iposorc=strpos($vcol,'O');
-										
 										if($iposorc!='')
 										{
-
 											//echo '<br/> 801 ****** COLONNEK >'.$vcol.'< >'.$iposorc.'<';
-											
 											//die('**********	803');
-											
 											$iposorc=($iposorc=='') ? 0 : intval($iposorc);
 											$iposorc=(is_null($iposorc)) ? 0 : intval($iposorc);
-										
 											/**
 											 * ........... + - :
 											 */
 											$iposorc2=strpos($vcol,'+');
-											
 											if($iposorc2!='')
 											{
 												$aColMultOrche=explode('+',$vcol);
-												
 											}
 											else {
 												$iposorc2=strpos($vcol,'-');
@@ -1068,7 +1056,6 @@ LIMIT 0 , 30
 												}
 											}
 											$iNbOrche=0;
-											
 											if(is_array($aColMultOrche))
 											{
 												$iNbOrche=count($aColMultOrche);
@@ -1079,12 +1066,10 @@ LIMIT 0 , 30
 											//$sOrchestrations='';
 											if($iNbOrche>0)
 											{
-										
 												foreach ($aColMultOrche as $co=>$orch)
 												{
 													$iposorc2=strpos($orch,"O");
 													$borch=is_int($iposorc2);
-
 													if($borch==false)
 													{
 														//echo '<br/>807 PAS D ORCHESTRATION';
@@ -1096,25 +1081,11 @@ LIMIT 0 , 30
 												}
 											}else 
 											{
-												//echo "<br/>816 >".$vcol."< POSITION =".$iposorc;//.'< TAILLE='.strlen($vcol);
 												$sOrchestrations.=($sOrchestrations!='') ? ':' : '';
 												$sOrchestrations.=$vcol;
-												//echo '<br/>818 ******* ORCHESTRATION >'.$sOrchestrations.'<';
-												
-												
 											}
-											if($sOrchestrations!='')
-											{
-											}
-											
 										}
 									}
-									/*
-									if($sOrchestrations!='')
-									{
-										echo "<br/>	 887 ORCHESTRATION >".$sOrchestrations."< ";
-									}*/
-									
 									break;
 								case 12:/* Colonne L MUSIQUE SACREE */
 									
@@ -1122,26 +1093,7 @@ LIMIT 0 , 30
 									$vcol=$this->epure($vcol);
 									$vcol=strtoupper($vcol);//MAJUSCULES
 									
-							}
-							
-							
-							if ($cptcol!=9)//<>
-							{
-								
-								
-							}else
-							{
-								
-								//$vcol=str_ireplace(chr(47), " ", $texte);
-								/*
-								 * remplacer ESPACE PAR /
-								 */
-
-								
-								//echo "<br/> tessiture voix >".$vcol." <br/>";
-								
-							}
-							
+							}							
 								
 							//$vcol=htmlentities($vcol,ENT_NOQUOTES);
 							//$vcol=htmlentities($vcol,ENT_COMPAT);
@@ -1381,7 +1333,7 @@ LIMIT 0 , 30
 									$imp->setColF($vcol);//TempsLiturgiques
 									break;								
 								case 7:
-									$imp->setColG($vcol);//FONCTIONS TempsLiturgiques
+									$imp->setColG($vcol);//FONCTIONS Liturgiques
 									break;
 								case 8:
 									$imp->setColH($vcol);//...................... COTE
@@ -1648,21 +1600,17 @@ LIMIT 0 , 30
 			/**
 			 * par cours des lignes $baTraiter
 			 */
-			//die('1350');
-			//echo "<br/>";
 			$icpt=0;
-			
 			$inbOeuvres=count($aLignesImport)-1;
-			
 			$icptOeuvre=0;
 			$icptOeuvremodifiee=0;
+
+			//echo "<br/>1608 $inbOeuvres";
 			
 			foreach ($aLignesImport as $iligne=>$aLigne)
 			{
 				
 				$valf=trim($aLigne->getColA());
-				
-				//echo "<br/>".$valf."<<br/>";
 				
 				//var_dump($aLigne);
 							
@@ -1779,30 +1727,14 @@ LIMIT 0 , 30
 							if(count($an)>1)
 							{
 								$nom=trim($an[0]);				
-								//echo "<br>1308 \$nom >".$nom."< <br>";
-								
 								$harmonisateur=trim(strtoupper($an[1]));
-								//echo "<br>1309 \$harmonisateur >".$harmonisateur."<";
-
-								$prenom='';//$an[1];
+								$prenom='';
 								$ancomposit=explode(" ", $nom);
 								if(count($ancomposit)>1)
 								{
-									//echo '<br>1315--- ancomposit <br>';
-									//var_dump($ancomposit);
 									$prenom=$ancomposit[1];
 									$sprenom2=trim(strtoupper($prenom));
-									
-									
 								}
-									
-								//$anh=explode(" ", $harmonisateur);
-								//var_dump($anh);
-								
-								//echo "<br/>*********** 1202 \$prenom >".$prenom."<";
-								
-								//echo '<br>1344 NOM>'.trim($nom).'< PRENOM >'.$prenom.'<';
-								
 								if(count($an)>2){
 									if($prenom=='')
 									{
@@ -1812,33 +1744,23 @@ LIMIT 0 , 30
 											$sprenom2=trim(strtoupper($prenom));
 										}
 									}
-
 								}						
 
 								$ancomp=explode(" ", $nom);
 								if($harmonisateur!='')
 								{
 									$ancomp=explode(" ", $harmonisateur);
-									
 								}
-								
 								
 								if(is_array($ancomp))
 								{
-									//echo '<br>1332 ancomp <br>'.count($ancomp).'>';
-									//var_dump($ancomp);
 									$nomhar=trim(strtoupper($ancomp[0]));
-									
 									$prenomhar='';
 									if(count($ancomp)>1)
 									{
-										//echo '<br>1360 NOMHAR >'.trim($nomhar).'< PRENOMHAR >'.$prenomhar.'<';
 										$prenomhar=trim(strtoupper($ancomp[1]));
-										
 									}
 								}
-								//echo '<br>1365 NOMHAR >'.trim($nomhar).'< PRENOMHAR >'.$prenomhar.'<';
-								
 								/*
 								if(trim(strtoupper($nom))!=="ANONYME")
 								{
@@ -2330,6 +2252,14 @@ LIMIT 0 , 30
 							
 								//echo "<br/> fin Tessiture Voix ...>".$sLib." ( ".$idvoix.")";
 								
+								/**
+								 * rechercheTempsLiturgique
+								 */
+								$sLib=$aLigne->getColF();
+								$sLib=trim($sLib);
+								
+								$idtpslit= $eml->getRepository('oeuvresBundle:TempsLiturgiques')->rechercheTempsLiturgique($sLib);
+								
 							}
 							
 							/**
@@ -2341,18 +2271,22 @@ LIMIT 0 , 30
 							$sLib=trim($sLib);
 							if($sLib!="")
 							{
-								//$idtpslit= rechercheTempsLiturgique($aLigne->getColF());
-							
+								$idtpslit=0;
+								$sLib3=$aLigne->getColF();
+
+								if (trim($sLib3)!='')
+								{
+									$idtpslit= $eml->getRepository('oeuvresBundle:TempsLiturgiques')->rechercheTempsLiturgique($sLib3);
+								}
+								
 								$idfonc= $eml->getRepository('oeuvresBundle:Fonctions')->rechercheFonction($sLib);
 							
 								//echo "<br/>983....... rechercheFonction ...".$sLib." ( ".$idfonc.")";
 							
 								if($idfonc==0)
 								{
-									$idfonc= $eml->getRepository('oeuvresBundle:Fonctions')->insertionFonction($sLib);
-							
+									$idfonc= $eml->getRepository('oeuvresBundle:Fonctions')->insertionFonction($sLib,$idtpslit);
 								}
-									
 								//echo "<br/> fin oeuvresBundle:Fonctions ...".$sLib." ( ".$idfonc.")";
 							
 							}							

@@ -58,7 +58,6 @@ class TempsLiturgiquesRepository extends EntityRepository
 		}
 		
 		$sSql.=' order by t.libelle';
-		
 		$query = $this->getEntityManager()
 		->createQuery(
 				$sSql
@@ -163,7 +162,7 @@ class TempsLiturgiquesRepository extends EntityRepository
 		$sql="SELECT
 				t.id from oeuvresBundle:TempsLiturgiques t
 				WHERE t.libelle = '".$sLibelle."'";
-	
+	//echo "<br/> rechercheTempsLiturgique $sql";
 		$query = $this->getEntityManager()
 		->createQuery(
 				$sql

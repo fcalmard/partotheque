@@ -160,6 +160,16 @@
 
        <script type="text/javascript">
 
+         	var objtous = document.getElementById("oeuvresbundle_filtre_voix_tous");
+     		
+    		$( "#oeuvresbundle_filtre_voix_voix" ).change(function() {
+               if(objtous)
+               {
+           			objtous.value="0";
+               }
+    		});
+    
+       
             {% if voix is defined %}
             
             $("#oeuvresbundle_filtre_voix_voix").val("{{voix}}");

@@ -167,99 +167,10 @@ class MenusRepository extends EntityRepository
 				
 		try {
 			$aListeMenus=$query->getArrayResult();
-			/*
-			foreach ($aListeMenus as $oMenu)
-			{
-				$queryPrm = $this->getEntityManager()
-				->createQuery(
-						'SELECT t.menus_id,
-						t.profils_id
-						FROM oeuvresBundle:profils_menus t
-						WHERE t.profils_id='.$idProfil.' AND t.menus_id='.$oMenu['id']
-				);
-				
-				$aListeProfilsMenus=$queryPrm->getArrayResult();
-				
-				var_dump($aListeProfilsMenus);
-				
-				$bActive=(count($aListeProfilsMenus)>0) ? 1 : 0;
-								
-			}
-
-			*/
-			
-				/*
-			foreach ($aListeMenus as $oMenu)
-			{
-				
-				 * recherche si il y a un profil menu
-				 
-				$queryPrm = $this->getEntityManager()
-				->createQuery(
-						'SELECT DISTINCT
-						t.menus_id,
-						t.profils_id
-						FROM oeuvresBundle:profils_menus t
-						WHERE t.profils_id='.$idProfil.' AND t.menus_id='.$oMenu['id']
-				);
-				$aListeProfilsMenus=$queryPrm->getArrayResult();
-				
-				$bActive=(count($aListeProfilsMenus)>0) ? 1 : 0;
-				
-				$aMenu=array("menus_id"=>$oMenu['id'],"profils_id"=>$idProfil,"active"=>$bActive);
-				
-				$aListeMenusARemplir[]=$aMenu;
-			}
-			
-			 * pour chaque menu rechercher si il y a un profil menu
-			 * si oui active=1 si non active=0
-			 */
-
-					
-			
 			
 		} catch (\Doctrine\ORM\NoResultException $e) {
 			die("ERREUR LISTE MENUS");
 		}		
-				/*
-				 * 
-					CREATE TABLE IF NOT EXISTS `profils_menus` (
-					  `menus_id` int(11) NOT NULL,
-					  `profils_id` int(11) NOT NULL,
-					  PRIMARY KEY (`menus_id`,`profils_id`),
-					  KEY `IDX_81AF3EE914041B84` (`menus_id`),
-					  KEY `IDX_81AF3EE9B9881AFB` (`profils_id`)
-					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci		 * 
-				 
-				
-				$queryPrm = $this->getEntityManager()
-				->createQuery(
-						'SELECT DISTINCT
-						t.menus_id,
-						t.profils_id
-						FROM oeuvresBundle:profils_menus t
-						WHERE t.profils_id='.$idProfil
-				);
-				
-				$aListeProfilsMenus=array();
-				
-				
-				 * recherche les MENUS activé pour le PROFIL
-				
-				
-				try {
-					$aListeProfilsMenus=$queryPrm->getArrayResult();
-						
-		
-				
-				} catch (\Doctrine\ORM\NoResultException $e) {
-					die("ERREUR LISTE PROFILS MENUS");
-				}		
-				*/
-		
-		//var_dump($aListeMenusARemplir);
-		
-		
 		
 		return $aListeMenusARemplir;
 

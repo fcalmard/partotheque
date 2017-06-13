@@ -103,6 +103,8 @@
 					
 			</tr>
 		</table>
+		
+		<!-- oeuvresbundle_fonctions_id_tpslitur -->
 
 	</div>
 	
@@ -113,7 +115,15 @@
 		{{ parent() }}
         
 	        <script type="text/javascript">
-	        
+			{% if id_tpslitur is defined %}
+			   var obj = document.getElementById("oeuvresbundle_fonctions_id_tpslitur")
+			   
+			    if(obj)
+				    {
+					obj.value="{{id_tpslitur}}";
+				    }
+			   
+			{% endif %}	        
 	        	
 			$("#menu1").hide();
 			$("#menu2").hide();

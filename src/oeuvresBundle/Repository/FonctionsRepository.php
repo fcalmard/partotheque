@@ -12,27 +12,158 @@ use Doctrine\ORM\EntityRepository;
  */
 class FonctionsRepository extends EntityRepository
 {
-	public function ChargeListe()
+	public function ChargeListe($aFiltres=Null)
 	{
+		$aFonctions=array();
+		$aListe=array();
+		
+		$btous=true;
+		$sfonction='';
+		if(isset($aFiltres) & is_array($aFiltres) & count($aFiltres)!=0)
+		{
+			$sfonction=(isset($aFiltres['fonction'])) ? $aFiltres['fonction'] : '';
+			$btous=(isset($aFiltres['tous'])) ? $aFiltres['tous'] : 0 ;
+		}
+		
+		$sSql='SELECT
+						t.id,
+						t.active,
+						t.id_tpslitur,
+						t.code,
+						t.libelle,
+						t.datecreateAt
+						FROM oeuvresBundle:Fonctions t where ';
+		
+		if($btous=='2')
+		{
+			$sSql.='t.active=0';
+			
+		}
+		else{
+			$sSql.='t.active=1';
+			$btous=($btous=='1');
+			if(!$btous && $sfonction!='')
+			{
+				$s=sprintf("%s",$sfonction);
+				$sSql.=" and (t.libelle like '%$s%'";
+				$sSql.=" or t.libelle = '$sfonction')";
+			}
+		}
+		
+		$sSql.=' order by t.libelle';
+		
+		$query = $this->getEntityManager()
+		->createQuery($sSql);
+		
+		$em=$this->getEntityManager();
+		
+		try {
+			
+			$aFonctions= $query->getArrayResult();
+			foreach ($aFonctions as $oFonc)
+			{
+				$idtps=(integer)$oFonc['id_tpslitur'];
+				
+				$slib=($idtps==0) ? '?' : 'ok';//Temps liturgique inconnu ?
+				
+				$bactive=$oFonc['id'];
+				
+				if($idtps!=0)
+				{
+					//$id_tpslitur=$entity->getIdTpslitur();
+					$entity = $em->getRepository('oeuvresBundle:TempsLiturgiques')->find($idtps);
+					if($entity)
+					{
+						$slib=$entity->getLibelle();
+						$slib=$this->epure($slib);
+						
+						$bactive=$entity->getActive();
+						
+					}
+				}
+				//
+				$oFonction=array('id'=>$oFonc['id']
+						,'active'=>$oFonc['active']
+						,'id_tpslitur'=>$oFonc['id_tpslitur']
+						,'code'=>$oFonc['code']
+						,'libelle'=>$oFonc['libelle']
+						,'datecreateAt'=>$oFonc['datecreateAt']
+						,'lib_tpslitur'=>$slib
+				);
+
+				$aListe[]=$oFonction;
+				
+			}
+			
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			$aFonctions=null;
+			$aListe=null;
+		}
+
+		$Ordreaff=array();
+		
+		foreach ($aListe as $key=>$row)
+		{
+			$slib=$row['lib_tpslitur'];
+			$Ordreaff[$key]  = $slib;
+			//echo "<br/>96 $slib<";
+			
+		}
+		array_multisort($Ordreaff,SORT_ASC,$aListe);
+		
+		$skeylib='';
 		
 		$aFonctions=array();
-		$query = $this->getEntityManager()
-		->createQuery(
-				'SELECT
-				t.id,
-				t.active,
-				t.code,
-				t.libelle,
-				t.datecreateAt
-				FROM oeuvresBundle:Fonctions t order by t.libelle'
-		);
+		
+		foreach ($aListe as $key=>$oFonc)
+		{
+			$oFonction=array('id'=>$oFonc['id']
+					,'active'=>$oFonc['active']
+					,'id_tpslitur'=>$oFonc['id_tpslitur']
+					,'code'=>$oFonc['code']
+					,'libelle'=>$oFonc['libelle']
+					,'datecreateAt'=>$oFonc['datecreateAt']
+					,'lib_tpslitur'=>'');//$oFonc['lib_tpslitur']
 			
-		try {
-			return $query->getResult();
-		} catch (\Doctrine\ORM\NoResultException $e) {
-			return null;
-		}
+			if($skeylib=='')
+			{
+				$oTpsliturgique=array('id'=>$oFonc['id_tpslitur']
+						,'active'=>$oFonc['active']
+						,'id_tpslitur'=>0
+						,'code'=>''
+						,'libelle'=>''
+						,'datecreateAt'=>$oFonc['datecreateAt']
+						,'lib_tpslitur'=>$oFonc['lib_tpslitur']);
+				$aFonctions[]=$oTpsliturgique;
 				
+				$skeylib=$oFonc['lib_tpslitur'];
+				
+			}else{
+				/*
+				 * rupture
+				 */
+				if($oFonc['lib_tpslitur']!=$skeylib)
+				{
+					$oTpsliturgique=array('id'=>$oFonc['id_tpslitur']
+							,'active'=>$oFonc['active']
+							,'id_tpslitur'=>0
+							,'code'=>''
+							,'libelle'=>''
+							,'datecreateAt'=>$oFonc['datecreateAt']
+							,'lib_tpslitur'=>$oFonc['lib_tpslitur']);
+					$aFonctions[]=$oTpsliturgique;
+					
+					$skeylib=$oFonc['lib_tpslitur'];
+					
+					//echo "<br/>150 RUPTURE >$skeylib<";
+					
+				}
+			}
+
+			$aFonctions[]=$oFonction;
+		
+		}
+		
 		return $aFonctions;
 		
 	}
@@ -44,8 +175,8 @@ class FonctionsRepository extends EntityRepository
 		$query = $this->getEntityManager()
 		->createQuery(
 				'SELECT	t.id FROM oeuvresBundle:Fonctions t'
-		);
-	
+				);
+		
 		try {
 			return $query->getResult();
 		} catch (\Doctrine\ORM\NoResultException $e) {
@@ -137,7 +268,7 @@ class FonctionsRepository extends EntityRepository
 	/**
 	 *
 	 */
-	public function insertionFonction($sLib)
+	public function insertionFonction($sLib,$idtpslit)
 	{
 	
 		$idcree=0;
@@ -156,7 +287,7 @@ class FonctionsRepository extends EntityRepository
 		
 		$conn=$this->getEntityManager()->getConnection();
 	
-		$dataArray=array('code'=>$sCode,'libelle'=>$sLib,'active'=>1
+		$dataArray=array('code'=>$sCode,'libelle'=>$sLib,'active'=>1,'id_tpslitur'=>$idtpslit
 				,'datecreateAt'=>$sdate
 				
 		);

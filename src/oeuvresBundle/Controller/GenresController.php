@@ -382,8 +382,6 @@ class GenresController extends Controller
 
         if (!$entity) {
         	return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'genres','id'=>$id)));
-        	
-            //throw $this->createNotFoundException('Unable to find Genres entity.');
         }
 
         $editForm = $this->createEditForm($entity);

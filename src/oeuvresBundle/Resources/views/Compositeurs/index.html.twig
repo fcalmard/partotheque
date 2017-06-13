@@ -111,6 +111,14 @@
 
 		<script type="text/javascript">
 
+          	var objtous = document.getElementById("oeuvresbundle_filtre_compositeurs_tous");
+  		
+    		$( "#oeuvresbundle_filtre_compositeurs_compositeur").change(function() {
+	            if(objtous)
+                {
+            	objtous.value="0";
+                }
+			});
 	       {% if compositeur is defined %}
 		       
 	       		$("#oeuvresbundle_filtre_compositeurs_compositeur").val("{{compositeur}}");
@@ -118,11 +126,11 @@
 			{% endif %}
 
 	        {% if tous is defined %}
-	            var obj = document.getElementById("oeuvresbundle_filtre_compositeurs_tous");
-	            if(obj)
-	                {
-	            	obj.value="{{tous}}";
-	                }
+            var obj = document.getElementById("oeuvresbundle_filtre_compositeurs_tous");
+            if(obj)
+                {
+            	obj.value="{{tous}}";
+                }
 	        {% endif %}
 				
 			$("#menu1").hide();

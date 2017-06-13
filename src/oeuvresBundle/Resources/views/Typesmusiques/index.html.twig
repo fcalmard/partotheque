@@ -75,7 +75,6 @@
             </table>
 
     </div>
-    
     {% endblock %}
     
 {% block javascripts %}
@@ -84,11 +83,26 @@
 
        <script type="text/javascript">
                {# oeuvresbundle_filtre_typesmusiques #}
-        
+
+             	var objtous = document.getElementById("oeuvresbundle_filtre_typesmusiques_tous");
+          		
+        		$( "#oeuvresbundle_filtre_typesmusiques_typesmusique" ).change(function() {
+    	            if(objtous)
+                    {
+                	objtous.value="0";
+                    }
+    			});
+    			               
             {% if typesmusique is defined %}
           		$("#oeuvresbundle_filtre_typesmusiques_typesmusique").val("{{typesmusique}}");
         	{% endif %}
-
+	        {% if tous is defined %}
+            var obj = document.getElementById("oeuvresbundle_filtre_typesmusiques_tous");
+            if(obj)
+                {
+            	obj.value="{{tous}}";
+                }
+	        {% endif %}
 		
 			$("#menu1").hide();
 			$("#menu2").hide();
