@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use oeuvresBundle\Entity\Fonctions;
 use oeuvresBundle\Form\FonctionsType;
 use oeuvresBundle\Form\FonctionsFiltreType;
+use oeuvresBundle\Entity\TempsLiturgiques;
 
 /**
  * Fonctions controller.
@@ -41,26 +42,37 @@ class FonctionsController extends Controller
 
         $aFiltres= $session->get($gUserLoginLogged.'_fonctions_filtres');
         
-        $sfonction=$aFiltres['fonction'];
-        
-        $btous=$aFiltres['tous'];
+        $sfonction=isset($aFiltres['fonction']) ? $aFiltres['fonction'] : '';
+
+        $btous=isset($aFiltres['tous']) ? $aFiltres['tous'] : 1;//tous
         
         $entities = $em->getRepository('oeuvresBundle:Fonctions')->ChargeListe($aFiltres);
 
-        $aEnregId=$this->listeDesIds($entities);
+        $aEnregId=$this->listeDesIds($entities,2);
+        
+        $aEnregIdFonc=$this->listeDesIds($entities,1);
         
         $iEnreg=1;
         $iPage=1;
         $sColDeTri="";
         $sColDeTriOrdre="";
-        
-
-        
+                
         $filtre_form=$this->filtreCreateForm();
-        
-        $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
-        
-        return $this->render('oeuvresBundle:Fonctions:index.html.twig', array(
+        /**
+         * memorise dans deux tables d'id
+         * 
+         */
+        $stbl='_tempsliturgiques';        
+        $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged,$stbl);
+        /*
+         * 
+         */
+        $stbl='_fonctions';
+        $this->tblEnregSauveSession($aEnregIdFonc, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged,$stbl);
+        /*
+         * 
+         */
+        return $this->render('oeuvresBundle:Fonctions:treeview.html.twig', array(
             'entities' => $entities,
         		'filtre_form'   => $filtre_form->createView()
         		,'fonction'=>$sfonction
@@ -108,7 +120,19 @@ class FonctionsController extends Controller
     	));
     }
     
-    public function tblEnregSauveSession($aEnregId,$iEnreg,$iPage,$sColDeTri,$sColDeTriOrdre,$gUserLoginLogged)
+    /**
+     * _tempsliturgiques_tblenreg
+     * _fonctions_tblenreg
+     * 
+     * @param array $aEnregId
+     * @param integer $iEnreg
+     * @param integer $iPage
+     * @param string $sColDeTri
+     * @param string $sColDeTriOrdre
+     * @param string $gUserLoginLogged
+     * @return boolean
+     */
+    public function tblEnregSauveSession($aEnregId,$iEnreg,$iPage,$sColDeTri,$sColDeTriOrdre,$gUserLoginLogged,$stbl='_tempsliturgiques')
     {
     	$bOk=true;
     
@@ -118,8 +142,8 @@ class FonctionsController extends Controller
     	$aSessionTblEnreg=array();
     
     	//$aEnreg=array('nbenreg'=>count($entities));
-    
-    	$aSessionTblEnreg['nbenreg']=count($aEnregId);
+    	$nbenreg=count($aEnregId);
+    	$aSessionTblEnreg['nbenreg']=$nbenreg;
     
     	$aSessionTblPageEnreg=array();
     
@@ -143,8 +167,16 @@ class FonctionsController extends Controller
     	$aSessionTblEnreg['trifonctions']=$aEnregTri;
     
     	$session = new Session();
-    
-    	$session->set($gUserLoginLogged.'_fonctions_tblenreg',$aSessionTblEnreg);
+    	if($stbl=='')
+    	{
+    		$stblenreg='_fonctions_tblenreg';
+    		
+    	}else {
+    		$stblenreg=$stbl.'_tblenreg';
+    		//echo "<br/>176,tblEnregSauveSession $stblenreg nbenreg=$nbenreg";
+    		
+    	}
+    	$session->set($gUserLoginLogged.$stblenreg,$aSessionTblEnreg);
     
     	//var_dump($aSessionTblEnreg);
     
@@ -153,16 +185,39 @@ class FonctionsController extends Controller
     	return $bOk;
     }
 
-    
-    private function listeDesIds(&$entities)
+    /**
+     * 
+     * @param unknown $entities
+     * @param number $iType 1 = Fonctions 2 = TempsLiturgiques
+     * @return unknown[]
+     */
+    private function listeDesIds(&$entities,$iType=2)
     {
     	$aEnregId=array();
     	$c=0;
     	foreach ($entities as $entity)
     	{
-    		$c++;
-    
-    		$aEnregId[$c]=$entity['id'];
+    		//var_dump($entity);
+    		//die('170');
+    		$bok=true;
+    		if(isset($entity['lib_tpslitur']))
+    		{
+    			switch ($iType)
+    			{
+    				case 1://Fonctions
+    					$bok=$entity['lib_tpslitur']=='' && $entity['id']!=0;
+    					break;
+    				case 2://TempsLiturgiques
+    					$bok=$entity['lib_tpslitur']!='' && $entity['id']!=0;
+    				default:
+    			}
+    		}
+
+		    if($bok)
+		    {
+		    	$c++;
+		    	$aEnregId[$c]=$entity['id'];
+		    }
     		 
     		/*if($c=$iNbEnregParPage)
     		 {
@@ -170,6 +225,14 @@ class FonctionsController extends Controller
     		$iPage++;
     		 
     		}*/
+    	}
+    	switch ($iType)
+    	{
+    		case 1://Fonctions
+    			break;
+    		case 2://TempsLiturgiques
+    			//var_dump($aEnregId);
+    		default:
     	}
     	return $aEnregId;
     }

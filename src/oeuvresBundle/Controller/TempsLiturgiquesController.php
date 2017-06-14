@@ -157,22 +157,25 @@ class TempsLiturgiquesController extends Controller
     			//echo ("<br/>372 $id");
     		}
     		 
-    	
-    		 
-    		$aEnregTri=$aSessionTblEnreg['tritempsliturgiques'];
-    		foreach ($aEnregTri as $ket=>$aEnregTriPar)
+    		$aEnregTri=isset($aSessionTblEnreg['tritempsliturgiques']) ? $aSessionTblEnreg['tritempsliturgiques'] : null;
+    		if(is_array($aEnregTri) && count($aEnregTri)!=0)
     		{
-    			//echo "<br/>A ENREGTRI PAR <br/>";
-    			//var_dump($aEnregTriPar);
-    			foreach ($aEnregTriPar as $ket2=>$aEnregTriPar2)
+    			foreach ($aEnregTri as $ket=>$aEnregTriPar)
     			{
-    				//echo "<br/>A ENREGTRI PAR NIVEAU2 $ket2<br/>";
-    	
-    				//var_dump($aEnregTriPar2);
-    	
+    				//echo "<br/>A ENREGTRI PAR <br/>";
+    				//var_dump($aEnregTriPar);
+    				foreach ($aEnregTriPar as $ket2=>$aEnregTriPar2)
+    				{
+    					//echo "<br/>A ENREGTRI PAR NIVEAU2 $ket2<br/>";
+    					
+    					//var_dump($aEnregTriPar2);
+    					
+    				}
+    				
     			}
-    	
     		}
+
+
     		 
     		$this->tblEnregSauveSession($aEnregId, $idxenreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
 

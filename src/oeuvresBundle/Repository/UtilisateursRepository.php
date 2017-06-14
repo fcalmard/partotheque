@@ -23,22 +23,7 @@ class UtilisateursRepository extends EntityRepository
 		{
 			$suser=(isset($aFiltres['utilisateur'])) ? $aFiltres['utilisateur'] : '';
 			$btous=(isset($aFiltres['tous'])) ? $aFiltres['tous'] : 0 ;
-		}
-		/*
-		$sSql="SELECT
-				t.id,
-				t.Login,
-				t.passwd,
-				concat(t.prenom,' ',t.nom) as utilisateur,
-				t.email,
-				t.actif,
-				t.idPays,
-				p.libelleProfil,
-				t.datecreateAt
-				FROM oeuvresBundle:Utilisateurs t
-				LEFT JOIN oeuvresBundle:Profils p ";
-				*/
-		
+		}		
 		$sSql="SELECT
 				t.id,
 				t.Login,
@@ -103,8 +88,6 @@ class UtilisateursRepository extends EntityRepository
 		} catch (\Doctrine\ORM\NoResultException $e) {
 			return null;
 		}
-
-		
 		
 		$query = $this->getEntityManager()
 		->createQuery($sSql);
@@ -270,7 +253,15 @@ class UtilisateursRepository extends EntityRepository
 				$aFiltres=array('voix'=>'','tous'=>$tous);
 				$session->set($slogin.'_voix_filtres',$aFiltres);
 			}
-			
+			/*
+			 * fonctions
+			 */
+			$aFiltresTest= $session->get($slogin.'_fonctions_filtres');
+			if(is_null($aFiltresTest))
+			{
+				$aFiltres=array('voix'=>'','tous'=>$tous);
+				$session->set($slogin.'_fonctions_filtres',$aFiltres);
+			}
 			/*
 			 * avancements CHANGE
 			 */
