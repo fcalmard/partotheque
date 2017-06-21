@@ -19,12 +19,18 @@
 			{{ form_label(edit_form.Login, 'Login') }}
 			{{ form_widget(edit_form.Login) }}
 			{{ form_errors(edit_form.Login) }}
-			
 			<br/>
 			{{ form_label(edit_form.passwd, 'Mot de passe') }}
 			{{ form_widget(edit_form.passwd) }}
 			{{ form_errors(edit_form.passwd) }}
-						
+			<br/>
+			{{ form_label(edit_form.actif, 'Verrouillage') }}
+            {% if entity.actif==1 %}
+	            <img alt="deverrouillé" src="/web/css/images/unlocked2.png">
+            {% else %}
+	            <img alt="deverrouillé" src="/web/css/images/locked2.png">
+            {% endif %}								
+			<br/>
 			{{ form_end(edit_form) }}
 					
 		</div>
@@ -87,11 +93,28 @@
 				    {% if entity.id!=0 %}
 				    
 					<td class="tdtblactionsbdp">
-					    <a href="{{ path('utilisateurs_confirm_delete', { 'id': entity.id }) }}">
-				             <img alt="Désactiver" src="/web/css/images/desactiver.png" width="64px" height="64px" >
-					    </a>					    
+				    	{%  if entity.actif==1 %}
+    					    <a href="{{ path('utilisateurs_confirm_delete', { 'id': entity.id }) }}">
+    					    {# actif #}
+    				             <img alt="Désactiver" src="/web/css/images/locked2.png" width="64px" height="64px" >
+    					    </a>
+    					{% else %}
+    					    <a href="{{ path('utilisateurs_confirm_reactiv', { 'id': entity.id }) }}">
+    					    {# actif #}
+    				             <img alt="Désactiver" src="/web/css/images/unlocked2.png" width="64px" height="64px" >
+				    	{% endif %}
 				    </td>
-				    {% endif %}
+
+    	            {# generation nouveau mot de passe #}
+
+    				<td class="tdtblactionsbdp">
+    		           <a href="{{ path('utilisateurs_confirm_nvmdp', { 'id': entity.id }) }}">
+    		             <img alt="Désactiver" src="/web/css/images/passwd4.png" width="64px" height="64px" >
+    				    </a>	
+    				</td>
+								    
+			    	{% endif %}
+				    
 				    
 											
 				<td style="background-color:beige; " >
@@ -134,9 +157,6 @@
 		{{ parent() }}
         
 	        <script type="text/javascript">
-	        
-	        
-	        
 	        
 			{% if ProfilsId is defined %}
 	        var obj = document.getElementById("oeuvresbundle_utilisateurs_Profils_id");

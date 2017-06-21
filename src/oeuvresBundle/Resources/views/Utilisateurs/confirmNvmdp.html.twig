@@ -1,0 +1,106 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+
+	<div class="titrelisteetform">
+	    	<h1>Confirmez vous la génération d'un nouveau mot de passe pour {{ user }}?</h1>
+	</div>
+
+    <div class="listeetform">
+<br/>
+
+		<div class="showform">
+			{{ form_start(form) }}
+			<table>
+    			<tr>
+    			<td>
+    				  <br/>
+    				  <img alt="nouveau mdp" src="/web/css/images/passwd4.png">
+    				  <br/>
+    				  <br/>
+    			
+    			</td>
+    			</tr>
+    			<tr>
+    			<td>
+    			    {{ form_label(form.passwdclr, 'Mot de passe en clair') }}
+    						{{ form_widget(form.passwdclr) }}
+    						{{ form_errors(form.passwdclr) }}
+    			</td>
+    			<td>&nbsp;&nbsp;&nbsp;
+    			  	<a href="{{ path('utilisateurs_confirm_nvmdp', { 'id': id }) }}">
+        		             <img alt="Désactiver" src="/web/css/images/reload_blue2.png" width="64px" height="64px" >
+        				    </a>	
+    	        </td>
+			</tr>
+			<tr>
+			<td>
+			{{ form_label(form.passwd, 'Mot de passe codifié') }}
+						{{ form_widget(form.passwd) }}
+						{{ form_errors(form.passwd) }}
+			</td>
+			</tr>
+			
+			</table>
+							  <br/>
+							  <br/>
+			
+						{{ form_end(form) }}
+			
+		</div>
+
+	</div>
+
+	<div class="finlisteetform">
+
+		<table>
+			<tr>
+				<td class="tdtblactionsbdp">
+			        <a href="{{ path('utilisateurs') }}">
+			            <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
+			        </a>
+				</td>
+				<td class="tdtblactionsbdp">
+			        <a href="{{ path('utilisateurs_edit', { 'id': entity.id }) }}">
+			            <img alt="Modification" src="/web/css/images/edit.png">
+			        </a>
+				</td>
+	
+			</tr>
+		</table>
+	</div>	
+	
+{% endblock %}
+
+{% block javascripts %}
+		
+		{{ parent() }}
+        
+	        <script type="text/javascript">
+
+	        
+			{% if mdp is defined %}
+	        var obj = document.getElementById("oeuvresbundle_utilisateurs_nvmdp_passwd");
+		    if(obj)
+		    {
+		    obj.value="{{mdp}}";
+		    }
+			{% endif %}
+
+			{% if mdpclr is defined %}
+	        var obj = document.getElementById("oeuvresbundle_utilisateurs_nvmdp_passwdclr");
+		    if(obj)
+		    {
+		    obj.value="{{mdpclr}}";
+		    }
+			{% endif %}			
+	        
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+						
+			</script>
+{% endblock %}
+
+
+

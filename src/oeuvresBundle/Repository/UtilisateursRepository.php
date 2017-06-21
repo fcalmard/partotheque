@@ -37,7 +37,7 @@ class UtilisateursRepository extends EntityRepository
 				FROM oeuvresBundle:Utilisateurs t";
 
 		$sSql.=' where ';
-		
+				
 		if($btous=='2')
 		{
 			$sSql.='t.actif=0';
@@ -50,7 +50,11 @@ class UtilisateursRepository extends EntityRepository
 			{
 				$s=sprintf("%s",$suser);
 				$sSql.=" and (t.nom like '%$s%'";
-				$sSql.=" or t.nom = '$suser')";
+				$sSql.=" or t.nom = '$suser'";
+				
+				$sSql.= " or t.prenom like '%$s%'";
+				$sSql.= " or t.prenom = '$suser')";
+				
 			}
 		}
 		
@@ -59,6 +63,7 @@ class UtilisateursRepository extends EntityRepository
 		
 		$aListeUsers=array();
 		
+		//echo "<br/>$sSql";
 		try {
 			$query= $this->getEntityManager()
 			->createQuery($sSql);
@@ -162,29 +167,45 @@ class UtilisateursRepository extends EntityRepository
 		return $iProfil;
 	
 	}
-	
+	/**
+	 * genPassword
+	 * @return string
+	 */
+	public function genPassword()
+	{
+		$snewmdp="";
+		//forme chaine de 8 caracteres
+		$snewmdp.=chr(rand(65,90));// A Z
+		$snewmdp.=chr(rand(97,122));//a z
+		$snewmdp.=chr(rand(48,57));//0 9
+		$snewmdp.=chr(rand(97,122));// a z
+		$snewmdp.=chr(rand(65,90));
+		$snewmdp.=chr(rand(65,90));
+		$snewmdp.=chr(rand(65,90));
+		$snewmdp.=chr(rand(65,90));
+		
+		return $snewmdp;
+	}
 	/**
 	 * 
 	 * @param string $email
 	 */
 	public function miseajourmdp($email,$mdp)
 	{
-	
 		$mdp=md5($mdp);
 			
+		$sSql="UPDATE oeuvresBundle:Utilisateurs t
+				SET t.passwd='".$mdp."'
+				WHERE t.email='".$email."'";
+		
 		$b=false;
 		$query = $this->getEntityManager()
-		->createQuery(
-				"UPDATE oeuvresBundle:Utilisateurs t
-				SET t.passwd='".$mdp."'
-				WHERE t.email='".$email."'");
-		
+		->createQuery($sSql);
 		try {
 			$b=$query->execute();
 		} catch (\Doctrine\ORM\NoResultException $e) {
 			$b=false;
 		}
-		
 		return $b;
 		
 	}
@@ -207,7 +228,12 @@ class UtilisateursRepository extends EntityRepository
 			/*
 			 * utilisateurs
 			 */
-			
+			$aFiltresTest= $session->get($slogin.'_utilisateurs_filtres');
+			if(is_null($aFiltresTest))
+			{
+				$aFiltres=array('utilisateur'=>'','tous'=>$tous);
+				$session->set($slogin.'_utilisateurs_filtres',$aFiltres);
+			}
 			/*
 			 * compositeur
 			 */

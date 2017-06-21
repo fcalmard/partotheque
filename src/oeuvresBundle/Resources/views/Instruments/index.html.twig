@@ -21,7 +21,13 @@
 	            <tr>
 	                <td><a href="{{ path('instruments_show', { 'id': entity.id }) }}">{{ entity.libelle }}</a></td>
 	                <td>{% if entity.datecreateAt %}{{ entity.datecreateAt|date('d/m/Y') }}{% endif %}</td>
-	                <td>{{ entity.active==1 ? "O" : "N"}}</td>
+	                <td>
+    	                {% if entity.active==1 %}
+           		            <img alt="deverrouillé" src="/web/css/images/unlocked2.png">
+    	                {% else %}
+           		            <img alt="deverrouillé" src="/web/css/images/locked2.png">
+    	                {% endif %}
+	                </td>
 	                <td>
 		                <ul>
 		                    <li>
@@ -39,12 +45,44 @@
 	</div>
 	
 		<div class="finlisteetform">
+		
+		    	<table>
+    		<tr>
+    			<td>
+    	            <a href="{{ path('instruments_new') }}">
+    		            <img alt="ajout" src="/web/css/images/add.png">
+    	            </a>
+    			</td>
+					
+    			 {# FILTRES #}
+                     {{ form_start(filtre_form) }}
+
+                        <td>
+                        {{ form_label(filtre_form.instrument, 'Instrument', { 'label_attr': {'class': 'filtre-label'} }) }}    				
+            			{{ form_widget(filtre_form.instrument) }}
+            			{{ form_errors(filtre_form.instrument) }}
+                        </td>
+                        <td>
+            	
+            	        {{ form_label(filtre_form.tous, 'Tous', { 'label_attr': {'class': 'filtre-label'} }) }}    				
+            			{{ form_widget(filtre_form.tous) }}
+            			{{ form_errors(filtre_form.tous) }}		
+                        </td>
+            			<td>
+            			&nbsp;&nbsp;&nbsp;&nbsp;
+            		    {{ form_widget(filtre_form.submit) }}
+            		    </td>
+
+        			    {# FILTRES #}
+		             {{ form_end(filtre_form) }}
+    		</tr>
+    	</table>
+		
+		
+		
 	        <ul>
 	        <li>
-	            <a href="{{ path('instruments_new') }}">
-		            <img alt="ajout" src="/web/css/images/add.png">
-	            </a>
-	        </li>
+	        1</li>
 	    	</ul>
 		
 		</div>
@@ -56,6 +94,25 @@
 
        <script type="text/javascript">
 
+  		var objtous = document.getElementById("oeuvresbundle_filtre_instruments_tous");
+		$( "#oeuvresbundle_filtre_instruments_instrument" ).change(function() {
+            if(objtous)
+            {
+        	objtous.value="0";
+            }
+		});
+        {% if instrument is defined %}
+			$("#oeuvresbundle_filtre_instruments_instrument").val("{{instrument}}");
+        {% endif %}
+
+        {% if tous is defined %}
+            if(objtous)
+                {
+            	objtous.value="{{tous}}";
+                }
+        {% endif %}
+
+		
 			$("#menu1").hide();
 			$("#menu2").hide();
 			$("#menu3").hide();

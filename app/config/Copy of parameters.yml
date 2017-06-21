@@ -1,0 +1,18 @@
+parameters:
+    database_driver: pdo_mysql
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: mychoralebd.mysql
+    database_user: root
+    database_password: root
+    mailer_transport: gmail
+    mailer_host: ~
+    mailer_user: fcalemard@gmail.com
+    mailer_password: raoume01
+    locale: fr
+    secret: df3a26010ffb9810e8291054c4ac7ff938
+    debug_toolbar: true
+    debug_redirects: false
+    use_assetic_controller: true
+    database_path: app/data
+    partitions_path: web/uploads/partitions

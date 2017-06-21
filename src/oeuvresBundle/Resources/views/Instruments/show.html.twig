@@ -20,7 +20,13 @@
 		            </tr>
 		            <tr class="ligneshow" >
 		                <th>Active</th>
-		                <td>{{ entity.active==1 ? "O" : "N"}}</td>
+		                <td>
+		                    {% if entity.active==1 %}
+           		            <img alt="deverrouillé" src="/web/css/images/unlocked2.png">		                    
+		                    {% else %}
+		                    <img alt="deverrouillé" src="/web/css/images/locked2.png">
+		                    {% endif %}
+		                </td>
 		            </tr>
 
 		            <tr class="ligneshow" >

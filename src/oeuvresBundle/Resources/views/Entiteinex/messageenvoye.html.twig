@@ -1,0 +1,30 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+
+   	<div class="titrelisteetform" >
+
+	    <h1>Message envoyé</h1>
+    
+        <a class="navbar-brand" href="{{ path('homepage') }}">
+            Retour à la Page d'accueil
+        </a>
+	                            
+	</div>
+	
+{% endblock %}
+
+{% block javascripts %}
+
+	{{ parent() }}
+
+       <script type="text/javascript">
+
+			$("#menu1").hide();
+			$("#menu2").hide();
+			$("#menu3").hide();
+					
+       </script>
+{% endblock %}
+
+

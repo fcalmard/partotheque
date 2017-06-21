@@ -58,5 +58,7 @@ $collection->add('instruments_confirm_action_delete', new Route('/{id}/confirm_d
 $collection->add('instruments_pagine', new Route('/{idxenreg}/{sens}/{action}/pagine', array(
 		'_controller' => 'oeuvresBundle:Instruments:pagine',
 )));
-
+$collection->add('instruments_filtrer', new Route('/{tous}/filtrer', array(
+		'_controller' => 'oeuvresBundle:Instruments:filtrer',
+)));
 return $collection;

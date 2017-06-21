@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 use oeuvresBundle\Entity\Instruments;
 use oeuvresBundle\Form\InstrumentsType;
+use oeuvresBundle\Form\InstrumentsFiltreType;
 /**
  * Instruments controller.
  *
@@ -35,7 +36,13 @@ class InstrumentsController extends Controller
     	}
     	$em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('oeuvresBundle:Instruments')->ChargeListe();
+    	$aFiltres= $session->get($gUserLoginLogged.'_instrument_filtres');
+    	var_dump($aFiltres);
+    	$sinstrument=$aFiltres['instrument'];
+    	
+    	$btous=$aFiltres['tous'];
+    	
+    	$entities = $em->getRepository('oeuvresBundle:Instruments')->ChargeListe($aFiltres);
 
         $aEnregId=$this->listeDesIds($entities);
         
@@ -43,12 +50,75 @@ class InstrumentsController extends Controller
         $iPage=1;
         $sColDeTri="";
         $sColDeTriOrdre="";
+
+        
+        $form=$this->filtreCreateForm();
         
         $this->tblEnregSauveSession($aEnregId, $iEnreg, $iPage, $sColDeTri, $sColDeTriOrdre, $gUserLoginLogged);
                         
         return $this->render('oeuvresBundle:Instruments:index.html.twig', array(
             'entities' => $entities,
+        	'filtre_form'=>$form->createView(),
+        		'instrument'=>$sinstrument,
+        	'tous'=>$btous
         ));
+    }
+    
+    public function filtrerAction(Request $request,$tous=1)
+    {
+    	/**
+    	 * retour à la liste filtrée
+    	 */
+    	
+    	$gUserLoginLogged="";
+    	$session = $this->getRequest()->getSession();
+    	
+    	if($session)
+    	{
+    		$gUserLoginLogged=$session->get('gUserLoginLogged');
+    	}
+    	if($gUserLoginLogged=='')
+    	{
+    		try {
+    			$redir= new RedirectResponse($this->generateUrl('homepage'));
+    			
+    			return $redir;
+    			
+    		}catch (\ErrorException $e)
+    		{
+    			die('filtrerAction >'.$gUserLoginLogged.'<');
+    			
+    		}
+    	}
+    	
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$post = $request->request->get('oeuvresbundle_filtre_instruments');
+    	
+    	$instrument=$post['instrument'];
+    	
+    	$tous=isset($post['tous']) ? $post['tous'] : 0;
+    	
+    	if($instrument!='' || !$tous)
+    	{
+    		$session = new Session();
+    		
+    		$aFiltres=array('instrument'=>$instrument,'tous'=>$tous);
+    		
+    		$session->set($gUserLoginLogged.'_instrument_filtres',$aFiltres);
+    		
+    	}
+    	$entities = $em->getRepository('oeuvresBundle:Instruments')->ChargeListe($post);
+    	
+    	$filtre_form=$this->filtreCreateForm();
+    	
+    	return $this->render('oeuvresBundle:Instruments:index.html.twig', array(
+    			'entities' => $entities,
+    			'filtre_form'   => $filtre_form->createView(),
+    			'instrument'=>$instrument,
+    			'tous'=>$tous
+    			
+    	));
     }
     
     
@@ -528,5 +598,18 @@ class InstrumentsController extends Controller
     
     	return $bOk;
     }    
-        
+    private function filtreCreateForm()
+    {
+    	
+    	$form = $this->createForm(new InstrumentsFiltreType(), null,array(
+    			'action' => $this->generateUrl('instruments_filtrer', array('tous' => 1)),
+    			'method' => 'POST'
+    	));
+    	$form->add('submit', 'submit', array('label' => ' '));
+    	
+    	return $form;
+    	
+    	
+    	
+    }
 }

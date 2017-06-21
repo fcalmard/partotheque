@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use oeuvresBundle\Entity\Utilisateurs;
 use oeuvresBundle\Form\UtilisateursType;
 use oeuvresBundle\Form\UtilisateursFiltreType;
+use oeuvresBundle\Form\UtilisateursNvmdpType;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -19,7 +20,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class UtilisateursController extends Controller
 {
-
     /**
      * Lists all Utilisateurs entities.
      *
@@ -146,7 +146,7 @@ class UtilisateursController extends Controller
     
     	$aSessionTblEnreg=$session->get($gUserLoginLogged.'_utilisateurs_tblenreg');
     
-    	var_dump($aSessionTblEnreg);
+    	//var_dump($aSessionTblEnreg);
     
     	$nbenreg=0;
     
@@ -246,9 +246,44 @@ class UtilisateursController extends Controller
     	}
     
     	return new RedirectResponse($this->generateUrl('utilisateurs'));
-    
+    	
     }
     
+    public function genernvmdpAction(Request $request,$id,$mdp)
+    {
+    	
+    	$entity = new Utilisateurs();
+    	
+    	//$form = $this->createCreateForm($entity);
+    	//$form->handleRequest($request);
+    	
+    	//if ($form->isValid()) {
+    	
+    		$em = $this->getDoctrine()->getManager();
+    		
+    		$entity = $em->getRepository('oeuvresBundle:Utilisateurs')->find($id);
+    		
+    		if (!$entity) {
+    			return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'utilisateurs','id'=>$id)));
+    			//throw $this->createNotFoundException('Unable to find Utilisateurs entity.');
+    		}
+    		
+    		
+    		$em = $this->getDoctrine()->getManager();
+    		
+    		$entity->setPasswd($mdp);//mode pass en clair
+    		
+    		$em->persist($entity);
+    		
+    		$em->flush();
+    		
+    		die('genernvmdpAction '.$id.' '.$entity->getNom());
+    		
+    	//}
+    	
+    	return new RedirectResponse($this->generateUrl('utilisateurs'));
+    	
+    }
     /**
      * Creates a new Utilisateurs entity.
      *
@@ -260,8 +295,8 @@ class UtilisateursController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
+        	$em = $this->getDoctrine()->getManager();
+        	$em->persist($entity);
             $em->flush();
 
             return $this->redirect($this->generateUrl('utilisateurs_show', array('id' => $entity->getId())));
@@ -306,7 +341,43 @@ class UtilisateursController extends Controller
             'edit_form'   => $form->createView(),
         ));
     }
-
+    /**
+     * 
+     * @param unknown $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|unknown
+     */
+    public function confirmnvmdpAction($id)
+    {
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$oUser=$em->getRepository('oeuvresBundle:Utilisateurs');
+    	
+    	$entity = $oUser->find($id);
+    	
+    	$mdpclr=$oUser->genPassword();
+    	
+//    	echo "<br/> 324 $mdpclr";
+    	$mdp=md5($mdpclr);
+    	if (!$entity) {
+    		return new RedirectResponse($this->generateUrl('entiteinex_show',array('entite'=>'utilisateurs','id'=>$id)));
+    		//throw $this->createNotFoundException('Unable to find Utilisateurs entity.');
+    	}
+    	$sUser=$entity->getPrenom();
+    	$sUser.=' '.$entity->getNom();
+    	
+    	$form=$this->nvmdpCreateForm($id,$mdpclr);
+    	
+    	return $this->render('oeuvresBundle:Utilisateurs:confirmNvmdp.html.twig', array('id'=>$id,
+    			'entity'      => $entity,'user'=>$sUser,'mdp'=>$mdp,'mdpclr'=>$mdpclr,'form'=>$form->createView()
+    	));
+    	
+    	/*
+    	 return $this->render('oeuvresBundle:Utilisateurs:confirmNvmdp.html.twig', array(
+    	 'form'=>$form->createView(),'id'=>$id
+    	 ,'entity'=>$entity
+    	 ));
+    	 */
+    }
     /**
      * Finds and displays a Utilisateurs entity.
      *
@@ -420,26 +491,65 @@ class UtilisateursController extends Controller
     	$em->flush();
     	return $this->redirect($this->generateUrl('utilisateurs'));
     }
+    /**
+     * 
+     * @param Request $request
+     * @param unknown $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function reactivAction(Request $request, $id)
+    {
+    	$em = $this->getDoctrine()->getManager();
+    	$entity = $em->getRepository('oeuvresBundle:Utilisateurs')->find($id);
+    	
+    	if (!$entity) {
+    		throw $this->createNotFoundException('Problème de lecture Utilisateur.');
+    	}
+    	$entity->setActif(true);
+    	$em->flush();
+    	return $this->redirect($this->generateUrl('utilisateurs'));
+    }
+    /**
+     *
+     * @param integer $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function confirmdeleteAction($id)
+    {
+    	$em = $this->getDoctrine()->getManager();
+    	$entity = $em->getRepository('oeuvresBundle:Utilisateurs')->find($id);
+    	if (!$entity) {
+    		throw $this->createNotFoundException('Problème de lecture Utilisateur.');
+    	}
+    	
+    	$confirm_form=$this->createConfirmDeleteForm($id);
+    	
+    	return $this->render('oeuvresBundle:Utilisateurs:confirmDelete.html.twig', array(
+    			'entity'      => $entity,
+    			'confirm_form'=>$confirm_form->createView()
+    	));
+    }
+    /**
+     *
+     * @param integer $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function confirmreactivAction($id)
+    {
+    	$em = $this->getDoctrine()->getManager();
+    	$entity = $em->getRepository('oeuvresBundle:Utilisateurs')->find($id);
+    	if (!$entity) {
+    		throw $this->createNotFoundException('Problème de lecture Utilisateur.');
+    	}
+    	
+    	$confirm_form=$this->createConfirmReactivForm($id);
+    	
+    	return $this->render('oeuvresBundle:Utilisateurs:confirmReactive.html.twig', array(
+    			'entity'      => $entity,
+    			'confirm_form'=>$confirm_form->createView()
+    	));
+    }
     
-    
-	
-	public function confirmdeleteAction($id)
-	{
-		$em = $this->getDoctrine()->getManager();
-		$entity = $em->getRepository('oeuvresBundle:Utilisateurs')->find($id);
-		if (!$entity) {
-			throw $this->createNotFoundException('Problème de lecture Utilisateur.');
-		}
-	
-		//confirm_form
-		$confirm_form=$this->createConfirmDeleteForm($id);
-		//die ('confirmdeleteAction 216');
-		
-		return $this->render('oeuvresBundle:Utilisateurs:confirmDelete.html.twig', array(
-				'entity'      => $entity,
-				'confirm_form'=>$confirm_form->createView()
-		));
-	}
 	/**
 	 * Creates a form to delete a Utilisateur entity by id.
 	 *
@@ -454,7 +564,20 @@ class UtilisateursController extends Controller
 		->add('submit', 'submit', array('label' => 'Oui'))
 		->getForm()
 		;
-	}	
+	}
+	/**
+	 * Creates a form to reactiver a Utilisateur entity by id.
+	 * @param integer $id
+	 * @return \Symfony\Component\Form\Form
+	 */
+	private function createConfirmReactivForm($id)
+	{
+		return $this->createFormBuilder()
+		->setAction($this->generateUrl('utilisateurs_reactiv', array('id' => $id)))
+		->add('submit', 'submit', array('label' => 'Oui'))
+		->getForm()
+		;
+	}
 
 	
 	
@@ -535,4 +658,15 @@ class UtilisateursController extends Controller
 		return $form;
 	}
 	
+	private function nvmdpCreateForm($id,$mdp)
+	{
+		
+		$form = $this->createForm(new UtilisateursNvmdpType(), null,array(
+				'action' => $this->generateUrl('utilisateurs_gener_nvmdp', array('id' => $id,'mdp'=>$mdp)),
+				'method' => 'POST'
+		));
+		$form->add('submit', 'submit', array('label' => ' '));
+		
+		return $form;
+	}
 }

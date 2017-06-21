@@ -14,7 +14,7 @@
 		                <th>Utilisateur</th>
 		                <th>Email</th>
 		                <th>Profil</th>
-		                <th>Activé</th>
+		                <th>Verrouillage</th>
 		                <th>Saisi le</th>
 		                <th>Actions</th>
 		            </tr>
@@ -26,7 +26,15 @@
 			                <td>{{ entity.utilisateur }}</td>
 			                <td>{{ entity.email }}</td>
 			                <td>{{ entity.libelleProfil }}</td>
-		               	 <td>{{ entity.actif==1 ? "O" : "N"}}</td>
+		               	 
+		               	 
+		               	 	<td>
+		               	 	   {% if entity.actif==1 %}
+           		            		<img alt="deverrouillé" src="/web/css/images/unlocked2.png">
+    	                        {% else %}
+           		            		<img alt="verrouillé" src="/web/css/images/locked2.png">
+    	                        {% endif %}
+		               	 	</td>
 			                
 			                <td>{% if entity.datecreateAt %}{{ entity.datecreateAt|date('d/m/Y') }}{% endif %}</td>
 			                <td>
@@ -54,7 +62,7 @@
 			            <img alt="ajout" src="/web/css/images/add.png">
 		            </a>
 				</td>
-				                    <td>
+				<td>
                     {# FILTRES #}
                      {{ form_start(filtre_form) }}
                     <td>
@@ -64,7 +72,7 @@
                     </td>
                     <td>
         	
-        	        {{ form_label(filtre_form.tous, 'Tous', { 'label_attr': {'class': 'filtre-label'} }) }}    				
+        	        {{ form_label(filtre_form.tous, 'Verrous', { 'label_attr': {'class': 'filtre-label'} }) }}    				
         			{{ form_widget(filtre_form.tous) }}
         			{{ form_errors(filtre_form.tous) }}		
                     </td>
@@ -91,17 +99,25 @@
         
 	        <script type="text/javascript">
 
+	   		var objtous = document.getElementById("oeuvresbundle_filtre_utilisateurs_tous");
+	   		
+			$( "#oeuvresbundle_filtre_utilisateurs_utilisateur" ).change(function() {
+	            if(objtous)
+	            {
+	        	objtous.value="0";
+	            }
+			});
+			
 	        {% if utilisateur is defined %}
 	        
        		$("#oeuvresbundle_filtre_utilisateurs_utilisateur").val("{{utilisateur}}");
        
            {% endif %}
-       
+
            {% if tous is defined %}
-           		var obj = document.getElementById("oeuvresbundle_filtre_utilisateurs_tous");
-               	if(obj)
+	            if(objtous)
                 {
-               		obj.value="{{tous}}";
+	            	objtous.value="{{tous}}";
                	}
            {% endif %}
            	        

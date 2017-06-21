@@ -30,7 +30,9 @@ $collection->add('utilisateurs_create', new Route(
 $collection->add('utilisateurs_edit', new Route('/{id}/edit', array(
     '_controller' => 'oeuvresBundle:Utilisateurs:edit',
 )));
-
+$collection->add('utilisateurs_reactiv', new Route('/{id}/reactiv', array(
+		'_controller' => 'oeuvresBundle:Utilisateurs:reactiv',
+)));
 $collection->add('utilisateurs_update', new Route(
     '/{id}/update',
     array('_controller' => 'oeuvresBundle:Utilisateurs:update'),
@@ -42,23 +44,31 @@ $collection->add('utilisateurs_update', new Route(
 ));
 
 $collection->add('utilisateurs_delete', new Route(
-    '/{id}/delete',
-    array('_controller' => 'oeuvresBundle:Utilisateurs:delete'),
-    array(),
-    array(),
-    '',
-    array(),
-    array('POST', 'DELETE')
-));
+		'/{id}/delete',
+		array('_controller' => 'oeuvresBundle:Utilisateurs:delete'),
+		array(),
+		array(),
+		'',
+		array(),
+		array('POST', 'DELETE')
+		));
+
 $collection->add('utilisateurs_confirm_delete', new Route('/{id}/confirm_delete', array(
 		'_controller' => 'oeuvresBundle:Utilisateurs:confirmdelete',
 )));
-
-
+$collection->add('utilisateurs_confirm_reactiv', new Route('/{id}/confirm_reactiv', array(
+		'_controller' => 'oeuvresBundle:Utilisateurs:confirmreactiv',
+)));
 $collection->add('utilisateurs_pagine', new Route('/{idxenreg}/{sens}/{action}/pagine', array(
 		'_controller' => 'oeuvresBundle:Utilisateurs:pagine',
 )));
 $collection->add('utilisateurs_filtrer', new Route('/{tous}/filtrer', array(
 		'_controller' => 'oeuvresBundle:Utilisateurs:filtrer',
+)));
+$collection->add('utilisateurs_confirm_nvmdp', new Route('/{id}/confirm_nvmdp', array(
+		'_controller' => 'oeuvresBundle:Utilisateurs:confirmnvmdp',
+)));
+$collection->add('utilisateurs_gener_nvmdp', new Route('/{id}/{mdp}/gener_nvmdp', array(
+		'_controller' => 'oeuvresBundle:Utilisateurs:genernvmdp',
 )));
 return $collection;

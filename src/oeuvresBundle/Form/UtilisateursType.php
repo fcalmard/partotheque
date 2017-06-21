@@ -21,17 +21,15 @@ class UtilisateursType extends AbstractType
     	 */
         $builder
             ->add('Login')
-            ->add('passwd','password')
+            ->add('passwd','password',array('read_only'=>true))
             ->add('nom')
             ->add('prenom')
-            ->add('email','email',array('required'=>true))
-            ->add('actif','checkbox',array('required'=>false))
+            ->add('email','email',array('required'=>false,'read_only'=>true))
+            
+            ->add('actif','checkbox',array('required'=>false,'read_only'=>true,'attr'=>array('style'=>'display:none;'),'label_attr'=>array('style'=>'display:none;')))
             
            // ->add('idPays')
             //->add('datecreateAt')
-            //->add('Profils')
-            
-			//->add('Profils_id',array('required'=>true))
         
         ->add('Profils_id','entity',array(
         		'property'=>'libelleProfil',

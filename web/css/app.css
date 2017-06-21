@@ -345,6 +345,14 @@ td{
 	text-decoration:none;
 	
 }
+td.tdw100
+{
+	width:100px;
+}
+td.tdw800
+{
+	width:800px;
+}
 table.records_list tr:over {
 	background-color:red;
 

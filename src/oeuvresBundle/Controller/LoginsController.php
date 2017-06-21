@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use oeuvresBundle\Entity\Logins;
 use oeuvresBundle\Form\LoginsType;
 use oeuvresBundle\Form\LoginAskNewMdpType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
 /**
@@ -74,95 +75,114 @@ class LoginsController extends Controller
     			));
     	    	
     }
-    /**
-     * envoie email avec mot de passe
-     * @param string $email
-     */
-    public function sendnewmdpAction($email)
-    {
-    	//sendnewmdp 
-    	//oeuvresbundle_newmdp
-    	    	
-    	if($this->container)
-    	{
-    		$container=$this->container;
-    	}
-		/*
-		 * generation aleatoire mdp
-		 */    	
-		    	
-    	$snewmdp="";
+    
+    public function sendnewmdpAction(){
     	
-    	//forme chaine de 8 caracteres    	
-    	$snewmdp.=chr(rand(65,90));// A Z
-    	$snewmdp.=chr(rand(97,122));//a z
-    	$snewmdp.=chr(rand(48,57));//0 9
-    	$snewmdp.=chr(rand(97,122));// a z
-    	$snewmdp.=chr(rand(65,90));
-    	$snewmdp.=chr(rand(65,90));
-    	$snewmdp.=chr(rand(65,90));
-    	$snewmdp.=chr(rand(65,90));
+    	
+    	$email=isset($_POST['oeuvresbundle_newmdp']['email']) ? $_POST['oeuvresbundle_newmdp']['email'] : '';
 
-    	/*
-    	 * enregistre nouveau mdp dans utilisateurs
-    	 */
+    	require_once dirname(__FILE__).'/../../../web/phpmailer/PHPMailerAutoload.php';;
+    	
+    	$pcl="Les petits chanteurs de Lyon";
+    	
     	$em = $this->getDoctrine()->getManager();
     	
     	$oUtil=$em->getRepository('oeuvresBundle:Utilisateurs');
+    	
+    	/*
+    	 * generation aleatoire mdp
+    	 */
+    	$snewmdp=$oUtil->genPassword();
+    	    	
+    	$object="Votre mot de passe partothèque/PCL";
+    	$object=utf8_decode($object);
+    	
+    	$txtmessage="Les petis chanteurs de Lyon vous envoie votre nouveau mot de passe : ".$snewmdp;
+    	$txtmessage=utf8_decode($txtmessage);
+    	
+    	/**
+    	 smtp.google.com
+    	 fcalemard@gmail.com
+    	 lanza2017    	 *
+    	 */
+    	
+    	//Create a new PHPMailer instance
+    	$mail = new \PHPMailer;
+    	//Tell PHPMailer to use SMTP
+    	$mail->isSMTP();
+    	//Enable SMTP debugging
+    	// 0 = off (for production use)
+    	// 1 = client messages
+    	// 2 = client and server messages
+    	$mail->SMTPDebug = 0;
+    	//Ask for HTML-friendly debug output
+    	$mail->Debugoutput = 'html';
+    	//Set the hostname of the mail server
+    	$mail->Host = "smtp.gmail.com";
+    	//Set the SMTP port number - likely to be 25, 465 or 587
+    	$mail->Port = 25;
+    	//Whether to use SMTP authentication
+    	$mail->SMTPAuth = true;
+    	//Username to use for SMTP authentication
+    	$mail->Username = "fcalemard@gmail.com";
+    	//Password to use for SMTP authentication
+    	$mail->Password = "lanza2017";
+    	//Set who the message is to be sent from
+    	$mail->setFrom('fcalemard@gmail.com', $pcl);
+    	//Set an alternative reply-to address
+    	$mail->addReplyTo('fcalemard@gmail.com', $pcl);
+    	//Set who the message is to be sent to
+    	$mail->addAddress($email, 'Albert Doe');
+    	//Set the subject line
+    	$mail->Subject = $object;
+    	//Read an HTML message body from an external file, convert referenced images to embedded,
+    	//convert HTML into a basic plain-text alternative body
+    	$sdir=dirname(__FILE__);
+    	
+    	//echo $sdir;
+    	
+    	$sdir="../../../";
+    	$sdir="";
+    	$s=$sdir.'/contents.html';
 
-		 /*
-		  * envoie mot de passe
-		  * 
-		  */
+    	//$message="Veuillez trouvez ci-contre votre nouveau mot de passe";
     	
-    	$from="fcalemard@gmail.com";
+    	$sA="<a href='http://www.mychorale.fr/'>accés à la partothéque</a>";
+    	$sA=utf8_decode($sA);
     	
-    	$object="Votre mot de passe partothèque";
-    	 
-    	$message="Voici votre nouveau mot de passe : ".$snewmdp;
+    	$message="<html><h1>".$txtmessage."</h1>".$sA."</html>";
+    	$mail->msgHTML($message);
     	
-    	$mailer = $this->get('mailer');
-    	 
-    	$message = $mailer->createMessage()
-    	->setSubject($object)
-    	->setFrom($from)
-    	->setTo($email)
+    	//Replace the plain text body with one created manually
+    	$mail->AltBody = $txtmessage;
+
+    	//Attach an image file
     	
-    	->setBody(
-    			$this->renderView(
-    					// app/Resources/views/Emails/registration.html.twig
-    					'Emails/messagesimple.html.twig',
-    					array('message' => $message)
-    			),
-    			'text/html'
-    	);
+    	//$sdir=dirname(__FILE__);
     	
-    	// ENVOIE MESSAGE
-    	$bOk=$mailer->send($message);
+    	//$mail->addAttachment($sdir.'/images/phpmailer_mini.png');
     	
-    	$bOk=$oUtil->miseajourmdp($email,$snewmdp);
-    	if($bOk)
-    	{
-    		//die("Ok miseajourmdp ");
+    	//send the message, check for errors
+    	if (!$mail->send()) {
+    		
+    		$message= "Problème de messagerie : " . $mail->ErrorInfo;
+    		
+    		return $this->render('oeuvresBundle:Entiteinex:erreur.html.twig',array('message'=>$message));
+    		
+    	} else {
+    		//echo "Message sent!";
     	}
-    	 
     	
-    	if($bOk)
-    	{
-    		$form=$this->createAskMdpForm();
-    		
-    		$message="Un message vous a été envoyé à : ".$email;
-    		
-    		return $this->render('oeuvresBundle:Logins:mdpperdu.html.twig', array(
-    				'form'   => $form->createView(),
-    				'message'=>$message
-    		));
-    		
-    	}
-	   	//die("pb sendnewmdpAction");    	
-    	return $this->redirect($this->generateUrl('homepage'));
-    	 
+    	//require_once dirname(__FILE__).'../../../../vendor/phpmailer/PHPMailerAutoload.php';
+    	
+    	//require '../web/PHPMailerAutoload.php';
+    	//require_once dirname(__FILE__).'../../../../web/PHPMailerAutoload';
+    	//require_once '../../../web/PHPMailerAutoload';
+    	
+    	return $this->render('oeuvresBundle:Entiteinex:messageenvoye.html.twig');
+    	
     }
+    
     public function unlogAction()
     {
     	$session = $this->getRequest()->getSession();
@@ -203,7 +223,7 @@ class LoginsController extends Controller
         if ($form->isValid()) {
         	
         	$em = $this->getDoctrine()->getManager();
-
+        	
         	/*
 				oeuvresbundle_logins
         	 */
@@ -560,13 +580,18 @@ class LoginsController extends Controller
      */
     private function createAskMdpForm()
     {
-    	$form = $this->createForm(new LoginAskNewMdpType(), array(
-    			'action' => $this->generateUrl('sendnewmdp',array('email'=>' ')),
-    			'method' => 'PUT',
+    	$form = $this->createForm(new LoginAskNewMdpType(),null, array(
+    			'action' => $this->generateUrl('sendnewmdp'),
+    			'method' => 'POST',
     	));
-
+/**
+    	$form = $this->createForm(new LoginAskNewMdpType(),null, array(
+    			'action' => $this->generateUrl('sendnewmdp',array('email'=>' ')),
+    			'method' => 'POST',
+    	));
+ * 
+ */
     	$form->add('submit', 'submit', array('label' => 'Update'));
-    	 
     	return $form;
     }    
     /**

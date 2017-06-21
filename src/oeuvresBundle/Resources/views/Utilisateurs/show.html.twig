@@ -20,8 +20,8 @@
 		            </tr>
 
 		            <tr class="ligneshow" >
-		                <th>Nom</th>
-		                <td>{{ entity.nom }}</td>
+		                <th class="thw200" >Nom</th>
+		                <td class="tdw800" >{{ entity.nom }}</td>
 		            </tr>
 		            <tr class="ligneshow" >
 		                <th>Prenom</th>
@@ -32,8 +32,14 @@
 		                <td>{{ entity.email }}</td>
 		            </tr>
 		            <tr class="ligneshow" >
-		                <th>Actif</th>
-		                <td>{{ entity.actif==1 ? "O" : "N"}}</td>
+		                <th>Verrouillage</th>
+		                <td>
+    	                {% if entity.actif==1 %}
+           		            <img alt="deverrouillé" src="/web/css/images/unlocked2.png">
+    	                {% else %}
+           		            <img alt="deverrouillé" src="/web/css/images/locked2.png">
+    	                {% endif %}		                
+		                </td>
 		            </tr>
 
 		            <tr class="ligneshow" >
@@ -95,21 +101,41 @@
 
 		<table>
 			<tr>
-				<td class="tdtblactionsbdp">
+				<td class="tdtblactionsbdp" >
 			        <a href="{{ path('utilisateurs') }}">
 			            <img alt="Retour à la liste" src="/web/css/images/retour_liste.png">
 			        </a>
 				</td>
-				<td class="tdtblactionsbdp">
-			        <a href="{{ path('utilisateurs_edit', { 'id': entity.id }) }}">
-			            <img alt="Modification" src="/web/css/images/edit.png">
-			        </a>
-				</td>
-				<td class="tdtblactionsbdp">
-				    <a href="{{ path('utilisateurs_confirm_delete', { 'id': entity.id }) }}">
-			             <img alt="Désactiver" src="/web/css/images/desactiver.png" width="64px" height="64px" >
-				    </a>			
-				</td>
+				
+				{% if entity.id!=0 %}
+				
+    				<td class="tdtblactionsbdp">
+    			        <a href="{{ path('utilisateurs_edit', { 'id': entity.id }) }}">
+    			            <img alt="Modification" src="/web/css/images/edit.png">
+    			        </a>
+    				</td>
+    				<td class="tdtblactionsbdp">
+    				    	{%  if entity.actif==1 %}
+    					    <a href="{{ path('utilisateurs_confirm_delete', { 'id': entity.id }) }}">
+    			             <img alt="Désactiver" src="/web/css/images/locked2.png" width="64px" height="64px" >
+    					    </a>			
+    			             {% else %}
+    					    <a href="{{ path('utilisateurs_confirm_reactiv', { 'id': entity.id }) }}">
+    			             <img alt="Désactiver" src="/web/css/images/unlocked2.png" width="64px" height="64px" >
+    					    </a>			
+    			            {% endif %}
+    			            
+    
+    				</td>
+    				
+    	            {# generation nouveau mot de passe #}
+    				<td class="tdtblactionsbdp">
+    		           <a href="{{ path('utilisateurs_confirm_nvmdp', { 'id': entity.id }) }}">
+    		             <img alt="Désactiver" src="/web/css/images/passwd4.png" width="64px" height="64px" >
+    				    </a>	
+    				</td>
+				
+    	        {% endif %}
 				
 				<td style="background-color:beige; " >
 				    {% if idenreg>1 %}

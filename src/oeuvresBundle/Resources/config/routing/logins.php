@@ -17,20 +17,22 @@ $collection->add('mdpperdu', new Route('/mdpperdu', array(
 		array(),
 		'POST')));
 
+$collection->add('logins_show', new Route('/{id}/show', array(
+		'_controller' => 'oeuvresBundle:Logins:show',
+)));
 
-$collection->add('sendnewmdp', new Route('{email}/sendnewmdp', array(
+
+$collection->add('sendnewmdp', new Route('/sendnewmdp', array(
 		'_controller' => 'oeuvresBundle:Logins:sendnewmdp',
+
 		array(),
 		array(),
 		'',
 		array(),
-		'POST'		
+		'POST'
+		
+		
 )));
-
-$collection->add('logins_show', new Route('/{id}/show', array(
-    '_controller' => 'oeuvresBundle:Logins:show',
-)));
-
 $collection->add('logins_new', new Route('/new', array(
 		'_controller' => 'oeuvresBundle:Logins:new',
 )));

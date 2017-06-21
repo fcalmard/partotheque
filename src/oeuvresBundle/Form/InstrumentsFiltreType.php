@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class UtilisateursFiltreType extends AbstractType
+class InstrumentsFiltreType extends AbstractType
 {
 	
 	public function __construct()
@@ -20,11 +20,11 @@ class UtilisateursFiltreType extends AbstractType
     {
     	$builder 	 
     	
-    	->add('utilisateur','text',array('label'=>'Utilisateur','required'=>false))
+    	->add('instrument','text',array('label'=>'Instrument','required'=>false))
     	
-    	->add('tous', 'choice', array('label'=>'Verrou',
+    	->add('tous', 'choice', array('label'=>'Tous',
     			'empty_value'=>null,
-    			'choices'   => array(0=>'Selection',1 => 'déVerrouillés', 2 => 'Verrouillés'),
+    			'choices'   => array(0=>'Selection',1 => 'Tous', 2 => 'Inactifs'),
     			'required'  => false,
     	))
     	;
@@ -48,7 +48,7 @@ class UtilisateursFiltreType extends AbstractType
      */
     public function getName()
     {
-        return 'oeuvresbundle_filtre_utilisateurs';
+        return 'oeuvresbundle_filtre_instruments';
     }
     
 }
