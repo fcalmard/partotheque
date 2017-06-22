@@ -137,9 +137,8 @@ class UtilisateursRepository extends EntityRepository
 	{
 		$b=false;
 		$iProfil=0;
-		$query = $this->getEntityManager()
-		->createQuery(
-				"SELECT
+		
+		$sSql="SELECT
 				t.id,
 				t.Login,
 				t.passwd,
@@ -151,7 +150,10 @@ class UtilisateursRepository extends EntityRepository
 				t.datecreateAt
 				FROM oeuvresBundle:Utilisateurs t
 				 LEFT JOIN oeuvresBundle:Profils p WHERE p.id=t.Profils_id
- 				 WHERE t.actif=1 and p.actif=1 and t.Login='".$Login."'");
+ 				 WHERE t.actif=1 and p.actif=1 and t.Login='".$Login."'";
+		
+		$query = $this->getEntityManager()
+		->createQuery($sSql);		
 	
 		try {
 			$aResult=$query->getArrayResult();
@@ -193,10 +195,12 @@ class UtilisateursRepository extends EntityRepository
 	public function miseajourmdp($email,$mdp)
 	{
 		$mdp=md5($mdp);
-			
+		
 		$sSql="UPDATE oeuvresBundle:Utilisateurs t
 				SET t.passwd='".$mdp."'
 				WHERE t.email='".$email."'";
+		
+		//echo "<br/>miseajourmdp $sSql";
 		
 		$b=false;
 		$query = $this->getEntityManager()
@@ -206,10 +210,54 @@ class UtilisateursRepository extends EntityRepository
 		} catch (\Doctrine\ORM\NoResultException $e) {
 			$b=false;
 		}
+				
 		return $b;
 		
 	}
-	
+
+	/**
+	 * 
+	 * @param unknown $login
+	 * @param unknown $mdp
+	 * @return mixed
+	 */
+	public function controlemdplogin($login,$mdp)
+	{
+
+		$mdp=md5($mdp);
+		
+		$sSql='SELECT
+					u.id,
+					u.Login,
+					u.passwd
+					FROM oeuvresBundle:Utilisateurs u';
+		
+		$sSql.=" WHERE u.Login='".$login."' and u.passwd='".$mdp."'";
+		
+		echo "<br/>controlemdplogin 228 $sSql";
+		
+		$id=0;
+		
+		$query = $this->getEntityManager()
+		->createQuery($sSql);
+		
+		try {
+			$au=$query->getArrayResult();
+			var_dump(count($au));
+			foreach ($au as $ou)
+			{
+				$id=$ou['id'];
+				
+			}
+			
+			$b=(count($au)!=0);
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			$b=false;
+		}
+		//die("<br/>controlemdplogin 257 $id");
+		
+		return $id;
+	}
 
 	/**
 	 * 

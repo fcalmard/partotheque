@@ -14,7 +14,6 @@ use oeuvresBundle\Form\LoginsType;
 use oeuvresBundle\Form\LoginAskNewMdpType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-
 /**
  * Logins controller.
  *
@@ -81,6 +80,12 @@ class LoginsController extends Controller
     	
     	$email=isset($_POST['oeuvresbundle_newmdp']['email']) ? $_POST['oeuvresbundle_newmdp']['email'] : '';
 
+    	if($email=='')
+    	{
+    		return new RedirectResponse($this->generateUrl('homepage'));
+    	}
+    	
+    	
     	require_once dirname(__FILE__).'/../../../web/phpmailer/PHPMailerAutoload.php';;
     	
     	$pcl="Les petits chanteurs de Lyon";
@@ -99,6 +104,12 @@ class LoginsController extends Controller
     	
     	$txtmessage="Les petis chanteurs de Lyon vous envoie votre nouveau mot de passe : ".$snewmdp;
     	$txtmessage=utf8_decode($txtmessage);
+    	
+    	
+    	/**
+    	 * mise à jour du mot de passe utilisateur
+    	 */
+    	$oUtil->miseajourmdp($email,$snewmdp);
     	
     	/**
     	 smtp.google.com
@@ -137,13 +148,6 @@ class LoginsController extends Controller
     	$mail->Subject = $object;
     	//Read an HTML message body from an external file, convert referenced images to embedded,
     	//convert HTML into a basic plain-text alternative body
-    	$sdir=dirname(__FILE__);
-    	
-    	//echo $sdir;
-    	
-    	$sdir="../../../";
-    	$sdir="";
-    	$s=$sdir.'/contents.html';
 
     	//$message="Veuillez trouvez ci-contre votre nouveau mot de passe";
     	
@@ -173,11 +177,6 @@ class LoginsController extends Controller
     		//echo "Message sent!";
     	}
     	
-    	//require_once dirname(__FILE__).'../../../../vendor/phpmailer/PHPMailerAutoload.php';
-    	
-    	//require '../web/PHPMailerAutoload.php';
-    	//require_once dirname(__FILE__).'../../../../web/PHPMailerAutoload';
-    	//require_once '../../../web/PHPMailerAutoload';
     	
     	return $this->render('oeuvresBundle:Entiteinex:messageenvoye.html.twig');
     	
@@ -219,6 +218,7 @@ class LoginsController extends Controller
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
      
+        echo ('create action');
         
         if ($form->isValid()) {
         	
@@ -239,46 +239,20 @@ class LoginsController extends Controller
         	$bOk=($iProfil!=0) ? true : false;
         	if($bOk)
         	{
-        		
 	        	$sMdp=$post['pwd'];
-	        	 
-		       	$stmsp=md5($sMdp);
 	        	
-		        // echo "<br/> iProfil=".$iProfil;
-	        	 
-	        	$qb = $em->createQueryBuilder();
-	        	        	
-	        	$qb->select(array('u'))
-	        	->from('oeuvresBundle\Entity\Utilisateurs', 'u')
-	        	->where($qb->expr()->orX(
-	        			$qb->expr()->eq('u.Login', '?1'),
-	        			$qb->expr()->like('u.passwd', '?2')
-	        	));
-	        	$qb->setParameter(1,$login);
-	        	$qb->setParameter(2,$stmsp);
+	        	$stmsp=md5($sMdp);
+	        		        	
+	        	$stmsp=$sMdp;
 	        	
-	        	// $qb instanceof QueryBuilder
-	        	$query = $qb->getQuery();
-	        	// Execute Query
-	        	$oUtilisateurs = $query->getResult();
+	        	$iUtilisateur=$em->getRepository('oeuvresBundle:Utilisateurs')->controlemdplogin($login,$stmsp);
 	        	
-	        	$iUtilisateur=0;
+//	        	echo "<br/> 255 $login 	$sMdp $stmsp <br/>IDU=$iUtilisateur";
 	        	
-	        	if($oUtilisateurs)
+	        	$bOk= ($iUtilisateur!=0);
+
+	        	if($bOk)
 	        	{
-	        		//$iUtilisateur=$oUtilisateurs=>id;//[0]['id'];
-	        		foreach ($oUtilisateurs as $u)
-	        		{
-	        			$iUtilisateur=$u->getId();
-	        			//var_dump('UTIL ID >'.$iUtilisateur.'<');
-	        			break;
-	        			
-	        		}
-	        		//echo "<br/> ID UTILISATEUR ".$iUtilisateur;
-	        		
-	        		/*
-	        		 * find
-	        		 */
 	        		$session = new Session();
 	        		
 	        		$session->set('gUserLoginLogged', $login);
